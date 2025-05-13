@@ -251,12 +251,6 @@ BOOL CManualPickerDlg::OnInitDialog()
 	for (int i=12;i<20;i++) m_ledNGPickIO[i].ShowWindow(FALSE);
 #endif
 
-#ifdef PICKER_4
-	for (int i=0; i<4; i++) m_btnGoodPicker5[i].ShowWindow(FALSE);
-	for (int i=0; i<5; i++) m_ledGoogPick5IO[i].ShowWindow(FALSE);
-	for (int i=0; i<4; i++) m_btnGoodPicker6[i].ShowWindow(FALSE);
-	for (int i=0; i<5; i++) m_ledGoogPick6IO[i].ShowWindow(FALSE);
-#endif
 #ifdef PICKER_5
 	for (int i=0; i<4; i++) m_btnGoodPicker6[i].ShowWindow(FALSE);
 	for (int i=0; i<5; i++) m_ledGoogPick6IO[i].ShowWindow(FALSE);
@@ -301,12 +295,6 @@ void CManualPickerDlg::OnBtnPickerXClick(UINT nID)
 #ifdef PICKER_3
 	if (!pDX4->iGoodPicker1Up || !pDX4->iGoodPicker2Up || !pDX4->iGoodPicker3Up || 
 		pDX4->iGoodPicker1Down || pDX4->iGoodPicker2Down || pDX4->iGoodPicker3Down )
-#endif
-#ifdef PICKER_4
-		if (!pDX4->iGoodPicker1Up || !pDX4->iGoodPicker2Up || !pDX4->iGoodPicker3Up || 
-			!pDX4->iGoodPicker4Up || 
-			pDX4->iGoodPicker1Down || pDX4->iGoodPicker2Down || pDX4->iGoodPicker3Down || 
-			pDX4->iGoodPicker4Down ) 
 #endif
 #ifdef PICKER_5
 	if (!pDX4->iGoodPicker1Up || !pDX4->iGoodPicker2Up || !pDX4->iGoodPicker3Up || 
@@ -366,12 +354,6 @@ void CManualPickerDlg::OnBtnPickerYClick(UINT nID)
 #ifdef PICKER_3
 	if (!pDX4->iGoodPicker1Up || !pDX4->iGoodPicker2Up || !pDX4->iGoodPicker3Up || 
 		pDX4->iGoodPicker1Down || pDX4->iGoodPicker2Down || pDX4->iGoodPicker3Down )
-#endif
-#ifdef PICKER_4
-		if (!pDX4->iGoodPicker1Up || !pDX4->iGoodPicker2Up || !pDX4->iGoodPicker3Up || 
-			!pDX4->iGoodPicker4Up || 
-			pDX4->iGoodPicker1Down || pDX4->iGoodPicker2Down || pDX4->iGoodPicker3Down || 
-			pDX4->iGoodPicker4Down)
 #endif
 #ifdef PICKER_5
 	if (!pDX4->iGoodPicker1Up || !pDX4->iGoodPicker2Up || !pDX4->iGoodPicker3Up || 
@@ -445,15 +427,7 @@ void CManualPickerDlg::OnBtnNGPickXClick(UINT nID)
 			AfxMessageBox(_T("NG Picker Z Up후에 진행하세요....."));
 			return;
 	}
-#endif
-#ifdef NG_PICKER_4
-	if (!pDX3->iNGPicker1Up || !pDX3->iNGPicker2Up || !pDX3->iNGPicker3Up || !pDX3->iNGPicker4Up || 
-		pDX3->iNGPicker1Down || pDX3->iNGPicker2Down || pDX3->iNGPicker3Down || pDX3->iNGPicker4Down ) {
-		AfxMessageBox(_T("NG Picker Z Up후에 진행하세요....."));
-		return;
-	}
-#endif
-#ifdef NG_PICKER_5
+#else
 	if (!pDX3->iNGPicker1Up || !pDX3->iNGPicker2Up || !pDX3->iNGPicker3Up || !pDX3->iNGPicker4Up || !pDX3->iNGPicker5Up ||
 		pDX3->iNGPicker1Down || pDX3->iNGPicker2Down || pDX3->iNGPicker3Down || pDX3->iNGPicker4Down || pDX3->iNGPicker5Down ) {
 		AfxMessageBox(_T("NG Picker Z Up후에 진행하세요....."));
@@ -591,10 +565,8 @@ void CManualPickerDlg::OnBtnNGPickIOClick(UINT nID)
 #ifndef NG_PICKER_3
 		pDY3->oNGPicker4Open = TRUE;
 		pDY3->oNGPicker4Close = FALSE;
-	#ifndef NG_PICKER_4
 		pDY3->oNGPicker5Open = TRUE;
 		pDY3->oNGPicker5Close = FALSE;
-	#endif
 #endif
 	} else if (nID == IDC_BTN_NG_PICKER_IO1_13) {
 		pDY3->oNGPicker1Open = FALSE;
@@ -606,10 +578,8 @@ void CManualPickerDlg::OnBtnNGPickIOClick(UINT nID)
 #ifndef NG_PICKER_3
 		pDY3->oNGPicker4Open = FALSE;
 		pDY3->oNGPicker4Close = TRUE;
-	#ifndef NG_PICKER_4
 		pDY3->oNGPicker5Open = FALSE;
 		pDY3->oNGPicker5Close = TRUE;
-	#endif
 #endif
 	} else if (nID == IDC_BTN_NG_PICKER_IO1_14) {
 		pDY3->oNGPicker1Up = TRUE;
@@ -621,10 +591,8 @@ void CManualPickerDlg::OnBtnNGPickIOClick(UINT nID)
 #ifndef NG_PICKER_3
 		pDY3->oNGPicker4Up = TRUE;
 		pDY3->oNGPicker4Down = FALSE;
-	#ifndef NG_PICKER_4
 		pDY3->oNGPicker5Up = TRUE;
 		pDY3->oNGPicker5Down = FALSE;
-	#endif
 #endif
 	} else if (nID == IDC_BTN_NG_PICKER_IO1_15) {
 #ifdef NG_PICKER_3
@@ -637,20 +605,7 @@ void CManualPickerDlg::OnBtnNGPickIOClick(UINT nID)
 				AfxMessageBox(_T("Can not move......(NG Picker Close And CM Check Off)"));
 				return;
 		}
-#endif
-#ifdef NG_PICKER_4
-		if (pDX2->iInspCMAlign2In && pCommon->Check_Position(AX_NG_PICKER_X, 0) &&
-		   (pDX3->iNGPicker1CMCheck || pDX3->iNGPicker2CMCheck || pDX3->iNGPicker3CMCheck || pDX3->iNGPicker4CMCheck )) {
-			AfxMessageBox(_T("Can not move......(NG Picker CM Check And Align 2 In)"));
-			return;
-		}
-		if((!pDX3->iNGPicker1Open && !pDX3->iNGPicker1CMCheck) || (!pDX3->iNGPicker2Open && !pDX3->iNGPicker2CMCheck) || (!pDX3->iNGPicker3Open && !pDX3->iNGPicker3CMCheck) ||
-		   (!pDX3->iNGPicker4Open && !pDX3->iNGPicker4CMCheck)  ) {
-			AfxMessageBox(_T("Can not move......(NG Picker Close And CM Check Off)"));
-			return;
-		}
-#endif
-#ifdef NG_PICKER_5
+#else
 		if (pDX2->iInspCMAlign2In && pCommon->Check_Position(AX_NG_PICKER_X, 0) &&
 		   (pDX3->iNGPicker1CMCheck || pDX3->iNGPicker2CMCheck || pDX3->iNGPicker3CMCheck || pDX3->iNGPicker4CMCheck || pDX3->iNGPicker5CMCheck)) {
 			AfxMessageBox(_T("Can not move......(NG Picker CM Check And Align 2 In)"));
@@ -672,10 +627,8 @@ void CManualPickerDlg::OnBtnNGPickIOClick(UINT nID)
 #ifndef NG_PICKER_3
 		pDY3->oNGPicker4Up = FALSE;
 		pDY3->oNGPicker4Down = TRUE;
-	#ifndef NG_PICKER_4
 		pDY3->oNGPicker5Up = FALSE;
 		pDY3->oNGPicker5Down = TRUE;
-	#endif
 #endif
 
 	} else if (nID == IDC_BTN_NG_PICKER_IO1_16) {
@@ -1000,10 +953,6 @@ void CManualPickerDlg::OnBtnPickerAClick(UINT nID)
 		pDY4->oGoodPicker2Up = TRUE;
 		pDY4->oGoodPicker3Down = FALSE;
 		pDY4->oGoodPicker3Up = TRUE;
-#ifdef PICKER_4
-		pDY4->oGoodPicker4Down = FALSE;
-		pDY4->oGoodPicker4Up = TRUE;
-#endif
 #ifdef PICKER_5
 		pDY4->oGoodPicker4Down = FALSE;
 		pDY4->oGoodPicker4Up = TRUE;
@@ -1028,18 +977,6 @@ void CManualPickerDlg::OnBtnPickerAClick(UINT nID)
 		if((!pDX4->iGoodPicker1Open && !pDX4->iGoodPicker1CMCheck) || (!pDX4->iGoodPicker2Open && !pDX4->iGoodPicker2CMCheck) || (!pDX4->iGoodPicker3Open && !pDX4->iGoodPicker3CMCheck) ) {
 			AfxMessageBox(_T("Can not move......(Good Picker Close And CM Check Off)"));
 			return;
-		}
-#endif
-#ifdef PICKER_4
-		if (pDX2->iInspCMAlign3In &&
-			(pDX4->iGoodPicker1CMCheck || pDX4->iGoodPicker2CMCheck || pDX4->iGoodPicker3CMCheck || pDX4->iGoodPicker4CMCheck)) {
-				AfxMessageBox(_T("Can not move......(Good Picker CM Check And Align 3 In)"));
-				return;
-		}
-		if((!pDX4->iGoodPicker1Open && !pDX4->iGoodPicker1CMCheck) || (!pDX4->iGoodPicker2Open && !pDX4->iGoodPicker2CMCheck) || (!pDX4->iGoodPicker3Open && !pDX4->iGoodPicker3CMCheck) ||
-			(!pDX4->iGoodPicker4Open && !pDX4->iGoodPicker4CMCheck) ) {
-				AfxMessageBox(_T("Can not move......(Good Picker Close And CM Check Off)"));
-				return;
 		}
 #endif
 #ifdef PICKER_5
@@ -1073,10 +1010,6 @@ void CManualPickerDlg::OnBtnPickerAClick(UINT nID)
 		pDY4->oGoodPicker2Down = TRUE;
 		pDY4->oGoodPicker3Up = FALSE;
 		pDY4->oGoodPicker3Down = TRUE;
-#ifdef PICKER_4
-		pDY4->oGoodPicker4Up = FALSE;
-		pDY4->oGoodPicker4Down = TRUE;
-#endif
 #ifdef PICKER_5
 		pDY4->oGoodPicker4Up = FALSE;
 		pDY4->oGoodPicker4Down = TRUE;
@@ -1098,10 +1031,6 @@ void CManualPickerDlg::OnBtnPickerAClick(UINT nID)
 		pDY4->oGoodPicker2Open = TRUE;
 		pDY4->oGoodPicker3Close = FALSE;
 		pDY4->oGoodPicker3Open = TRUE;
-#ifdef PICKER_4
-		pDY4->oGoodPicker4Close = FALSE;
-		pDY4->oGoodPicker4Open = TRUE;
-#endif
 #ifdef PICKER_5
 		pDY4->oGoodPicker4Close = FALSE;
 		pDY4->oGoodPicker4Open = TRUE;
@@ -1123,10 +1052,6 @@ void CManualPickerDlg::OnBtnPickerAClick(UINT nID)
 		pDY4->oGoodPicker2Close = TRUE;
 		pDY4->oGoodPicker3Open = FALSE;
 		pDY4->oGoodPicker3Close = TRUE;
-#ifdef PICKER_4
-		pDY4->oGoodPicker4Open = FALSE;
-		pDY4->oGoodPicker4Close = TRUE;
-#endif
 #ifdef PICKER_5
 		pDY4->oGoodPicker4Open = FALSE;
 		pDY4->oGoodPicker4Close = TRUE;
@@ -1184,11 +1109,6 @@ void CManualPickerDlg::Initial_Controls()
 	for (int i = 16; i < 20; i++) { m_ledNGPickIO[i].ShowWindow(FALSE); }
 	for (int i = 20; i < 24; i++) { m_btnNGPickIO[i].ShowWindow(FALSE); }
 	m_btnNGPickX[4].ShowWindow(FALSE);
-	m_btnNGPickX[5].ShowWindow(FALSE);
-#endif
-#ifdef NG_PICKER_4
-	for (int i = 16; i < 20; i++) { m_ledNGPickIO[i].ShowWindow(FALSE); }
-	for (int i = 20; i < 24; i++) { m_btnNGPickIO[i].ShowWindow(FALSE); }
 	m_btnNGPickX[5].ShowWindow(FALSE);
 #endif
 }
@@ -1361,13 +1281,7 @@ void CManualPickerDlg::Display_Status()
 	for(int i=0; i<4; i++) {
 		m_btnNGPickX[i].ShowWindow(bShow);
 	}
-#endif
-#ifdef NG_PICKER_4
-	for(int i=0; i<5; i++) {
-		m_btnNGPickX[i].ShowWindow(bShow);
-	}
-#endif
-#ifdef NG_PICKER_5
+#else
 	for(int i=0; i<6; i++) {
 		m_btnNGPickX[i].ShowWindow(bShow);
 	}

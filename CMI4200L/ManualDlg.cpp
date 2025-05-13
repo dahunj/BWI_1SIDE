@@ -84,7 +84,10 @@ BOOL CManualDlg::OnInitDialog()
 	SetWindowPos(this, 0, 60, 0, 0, SWP_NOSIZE | SWP_NOZORDER);
 
 	Initial_Controls();
-	
+
+	m_pManualFlowDlg = new CManualFlowDlg(this);
+	m_pManualFlowDlg->Create(IDD_MANUAL_FLOW_DLG, this);
+
 	m_pManualElevatorDlg = new CManualElevatorDlg(this);
 	m_pManualElevatorDlg->Create(IDD_MANUAL_ELEVATOR_DLG, this);
 
@@ -103,8 +106,8 @@ BOOL CManualDlg::OnInitDialog()
 	m_pManualLotDataDlg = new CManualLotDataDlg(this);
 	m_pManualLotDataDlg->Create(IDD_MANUAL_LOTDATA_DLG, this);
 
-	m_pManualLoadTrayDlg = new CManualLoadingDlg(this);
-	m_pManualLoadTrayDlg->Create(IDD_MANUAL_LOADING_DLG, this);
+	m_pManualLoadingDlg = new CManualLoadingDlg(this);
+	m_pManualLoadingDlg->Create(IDD_MANUAL_LOADING_DLG, this);
 
 	// Inspector Dlg Visible
 	m_rdoManualInspector.SetCheck(TRUE);
@@ -123,14 +126,15 @@ void CManualDlg::OnDestroy()
 	m_pManualInspectorDlg->DestroyWindow();
 	m_pManualPickerDlg->DestroyWindow();
 	m_pManualElevatorDlg->DestroyWindow();
-	m_pManualLoadTrayDlg->DestroyWindow();
+	m_pManualFlowDlg->DestroyWindow();
+	m_pManualLoadingDlg->DestroyWindow();
 	m_pManualPicker2Dlg->DestroyWindow();
 	m_pManualPicker3Dlg->DestroyWindow();
 
 	if (m_pManualInspectorDlg) delete m_pManualInspectorDlg;
 	if (m_pManualPickerDlg) delete m_pManualPickerDlg;
 	if (m_pManualElevatorDlg) delete m_pManualElevatorDlg;
-	
+	if (m_pManualFlowDlg) delete m_pManualFlowDlg;
 
 	if (m_pManualPicker2Dlg) delete m_pManualPicker2Dlg;
 	if (m_pManualPicker3Dlg) delete m_pManualPicker3Dlg;
@@ -138,12 +142,13 @@ void CManualDlg::OnDestroy()
 
 	m_pManualInspectorDlg = NULL;
 	m_pManualPickerDlg = NULL;
-	m_pManualElevatorDlg = NULL;	
+	m_pManualElevatorDlg = NULL;
+	m_pManualFlowDlg = NULL;
 
 	m_pManualPicker2Dlg = NULL;
 	m_pManualPicker3Dlg = NULL;
 	m_pManualLotDataDlg = NULL;
-	m_pManualLoadTrayDlg = NULL;
+	m_pManualLoadingDlg = NULL;
 }
 
 BOOL CManualDlg::PreTranslateMessage(MSG* pMsg) 
@@ -159,7 +164,9 @@ void CManualDlg::OnShowWindow(BOOL bShow, UINT nStatus)
 	CDialogEx::OnShowWindow(bShow, nStatus);
 
 	if (bShow) {
-		if (m_rdoManualFlow.GetCheck()) m_pManualLoadTrayDlg->ShowWindow(SW_SHOW);
+		if (m_rdoManualFlow.GetCheck()) m_pManualLoadingDlg->ShowWindow(SW_SHOW);
+
+		//if (m_rdoManualElevator.GetCheck()) m_pManualElevatorDlg->ShowWindow(SW_SHOW);
 		if (m_rdoManualElevator.GetCheck()) m_pManualPicker2Dlg->ShowWindow(SW_SHOW);
 		if (m_rdoManualElevator2.GetCheck()) m_pManualPicker3Dlg->ShowWindow(SW_SHOW);
 		if (m_rdoManualGripper.GetCheck()) m_pManualElevatorDlg->ShowWindow(SW_SHOW);
@@ -181,7 +188,7 @@ void CManualDlg::OnShowWindow(BOOL bShow, UINT nStatus)
 //		m_rdoManualDoorLock.Set_Color(RGB(0x00, 0x00, 0x00), COLOR_DEFAULT);
 //		m_rdoManualDoorUnlock.Set_Color(RGB(0x00, 0x00, 0xFF), COLOR_DEFAULT);
 
-		if (m_rdoManualFlow.GetCheck()) m_pManualLoadTrayDlg->ShowWindow(SW_HIDE);
+		if (m_rdoManualFlow.GetCheck()) m_pManualLoadingDlg->ShowWindow(SW_HIDE);
 		//if (m_rdoManualElevator.GetCheck()) m_pManualElevatorDlg->ShowWindow(SW_HIDE);
 		//if (m_rdoManualGripper.GetCheck()) m_pManualGripperDlg->ShowWindow(SW_HIDE);
 		if (m_rdoManualElevator.GetCheck()) m_pManualPicker2Dlg->ShowWindow(SW_HIDE);
@@ -203,7 +210,9 @@ void CManualDlg::OnTimer(UINT nIDEvent)
 		pCommon->Check_MainEmgAir();	// Emg & Main Air
 	}
 
-	if (m_pManualElevatorDlg->IsWindowVisible()) {
+	if (m_pManualFlowDlg->IsWindowVisible()) {
+		m_pManualFlowDlg->Display_Status();
+	} else if (m_pManualElevatorDlg->IsWindowVisible()) {
 		m_pManualElevatorDlg->Display_Status();
 	} else if (m_pManualPickerDlg->IsWindowVisible()) {
 		m_pManualPickerDlg->Display_Status();
@@ -215,8 +224,8 @@ void CManualDlg::OnTimer(UINT nIDEvent)
 		m_pManualInspectorDlg->Display_Status();
 	} else if (m_pManualLotDataDlg->IsWindowVisible()) {
 		m_pManualLotDataDlg->Display_Status();
-	} else if (m_pManualLoadTrayDlg->IsWindowVisible()) {
-		m_pManualLoadTrayDlg->Display_Status();
+	} else if (m_pManualLoadingDlg->IsWindowVisible()) {
+		m_pManualLoadingDlg->Display_Status();
 	}
 
 	SetTimer(0, 100, NULL);
@@ -225,12 +234,12 @@ void CManualDlg::OnTimer(UINT nIDEvent)
 
 void CManualDlg::OnBnClickedRdoManualFlow()
 {
-	if (m_pManualLoadTrayDlg->IsWindowVisible()) return;
+	if (m_pManualLoadingDlg->IsWindowVisible()) return;
 	Hide_Windows();
 	CLogFile *pLogFile = CLogFile::Get_Instance();
 	pLogFile->Save_HandlerLog("[Manual - Flow] Start");
 	m_rdoManualFlow.Set_Color(RGB(0xFF, 0x00, 0x00), COLOR_DEFAULT);
-	m_pManualLoadTrayDlg->ShowWindow(SW_SHOW);
+	m_pManualLoadingDlg->ShowWindow(SW_SHOW);
 }
 
 void CManualDlg::OnBnClickedRdoManualElevator()
@@ -402,14 +411,14 @@ void CManualDlg::Initial_Controls()
 
 void CManualDlg::Hide_Windows()
 {
-	
+	m_pManualFlowDlg->ShowWindow(SW_HIDE);
 	m_pManualElevatorDlg->ShowWindow(SW_HIDE);
 	m_pManualPickerDlg->ShowWindow(SW_HIDE);
 	m_pManualPicker2Dlg->ShowWindow(SW_HIDE);
 	m_pManualPicker3Dlg->ShowWindow(SW_HIDE);
 	m_pManualInspectorDlg->ShowWindow(SW_HIDE);
 	m_pManualLotDataDlg->ShowWindow(SW_HIDE);
-	m_pManualLoadTrayDlg->ShowWindow(SW_HIDE);
+	m_pManualLoadingDlg->ShowWindow(SW_HIDE);
 
 	m_rdoManualFlow.Set_Color(RGB(0x00, 0x00, 0x00), COLOR_DEFAULT);
 	m_rdoManualElevator.Set_Color(RGB(0x00, 0x00, 0x00), COLOR_DEFAULT);

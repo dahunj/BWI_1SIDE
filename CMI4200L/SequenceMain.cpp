@@ -352,8 +352,6 @@ UINT CSequenceMain::Thread_MainRun(LPVOID lpVoid)
 		nRunSts = pSeqMain->Get_IsAutoRun(1);
 		if (nRunSts == 2) break;	// Alarm
 		if (nRunSts == 0 && gData.nStatus==5 && gData.nNGTrayPos==0) {
-			
-
 			pSeqMain->Job_LotEnd();
 			pSeqMain->Beep_Post(1000);
 			pSeqMain->Set_ClearRunData(1);
@@ -650,29 +648,17 @@ BOOL CSequenceMain::Load1_Run()
 			if (gLot.nTrayCount > gData.nLoadTrayCount || gData.nLoadTrayCount == 0) {
 				if (m_pDX1->iLS_Load1FCheck) {
 					if (m_pCommon->Check_Position(AX_LOAD_TRAY_X1, 0) && m_pCommon->Check_Position(AX_LOAD_TRAY_Z1, 0) ) {
-						if (gData.nStatus==0) 
-						{
-							Job_LotStart();
-							m_pDY1->oLS_Z1AlignM34In = FALSE;
-							m_pDY1->oLS_Z1AlignM34Out = TRUE;
-
-							m_pDY1->oLS_Z1AlignS12In = FALSE;
-							m_pDY1->oLS_Z1AlignS12Out = TRUE;
-							m_pAJinAXL->Write_Output(1);
-						}
+						if (gData.nStatus==0) Job_LotStart();
 
 						m_nLoad1Case = 110;
-						m_sLog.Format("m_nLoad1Case,%d",m_nLoad1Case); pLogFile->Save_MCCLog(m_sLog);
 						m_pCommon->Set_LoopTime(AUTO_LOAD1, 10000);
 					}
 				}
 			}
 		}
 		break;
-	
 	case 110:
-		if (!m_pDX1->iLS_Z1AlignS12In && m_pDX1->iLS_Z1AlignS12Out && !m_pDX1->iLS_Z1AlignM34In && m_pDX1->iLS_Z1AlignM34Out) 
-		{
+		if (!m_pDX1->iLS_Z1AlignS12In && m_pDX1->iLS_Z1AlignS12Out && !m_pDX1->iLS_Z1AlignM34In && m_pDX1->iLS_Z1AlignM34Out) {
 #ifdef TRAY_CHECK2
 			if (!m_pDX1->iLS_Z1Check1 && !m_pDX1->iLS_Z1Check2)
 #else
@@ -689,7 +675,7 @@ BOOL CSequenceMain::Load1_Run()
 	case 120:
 		if (m_pCommon->Check_Position(AX_LOAD_TRAY_Z1, 2)) {
 			m_pDY1->oLS_LoadSupport12In = FALSE;
-			m_pDY1->oLS_LoadSupport12Out = TRUE; // support Out
+			m_pDY1->oLS_LoadSupport12Out = TRUE;
 			m_pAJinAXL->Write_Output(1);
 			m_sLog.Format("m_nLoad1Case,%d",m_nLoad1Case); pLogFile->Save_MCCLog(m_sLog);
 			m_nLoad1Case = 130;	m_pCommon->Set_LoopTime(AUTO_LOAD1, 5000);
@@ -705,7 +691,7 @@ BOOL CSequenceMain::Load1_Run()
 		break;
 	case 140:
 		if (m_pCommon->Check_Position(AX_LOAD_TRAY_Z1, 3)) {
-			m_pDY1->oLS_LoadSupport12In = TRUE; //support in 
+			m_pDY1->oLS_LoadSupport12In = TRUE;
 			m_pDY1->oLS_LoadSupport12Out = FALSE;
 			m_pAJinAXL->Write_Output(1);
 			m_sLog.Format("m_nLoad1Case,%d",m_nLoad1Case); pLogFile->Save_MCCLog(m_sLog);
@@ -934,35 +920,13 @@ BOOL CSequenceMain::Load1_Run()
 		if (m_pCommon->Check_Position(AX_LOAD_TRAY_Z1, 1)) {
 			gData.nEmptyTrayCount++;
 			m_sLog.Format("m_nLoad1Case,%d",m_nLoad1Case); pLogFile->Save_MCCLog(m_sLog);
-			m_nLoad1Case = 431;
-			m_pCommon->Set_LoopTime(AUTO_LOAD1, 5000);
-		}
-		break;
-	case 431:
-		if (!m_pDX1->iLS_Z1AlignS12In && m_pDX1->iLS_Z1AlignS12Out && !m_pDX1->iLS_Z1AlignM34In && m_pDX1->iLS_Z1AlignM34Out) {
-			m_pDY1->oLS_Z1AlignM34In = TRUE;
-			m_pDY1->oLS_Z1AlignM34Out = FALSE;
-			
-			m_pDY1->oLS_Z1AlignS12In = TRUE;
-			m_pDY1->oLS_Z1AlignS12Out = FALSE;
-			m_pAJinAXL->Write_Output(1);
-			m_sLog.Format("m_nLoad1Case,%d",m_nLoad1Case); pLogFile->Save_MCCLog(m_sLog);
-			m_nLoad1Case = 432;
-			m_pCommon->Set_LoopTime(AUTO_LOAD1, 5000);
-		}
-		break;
-	case 432:
-		if( m_pDX1->iLS_Z1AlignS12In && !m_pDX1->iLS_Z1AlignS12Out 
-			&& m_pDX1->iLS_Z1AlignM34In && !m_pDX1->iLS_Z1AlignM34Out)
-		{
-			m_sLog.Format("m_nLoad1Case,%d",m_nLoad1Case); pLogFile->Save_MCCLog(m_sLog);
 			m_nLoad1Case = 440;
 			m_pCommon->Set_LoopTime(AUTO_LOAD1, 5000);
 		}
 		break;
+
 	case 440:
-		if (m_nLoad2Case > 100 && m_nLoad2Case < 440 
-			 ) {
+		if (m_nLoad2Case > 100 && m_nLoad2Case < 440) {
 			m_pCommon->Move_Position(AX_LOAD_TRAY_X1, 0);
 			m_sLog.Format("m_nLoad1Case,%d",m_nLoad1Case); pLogFile->Save_MCCLog(m_sLog);
 			m_nLoad1Case = 450;
@@ -972,13 +936,6 @@ BOOL CSequenceMain::Load1_Run()
 	case 450:
 		if (m_nLoad2Case > 290) {
 			if (m_pCommon->Check_Position(AX_LOAD_TRAY_X1, 0)) {
-				
-				m_pDY1->oLS_Z1AlignM34In = FALSE;
-				m_pDY1->oLS_Z1AlignM34Out = TRUE;
-
-				m_pDY1->oLS_Z1AlignS12In = FALSE;
-				m_pDY1->oLS_Z1AlignS12Out = TRUE;
-				m_pAJinAXL->Write_Output(1);
 				m_pCommon->Move_Position(AX_LOAD_TRAY_Z1, 0);
 				m_sLog.Format("m_nLoad1Case,%d",m_nLoad1Case); pLogFile->Save_MCCLog(m_sLog);
 				m_nLoad1Case = 460;
@@ -987,9 +944,7 @@ BOOL CSequenceMain::Load1_Run()
 		}
 		break;
 	case 460:
-		if (m_pCommon->Check_Position(AX_LOAD_TRAY_Z1, 0)
-			&& !m_pDX1->iLS_Z1AlignS12In && m_pDX1->iLS_Z1AlignS12Out 
-			&& !m_pDX1->iLS_Z1AlignM34In && m_pDX1->iLS_Z1AlignM34Out) {
+		if (m_pCommon->Check_Position(AX_LOAD_TRAY_Z1, 0)) {
 			m_sLog.Format("m_nLoad1Case,%d",m_nLoad1Case); pLogFile->Save_MCCLog(m_sLog);
 			m_nLoad1Case = 100;
 			m_pCommon->Set_LoopTime(AUTO_LOAD1, 5000);
@@ -1063,18 +1018,6 @@ BOOL CSequenceMain::Load1_Run()
 			m_sLog.Format("m_nLoad1Case,%d",m_nLoad1Case); pLogFile->Save_MCCLog(m_sLog);
 			m_nLoad1Case = 100;
 			m_nLoad2Case = 440;
-			m_pDY1->oLS_Z2AlignM34In = FALSE;
-			m_pDY1->oLS_Z2AlignM34Out = TRUE;
-
-			m_pDY1->oLS_Z2AlignS12In = FALSE;
-			m_pDY1->oLS_Z2AlignS12Out = TRUE;
-
-			m_pDY1->oLS_Z1AlignM34In = FALSE;
-			m_pDY1->oLS_Z1AlignM34Out = TRUE;
-
-			m_pDY1->oLS_Z1AlignS12In = FALSE;
-			m_pDY1->oLS_Z1AlignS12Out = TRUE;
-			m_pAJinAXL->Write_Output(1);
 			m_pCommon->Set_LoopTime(AUTO_LOAD1, 30000);
 		}
 		break;
@@ -1105,16 +1048,8 @@ BOOL CSequenceMain::Load2_Run()
 			if (gLot.nTrayCount > gData.nLoadTrayCount || gData.nLoadTrayCount == 0) {
 				if (m_pDX1->iLS_Load1FCheck) {
 					if (m_pCommon->Check_Position(AX_LOAD_TRAY_X2, 0) && m_pCommon->Check_Position(AX_LOAD_TRAY_Z2, 0) ) {
-						if (gData.nStatus==0) 
-						{
-							Job_LotStart();
-							m_pDY1->oLS_Z2AlignM34In = FALSE;
-							m_pDY1->oLS_Z2AlignM34Out = TRUE;
+						if (gData.nStatus==0) Job_LotStart();
 
-							m_pDY1->oLS_Z2AlignS12In = FALSE;
-							m_pDY1->oLS_Z2AlignS12Out = TRUE;
-							m_pAJinAXL->Write_Output(1);
-						}
 						m_sLog.Format("m_nLoad2Case,%d",m_nLoad2Case); pLogFile->Save_MCCLog(m_sLog);
 						m_nLoad2Case = 110;
 						m_pCommon->Set_LoopTime(AUTO_LOAD2, 10000);
@@ -1123,7 +1058,6 @@ BOOL CSequenceMain::Load2_Run()
 			}
 		}
 		break;
-	
 	case 110:
 		if (!m_pDX1->iLS_Z2AlignS12In && m_pDX1->iLS_Z2AlignS12Out && !m_pDX1->iLS_Z2AlignM34In && m_pDX1->iLS_Z2AlignM34Out) {
 #ifdef TRAY_CHECK2
@@ -1391,35 +1325,13 @@ BOOL CSequenceMain::Load2_Run()
 		if (m_pCommon->Check_Position(AX_LOAD_TRAY_Z2, 1)) {
 			gData.nEmptyTrayCount++;
 			m_sLog.Format("m_nLoad2Case,%d",m_nLoad2Case); pLogFile->Save_MCCLog(m_sLog);
-			m_nLoad2Case = 431;
-			m_pCommon->Set_LoopTime(AUTO_LOAD2, 5000);
-		}
-		break;
-	case 431:
-		if (!m_pDX1->iLS_Z2AlignS12In && m_pDX1->iLS_Z2AlignS12Out && !m_pDX1->iLS_Z2AlignM34In && m_pDX1->iLS_Z2AlignM34Out) {
-			m_pDY1->oLS_Z2AlignM34In = TRUE;
-			m_pDY1->oLS_Z2AlignM34Out = FALSE;
-
-			m_pDY1->oLS_Z2AlignS12In = TRUE;
-			m_pDY1->oLS_Z2AlignS12Out = FALSE;
-			m_pAJinAXL->Write_Output(1);
-			m_sLog.Format("m_nLoad2Case,%d",m_nLoad2Case); pLogFile->Save_MCCLog(m_sLog);
-			m_nLoad2Case = 432;
-			m_pCommon->Set_LoopTime(AUTO_LOAD2, 5000);
-		}
-		break;
-	case 432:
-		if( m_pDX1->iLS_Z2AlignS12In && !m_pDX1->iLS_Z2AlignS12Out 
-			&& m_pDX1->iLS_Z2AlignM34In && !m_pDX1->iLS_Z2AlignM34Out)
-		{
-			m_sLog.Format("m_nLoad2Case,%d",m_nLoad2Case); pLogFile->Save_MCCLog(m_sLog);
 			m_nLoad2Case = 440;
 			m_pCommon->Set_LoopTime(AUTO_LOAD2, 5000);
 		}
 		break;
+
 	case 440:
-		if (m_nLoad1Case > 100 && m_nLoad1Case < 440 ) 
-		{
+		if (m_nLoad1Case > 100 && m_nLoad1Case < 440) {
 			m_sLog.Format("m_nLoad2Case,%d",m_nLoad2Case); pLogFile->Save_MCCLog(m_sLog);
 			m_pCommon->Move_Position(AX_LOAD_TRAY_X2, 0);
 			m_nLoad2Case = 450;
@@ -1429,14 +1341,6 @@ BOOL CSequenceMain::Load2_Run()
 	case 450:
 		if (m_nLoad1Case > 290) {
 			if (m_pCommon->Check_Position(AX_LOAD_TRAY_X2, 0)) {
-
-				m_pDY1->oLS_Z2AlignM34In = FALSE;
-				m_pDY1->oLS_Z2AlignM34Out = TRUE;
-
-				m_pDY1->oLS_Z2AlignS12In = FALSE;
-				m_pDY1->oLS_Z2AlignS12Out = TRUE;
-				m_pAJinAXL->Write_Output(1);
-
 				m_pCommon->Move_Position(AX_LOAD_TRAY_Z2, 0);
 				m_sLog.Format("m_nLoad2Case,%d",m_nLoad2Case); pLogFile->Save_MCCLog(m_sLog);
 				m_nLoad2Case = 460;
@@ -1445,10 +1349,7 @@ BOOL CSequenceMain::Load2_Run()
 		}
 		break;
 	case 460:
-		if (m_pCommon->Check_Position(AX_LOAD_TRAY_Z2, 0)
-			&& !m_pDX1->iLS_Z2AlignS12In && m_pDX1->iLS_Z2AlignS12Out 
-			&& !m_pDX1->iLS_Z2AlignM34In && m_pDX1->iLS_Z2AlignM34Out)
-		{
+		if (m_pCommon->Check_Position(AX_LOAD_TRAY_Z2, 0)) {
 			m_sLog.Format("m_nLoad2Case,%d",m_nLoad2Case); pLogFile->Save_MCCLog(m_sLog);
 			m_nLoad2Case = 100;
 			m_pCommon->Set_LoopTime(AUTO_LOAD2, 5000);
@@ -1499,7 +1400,6 @@ BOOL CSequenceMain::Unload1_Run()
 			}
 		}
 		break;
-	
 	case 110:
 #ifdef TRAY_CHECK2
 		if (m_pDX6->iUS_Z1Check1 && m_pDX6->iUS_Z1Check2)	// Head에 Tray 있음
@@ -1512,11 +1412,9 @@ BOOL CSequenceMain::Unload1_Run()
 				m_nUnload1Case = 200;
 				m_pCommon->Set_LoopTime(AUTO_UNLOAD1, 5000);
 			}
-		} 
-		else {					// Head에 TRAY 없음
+		} else {					// Head에 TRAY 없음
 			if (!m_pDX6->iUS_Z1AlignS12In && m_pDX6->iUS_Z1AlignS12Out && !m_pDX6->iUS_Z1AlignM34In && m_pDX6->iUS_Z1AlignM34Out) {
 //				if (!m_pCommon->Delay_LoopTime(AUTO_UNLOAD1, 3000)) break;
-				
 				m_pCommon->Move_Position(AX_UNLOAD_TRAY_Z1, 2);	// Tray Up
 				m_sLog.Format("m_nUnload1Case,%d",m_nUnload1Case); pLogFile->Save_MCCLog(m_sLog);
 				m_nUnload1Case = 120;
@@ -1712,8 +1610,7 @@ BOOL CSequenceMain::Unload1_Run()
 					m_pCommon->Set_LoopTime(AUTO_UNLOAD1, 30000);
 				} else {
 					m_sLog.Format("m_nUnload1Case,%d",m_nUnload1Case); pLogFile->Save_MCCLog(m_sLog);
-					if(m_pEquipData->bUseInlineMode) m_nUnload1Case = 351;
-					else m_nUnload1Case = 360;
+					m_nUnload1Case = 351;
 					m_pCommon->Set_LoopTime(AUTO_UNLOAD1, 30000);
 				}
 				if(m_nUnload2Case==250) m_nUnload2Case=260;
@@ -1730,7 +1627,7 @@ BOOL CSequenceMain::Unload1_Run()
 		{
 			m_sLog.Format("m_nUnload1Case,%d, %d",m_nUnload1Case,m_pDX6->iUS_Unload1FCheck); pLogFile->Save_MCCLog(m_sLog);
 			nSenseCnt++;
-			if(nSenseCnt > 50)
+			if(nSenseCnt > 100)
 			{
 				m_sLog.Format("m_nUnload1Case,%d, %d",m_nUnload1Case,m_pDX6->iUS_Unload1FCheck); pLogFile->Save_MCCLog(m_sLog);
 				nSenseCnt = 0;
@@ -1746,7 +1643,7 @@ BOOL CSequenceMain::Unload1_Run()
 			if (m_pEquipData->bUseInlineMode) {
 				if (gData.bCapTrayLoad) break;
 				if ( m_pDX6->iUS_Unload1FCheck ) break;
-				if (!m_pCommon->Delay_LoopTime(AUTO_UNLOAD1, 500)) break;
+				if (!m_pCommon->Delay_LoopTime(AUTO_UNLOAD1, 1000)) break;
 				m_pDY6->oUS_UnloadSupport12In = FALSE;
 				m_pDY6->oUS_UnloadSupport12Out = TRUE;
 				m_pAJinAXL->Write_Output(6);
@@ -1796,20 +1693,13 @@ BOOL CSequenceMain::Unload1_Run()
 		break;
 	case 400:
 		if (!m_pDX6->iUS_UnloadSupport1In && m_pDX6->iUS_UnloadSupport1Out && !m_pDX6->iUS_UnloadSupport2In && m_pDX6->iUS_UnloadSupport2Out) {
-			if (m_pEquipData->bUseInlineMode)
-			{
-				if (!m_pCommon->Delay_LoopTime(AUTO_UNLOAD1, 300)) break;
-				if ( m_pDX6->iUS_Unload1FCheck ) break;
-				if (!m_pCommon->Delay_LoopTime(AUTO_UNLOAD1, 300)) break;
-				m_pCommon->Move_Position(AX_UNLOAD_TRAY_Z1, 2);	// Tray Up
-				m_nUnload1Case = 401;
-			}
-			else
-			{
-				if (!m_pCommon->Delay_LoopTime(AUTO_UNLOAD1, 300)) break;
-				m_pCommon->Move_Position(AX_UNLOAD_TRAY_Z1, 2);	// Tray Up
-				m_nUnload1Case = 410;
-			}
+			if (!m_pCommon->Delay_LoopTime(AUTO_UNLOAD1, 500)) break;
+			if ( m_pDX6->iUS_Unload1FCheck ) break;
+			if (!m_pCommon->Delay_LoopTime(AUTO_UNLOAD1, 500)) break;
+			m_pCommon->Move_Position(AX_UNLOAD_TRAY_Z1, 2);	// Tray Up
+			m_sLog.Format("m_nUnload1Case,%d",m_nUnload1Case); pLogFile->Save_MCCLog(m_sLog);
+			if (m_pEquipData->bUseInlineMode) m_nUnload1Case = 401;
+			else							  m_nUnload1Case = 410;
 			m_pCommon->Set_LoopTime(AUTO_UNLOAD1, 30000);
 		}
 		break;
@@ -1910,37 +1800,13 @@ BOOL CSequenceMain::Unload1_Run()
 // 				}
 			}
 			m_sLog.Format("m_nUnload1Case,%d",m_nUnload1Case); pLogFile->Save_MCCLog(m_sLog);
-			m_nUnload1Case = 431;
-			m_pCommon->Set_LoopTime(AUTO_UNLOAD1, 5000);
-		}
-		break;
-	case 431:
-	if(!m_pDX6->iUS_Z1AlignM34In && m_pDX6->iUS_Z1AlignM34Out
-		&& !m_pDX6->iUS_Z1AlignS12In && m_pDX6->iUS_Z1AlignS12Out)
-		{
-			m_pDY6->oUS_Z1AlignM34In = TRUE;
-			m_pDY6->oUS_Z1AlignM34Out = FALSE;
-
-			m_pDY6->oUS_Z1AlignS12In = TRUE;
-			m_pDY6->oUS_Z1AlignS12Out = FALSE;
-			m_pAJinAXL->Write_Output(6);
-			m_sLog.Format("m_nUnload1Case,%d",m_nUnload1Case); pLogFile->Save_MCCLog(m_sLog);
-			m_nUnload1Case = 432;
-			m_pCommon->Set_LoopTime(AUTO_UNLOAD1, 5000);
-		}
-		break;
-	case 432:
-		if( m_pDX6->iUS_Z1AlignM34In && !m_pDX6->iUS_Z1AlignM34Out
-			&& m_pDX6->iUS_Z1AlignS12In && !m_pDX6->iUS_Z1AlignS12Out)
-		{
-			m_sLog.Format("m_nUnload1Case,%d",m_nUnload1Case); pLogFile->Save_MCCLog(m_sLog);
 			m_nUnload1Case = 440;
 			m_pCommon->Set_LoopTime(AUTO_UNLOAD1, 5000);
 		}
 		break;
+
 	case 440:
-		if (m_pCommon->Check_Position(AX_UNLOAD_TRAY_Y2, 2) || m_nUnload2Case >= 300
-			 ) {
+		if (m_pCommon->Check_Position(AX_UNLOAD_TRAY_Y2, 2) || m_nUnload2Case >= 300 ) {
 			m_pCommon->Move_Position(AX_UNLOAD_TRAY_Y1, 0);
 			m_sLog.Format("m_nUnload1Case,%d",m_nUnload1Case); pLogFile->Save_MCCLog(m_sLog);
 			m_nUnload1Case = 450;
@@ -1957,14 +1823,6 @@ BOOL CSequenceMain::Unload1_Run()
 
 			if (m_nUnload2Case > 350 && dPosY2 <= dPos)
 			{
-
-				m_pDY6->oUS_Z1AlignM34In = FALSE;
-				m_pDY6->oUS_Z1AlignM34Out = TRUE;
-
-				m_pDY6->oUS_Z1AlignS12In = FALSE;
-				m_pDY6->oUS_Z1AlignS12Out = TRUE;
-				m_pAJinAXL->Write_Output(6);
-
 				m_pCommon->Move_Position(AX_UNLOAD_TRAY_Z1, 0);
 				m_sLog.Format("m_nUnload1Case,%d",m_nUnload1Case); pLogFile->Save_MCCLog(m_sLog);
 				m_nUnload1Case = 460;
@@ -1974,10 +1832,7 @@ BOOL CSequenceMain::Unload1_Run()
 		}
 		break;
 	case 460:
-		if (m_pCommon->Check_Position(AX_UNLOAD_TRAY_Z1, 0)
-			&& !m_pDX6->iUS_Z1AlignM34In && m_pDX6->iUS_Z1AlignM34Out
-			&& !m_pDX6->iUS_Z1AlignS12In && m_pDX6->iUS_Z1AlignS12Out )
-		{
+		if (m_pCommon->Check_Position(AX_UNLOAD_TRAY_Z1, 0)) {
 			m_sLog.Format("m_nUnload1Case,%d",m_nUnload1Case); pLogFile->Save_MCCLog(m_sLog);
 			m_nUnload1Case = 100;
 			m_pCommon->Set_LoopTime(AUTO_UNLOAD1, 5000);
@@ -2236,7 +2091,7 @@ BOOL CSequenceMain::Unload1_Run()
 			m_pDY2->oInspCMAlign4In = FALSE;
 			m_pDY2->oInspCMAlign4Out = TRUE;
 			m_pAJinAXL->Write_Output(2);
-*/			
+*/
 			m_sLog.Format("m_nUnload1Case,%d",m_nUnload1Case); pLogFile->Save_MCCLog(m_sLog);
 			m_nUnload1Case = 471;
 			m_pCommon->Set_LoopTime(AUTO_UNLOAD1, 5000);
@@ -2345,7 +2200,6 @@ BOOL CSequenceMain::Unload2_Run()
 			}
 		}
 		break;
-	
 	case 110:
 #ifdef TRAY_CHECK2
 		if (m_pDX6->iUS_Z2Check1 && m_pDX6->iUS_Z2Check2)	// Head에 Tray 있음
@@ -2556,8 +2410,7 @@ BOOL CSequenceMain::Unload2_Run()
 					m_pCommon->Set_LoopTime(AUTO_UNLOAD2, 30000);
 				} else {
 					m_sLog.Format("m_nUnload2Case,%d",m_nUnload2Case); pLogFile->Save_MCCLog(m_sLog);
-					if(m_pEquipData->bUseInlineMode) m_nUnload2Case = 351;
-					else m_nUnload2Case = 360;
+					m_nUnload2Case = 351;
 					m_pCommon->Set_LoopTime(AUTO_UNLOAD2, 30000);
 				}
 				if(m_nUnload1Case==250) m_nUnload1Case=260;
@@ -2574,7 +2427,7 @@ BOOL CSequenceMain::Unload2_Run()
 		{
 			m_sLog.Format("m_nUnload2Case,%d, %d",m_nUnload2Case,m_pDX6->iUS_Unload1FCheck); pLogFile->Save_MCCLog(m_sLog);
 			nSenseCnt++;
-			if(nSenseCnt > 50)
+			if(nSenseCnt > 100)
 			{
 				nSenseCnt = 0;
 				m_nUnload2Case = 360;
@@ -2588,7 +2441,7 @@ BOOL CSequenceMain::Unload2_Run()
 			if (m_pEquipData->bUseInlineMode) {
 				if (gData.bCapTrayLoad ) break;
 				if(m_pDX6->iUS_Unload1FCheck ) break;
-				if (!m_pCommon->Delay_LoopTime(AUTO_UNLOAD2, 500)) break;
+				if (!m_pCommon->Delay_LoopTime(AUTO_UNLOAD2, 1000)) break;
 				m_pDY6->oUS_UnloadSupport12In = FALSE;
 				m_pDY6->oUS_UnloadSupport12Out = TRUE;
 				m_pAJinAXL->Write_Output(6);
@@ -2636,22 +2489,15 @@ BOOL CSequenceMain::Unload2_Run()
 		}
 		break;
 	case 400:
-		if (!m_pDX6->iUS_UnloadSupport1In && m_pDX6->iUS_UnloadSupport1Out && !m_pDX6->iUS_UnloadSupport2In && m_pDX6->iUS_UnloadSupport2Out) 
-		{
-			if (m_pEquipData->bUseInlineMode)
-			{
-				if (!m_pCommon->Delay_LoopTime(AUTO_UNLOAD2, 300)) break;
-				if( m_pDX6->iUS_Unload1FCheck ) break;
-				if (!m_pCommon->Delay_LoopTime(AUTO_UNLOAD2, 300)) break;
-				m_pCommon->Move_Position(AX_UNLOAD_TRAY_Z2, 2);
-				m_nUnload2Case = 401;
-			}
-			else
-			{			
-				if (!m_pCommon->Delay_LoopTime(AUTO_UNLOAD2, 300)) break;
-				m_pCommon->Move_Position(AX_UNLOAD_TRAY_Z2, 2);
-				m_nUnload2Case = 410;
-			}
+		if (!m_pDX6->iUS_UnloadSupport1In && m_pDX6->iUS_UnloadSupport1Out && !m_pDX6->iUS_UnloadSupport2In && m_pDX6->iUS_UnloadSupport2Out) {
+			if (!m_pCommon->Delay_LoopTime(AUTO_UNLOAD2, 300)) break;
+			if( m_pDX6->iUS_Unload1FCheck ) break;
+			if (!m_pCommon->Delay_LoopTime(AUTO_UNLOAD2, 500)) break;
+			m_pCommon->Move_Position(AX_UNLOAD_TRAY_Z2, 2);
+			m_sLog.Format("m_nUnload2Case,%d",m_nUnload2Case); pLogFile->Save_MCCLog(m_sLog);
+
+			if (m_pEquipData->bUseInlineMode) m_nUnload2Case = 401;
+			else							  m_nUnload2Case = 410;
 			m_pCommon->Set_LoopTime(AUTO_UNLOAD2, 30000);
 		}
 		break;
@@ -2748,39 +2594,13 @@ BOOL CSequenceMain::Unload2_Run()
 // 					}
 // 				}
 			}
-			m_sLog.Format("m_nUnload2Case,%d",m_nUnload2Case); pLogFile->Save_MCCLog(m_sLog);
-			m_nUnload2Case = 431;
-			m_pCommon->Set_LoopTime(AUTO_UNLOAD2, 5000);
-		}
-		break;
-	case 431:
-		if(!m_pDX6->iUS_Z2AlignM34In && m_pDX6->iUS_Z2AlignM34Out
-			&& !m_pDX6->iUS_Z2AlignS12In && m_pDX6->iUS_Z2AlignS12Out)
-		{
-			m_pDY6->oUS_Z2AlignM34In = TRUE;
-			m_pDY6->oUS_Z2AlignM34Out = FALSE;
-
-			m_pDY6->oUS_Z2AlignS12In = TRUE;
-			m_pDY6->oUS_Z2AlignS12Out = FALSE;
-			m_pAJinAXL->Write_Output(6);
-			m_sLog.Format("m_nUnload2Case,%d",m_nUnload2Case); pLogFile->Save_MCCLog(m_sLog);
-			m_nUnload2Case = 432;
-			m_pCommon->Set_LoopTime(AUTO_UNLOAD2, 5000);
-		}
-		break;
-	case 432:
-		if( m_pDX6->iUS_Z2AlignM34In && !m_pDX6->iUS_Z2AlignM34Out
-			&& m_pDX6->iUS_Z2AlignS12In && !m_pDX6->iUS_Z2AlignS12Out)
-		{
-			m_sLog.Format("m_nUnload2Case,%d",m_nUnload2Case); pLogFile->Save_MCCLog(m_sLog);
 			m_nUnload2Case = 440;
 			m_pCommon->Set_LoopTime(AUTO_UNLOAD2, 5000);
 		}
-
 		break;
+
 	case 440:
-		if (m_pCommon->Check_Position(AX_UNLOAD_TRAY_Y1, 2) || m_nUnload1Case >= 300
-			) {
+		if (m_pCommon->Check_Position(AX_UNLOAD_TRAY_Y1, 2) || m_nUnload1Case >= 300) {
 			m_pCommon->Move_Position(AX_UNLOAD_TRAY_Y2, 0);
 			m_sLog.Format("m_nUnload2Case,%d",m_nUnload2Case); pLogFile->Save_MCCLog(m_sLog);
 			m_nUnload2Case = 450;
@@ -2797,13 +2617,6 @@ BOOL CSequenceMain::Unload2_Run()
 
 			if (m_nUnload1Case > 350 && dPosY1 <= dPos)
 			{
-
-				m_pDY6->oUS_Z2AlignM34In = FALSE;
-				m_pDY6->oUS_Z2AlignM34Out = TRUE;
-
-				m_pDY6->oUS_Z2AlignS12In = FALSE;
-				m_pDY6->oUS_Z2AlignS12Out = TRUE;
-				m_pAJinAXL->Write_Output(6);
 				m_pCommon->Move_Position(AX_UNLOAD_TRAY_Z2, 0);
 				m_sLog.Format("m_nUnload2Case,%d",m_nUnload2Case); pLogFile->Save_MCCLog(m_sLog);
 				m_nUnload2Case = 460;
@@ -2813,10 +2626,7 @@ BOOL CSequenceMain::Unload2_Run()
 		}
 		break;
 	case 460:
-		if (m_pCommon->Check_Position(AX_UNLOAD_TRAY_Z2, 0)
-			&& !m_pDX6->iUS_Z2AlignM34In && m_pDX6->iUS_Z2AlignM34Out
-			&& !m_pDX6->iUS_Z2AlignS12In && m_pDX6->iUS_Z2AlignS12Out)
-		{
+		if (m_pCommon->Check_Position(AX_UNLOAD_TRAY_Z2, 0)) {
 			m_sLog.Format("m_nUnload2Case,%d",m_nUnload2Case); pLogFile->Save_MCCLog(m_sLog);
 			m_nUnload2Case = 100;
 			m_pCommon->Set_LoopTime(AUTO_UNLOAD2, 5000);
@@ -3301,7 +3111,7 @@ BOOL CSequenceMain::NGPicker_Run()
 			m_sLog.Format("m_nNGPickerCase,%d",m_nNGPickerCase); pLogFile->Save_MCCLog(m_sLog);
 #ifdef NG_PICKER_3
 			m_nNGPickerCase = 141;	// NG Picker 3ea 전용 case로 보낸다.
-#else			
+#else
 			m_nNGPickerCase = 140;
 #endif
 			m_pCommon->Set_LoopTime(AUTO_NGPICKER, 10000);
@@ -3313,9 +3123,7 @@ BOOL CSequenceMain::NGPicker_Run()
 			if (gData.IndexInfo[2][1]>=2) { m_pDY3->oNGPicker2Up = FALSE; m_pDY3->oNGPicker2Down = TRUE; gData.NGJobPic[1]=1; }
 			if (gData.IndexInfo[2][2]>=2) { m_pDY3->oNGPicker3Up = FALSE; m_pDY3->oNGPicker3Down = TRUE; gData.NGJobPic[2]=1; }
 			if (gData.IndexInfo[2][3]>=2) { m_pDY3->oNGPicker4Up = FALSE; m_pDY3->oNGPicker4Down = TRUE; gData.NGJobPic[3]=1; }
-#ifdef NG_PICKER_5
 			if (gData.IndexInfo[2][4]>=2) { m_pDY3->oNGPicker5Up = FALSE; m_pDY3->oNGPicker5Down = TRUE; gData.NGJobPic[4]=1; }
-#endif
 			m_pAJinAXL->Write_Output(3);
 			m_sLog.Format("m_nNGPickerCase,%d",m_nNGPickerCase); pLogFile->Save_MCCLog(m_sLog);
 			m_nNGPickerCase = 150;
@@ -3335,16 +3143,11 @@ BOOL CSequenceMain::NGPicker_Run()
 		break;
 
 	case 150:
-		if((gData.NGJobPic[0]==0 || (gData.NGJobPic[0]==1 && !m_pDX3->iNGPicker1Up && m_pDX3->iNGPicker1Down)) 
-			&& (gData.NGJobPic[1]==0 || (gData.NGJobPic[1]==1 && !m_pDX3->iNGPicker2Up && m_pDX3->iNGPicker2Down))
-			&& (gData.NGJobPic[2]==0 || (gData.NGJobPic[2]==1 && !m_pDX3->iNGPicker3Up && m_pDX3->iNGPicker3Down)) 
-			&& (gData.NGJobPic[3]==0 || (gData.NGJobPic[3]==1 && !m_pDX3->iNGPicker4Up && m_pDX3->iNGPicker4Down))
-#ifdef NG_PICKER_5
-			&& (gData.NGJobPic[4]==0 || (gData.NGJobPic[4]==1 && !m_pDX3->iNGPicker5Up && m_pDX3->iNGPicker5Down)) 
-#endif
-			
-		) 
-		{
+		if((gData.NGJobPic[0]==0 || (gData.NGJobPic[0]==1 && !m_pDX3->iNGPicker1Up && m_pDX3->iNGPicker1Down)) &&
+		   (gData.NGJobPic[1]==0 || (gData.NGJobPic[1]==1 && !m_pDX3->iNGPicker2Up && m_pDX3->iNGPicker2Down)) &&
+		   (gData.NGJobPic[2]==0 || (gData.NGJobPic[2]==1 && !m_pDX3->iNGPicker3Up && m_pDX3->iNGPicker3Down)) &&
+		   (gData.NGJobPic[3]==0 || (gData.NGJobPic[3]==1 && !m_pDX3->iNGPicker4Up && m_pDX3->iNGPicker4Down)) &&
+		   (gData.NGJobPic[4]==0 || (gData.NGJobPic[4]==1 && !m_pDX3->iNGPicker5Up && m_pDX3->iNGPicker5Down)) ) {
 			m_pDY2->oInspCMAlign2In = FALSE;
 			m_pDY2->oInspCMAlign2Out = TRUE;
 			m_pAJinAXL->Write_Output(2);
@@ -3380,7 +3183,7 @@ BOOL CSequenceMain::NGPicker_Run()
 
 #ifdef NG_PICKER_3
 			m_nNGPickerCase = 165;
-#else			
+#else
 			m_nNGPickerCase = 161;
 #endif
 			m_pCommon->Set_LoopTime(AUTO_NGPICKER, 5000);
@@ -3393,10 +3196,7 @@ BOOL CSequenceMain::NGPicker_Run()
 			if (gData.NGJobPic[1]==1) { m_pDY3->oNGPicker2Open = FALSE; m_pDY3->oNGPicker2Close = TRUE; }
 			if (gData.NGJobPic[2]==1) { m_pDY3->oNGPicker3Open = FALSE; m_pDY3->oNGPicker3Close = TRUE; }
 			if (gData.NGJobPic[3]==1) { m_pDY3->oNGPicker4Open = FALSE; m_pDY3->oNGPicker4Close = TRUE; }
-#ifdef NG_PICKER_5
 			if (gData.NGJobPic[4]==1) { m_pDY3->oNGPicker5Open = FALSE; m_pDY3->oNGPicker5Close = TRUE; }
-#endif
-			
 			m_pAJinAXL->Write_Output(3);
 			m_sLog.Format("m_nNGPickerCase,%d",m_nNGPickerCase); pLogFile->Save_MCCLog(m_sLog);
 			m_nNGPickerCase = 162;
@@ -3405,24 +3205,17 @@ BOOL CSequenceMain::NGPicker_Run()
 		break;
 
 	case 162:
-		if( (gData.NGJobPic[0]==0 || (gData.NGJobPic[0]==1 && !m_pDX3->iNGPicker1Open)) 
-			&& (gData.NGJobPic[1]==0 || (gData.NGJobPic[1]==1 && !m_pDX3->iNGPicker2Open)) 
-			&& (gData.NGJobPic[2]==0 || (gData.NGJobPic[2]==1 && !m_pDX3->iNGPicker3Open)) 
-			&& (gData.NGJobPic[3]==0 || (gData.NGJobPic[3]==1 && !m_pDX3->iNGPicker4Open)) 
-#ifdef NG_PICKER_5
-			&& (gData.NGJobPic[4]==0 || (gData.NGJobPic[4]==1 && !m_pDX3->iNGPicker5Open)) 
-#endif
-			
-			) 
-		{
+		if( (gData.NGJobPic[0]==0 || (gData.NGJobPic[0]==1 && !m_pDX3->iNGPicker1Open)) &&
+			(gData.NGJobPic[1]==0 || (gData.NGJobPic[1]==1 && !m_pDX3->iNGPicker2Open)) &&
+			(gData.NGJobPic[2]==0 || (gData.NGJobPic[2]==1 && !m_pDX3->iNGPicker3Open)) &&
+			(gData.NGJobPic[3]==0 || (gData.NGJobPic[3]==1 && !m_pDX3->iNGPicker4Open)) &&
+			(gData.NGJobPic[4]==0 || (gData.NGJobPic[4]==1 && !m_pDX3->iNGPicker5Open)) ) {
 			if (!m_pCommon->Delay_LoopTime(AUTO_NGPICKER, 200)) break;
 			if (gData.NGJobPic[0]==1) { m_pDY3->oNGPicker1Up = TRUE; m_pDY3->oNGPicker1Down = FALSE; }
 			if (gData.NGJobPic[1]==1) { m_pDY3->oNGPicker2Up = TRUE; m_pDY3->oNGPicker2Down = FALSE; }
 			if (gData.NGJobPic[2]==1) { m_pDY3->oNGPicker3Up = TRUE; m_pDY3->oNGPicker3Down = FALSE; }
 			if (gData.NGJobPic[3]==1) { m_pDY3->oNGPicker4Up = TRUE; m_pDY3->oNGPicker4Down = FALSE; }
-#ifdef NG_PICKER_5
 			if (gData.NGJobPic[4]==1) { m_pDY3->oNGPicker5Up = TRUE; m_pDY3->oNGPicker5Down = FALSE; }
-#endif
 			m_pAJinAXL->Write_Output(3);
 
 			if (gData.bUseNGVacuum) {
@@ -3473,13 +3266,8 @@ BOOL CSequenceMain::NGPicker_Run()
 		if((gData.NGJobPic[0]==0 || (gData.NGJobPic[0]==1 && m_pDX3->iNGPicker1Up && !m_pDX3->iNGPicker1Down)) &&
 		   (gData.NGJobPic[1]==0 || (gData.NGJobPic[1]==1 && m_pDX3->iNGPicker2Up && !m_pDX3->iNGPicker2Down)) &&
 		   (gData.NGJobPic[2]==0 || (gData.NGJobPic[2]==1 && m_pDX3->iNGPicker3Up && !m_pDX3->iNGPicker3Down)) &&
-		   (gData.NGJobPic[3]==0 || (gData.NGJobPic[3]==1 && m_pDX3->iNGPicker4Up && !m_pDX3->iNGPicker4Down)) 
-#ifdef NG_PICKER_5
-		   && (gData.NGJobPic[4]==0 || (gData.NGJobPic[4]==1 && m_pDX3->iNGPicker5Up && !m_pDX3->iNGPicker5Down)) 
-#endif		   
-		   ) 
-		{
-			m_sLog.Format("m_nNGPickerCase,%d",m_nNGPickerCase); pLogFile->Save_MCCLog(m_sLog);
+		   (gData.NGJobPic[3]==0 || (gData.NGJobPic[3]==1 && m_pDX3->iNGPicker4Up && !m_pDX3->iNGPicker4Down)) &&
+		   (gData.NGJobPic[4]==0 || (gData.NGJobPic[4]==1 && m_pDX3->iNGPicker5Up && !m_pDX3->iNGPicker5Down)) ) {
 			m_nNGPickerCase = 180;
 			m_pCommon->Set_LoopTime(AUTO_NGPICKER, 5000);
 		}
@@ -3501,34 +3289,21 @@ BOOL CSequenceMain::NGPicker_Run()
 		   ((gData.NGJobPic[0]==0 || (gData.NGJobPic[0]==1 && m_pDX3->iNGPicker1CMCheck)) &&
 		    (gData.NGJobPic[1]==0 || (gData.NGJobPic[1]==1 && m_pDX3->iNGPicker2CMCheck)) &&
 		    (gData.NGJobPic[2]==0 || (gData.NGJobPic[2]==1 && m_pDX3->iNGPicker3CMCheck)) &&
-		    (gData.NGJobPic[3]==0 || (gData.NGJobPic[3]==1 && m_pDX3->iNGPicker4CMCheck)) 
-#ifdef NG_PICKER_5
-			&& (gData.NGJobPic[4]==0 || (gData.NGJobPic[4]==1 && m_pDX3->iNGPicker5CMCheck))
-#endif			
-			) 
-		)
-		{
+		    (gData.NGJobPic[3]==0 || (gData.NGJobPic[3]==1 && m_pDX3->iNGPicker4CMCheck)) &&
+		    (gData.NGJobPic[4]==0 || (gData.NGJobPic[4]==1 && m_pDX3->iNGPicker5CMCheck))) ) {
 			m_pDY2->oInspCMAlign2In = TRUE;
 			m_pDY2->oInspCMAlign2Out = FALSE;
 			m_pAJinAXL->Write_Output(2);
 
 			gData.PickerNGTrayNo = gData.IDXTrayNo[2][0];
 			int cm = (gData.IDXLineNo[2] - 1) * gData.nPickCnt;
-			
-#ifdef NG_PICKER_5
-			for(int i=0; i<5; i++)
-#endif
-
-#ifdef NG_PICKER_4
-			for(int i=0; i<4; i++)
-#endif			
-			{
+			for(int i=0; i<5; i++) {
 				if (gData.NGJobPic[i]==1) {
 					gData.PickerInfor[1][i] = gData.IndexInfo[2][i]; gData.IndexInfo[2][i] = 0;
 					gData.PickerNGPoNo[i]   = gData.IDXPoNo[2][i];   gData.IDXPoNo[2][i] = 0;
-					/*if (gData.PickerInfor[1][i] > 0) {
+					if (gData.PickerInfor[1][i] > 0) {
 						gLot.nCmJigNo[gData.PickerNGTrayNo-1][cm+i][4] = i+1;
-					}*/
+					}
 				} else {
 					gData.PickerInfor[1][i] = 0;
 					gData.PickerNGPoNo[i] = 0;
@@ -3555,9 +3330,9 @@ BOOL CSequenceMain::NGPicker_Run()
 				if (gData.NGJobPic[i]==1) {
 					gData.PickerInfor[1][i] = gData.IndexInfo[2][i]; gData.IndexInfo[2][i] = 0;
 					gData.PickerNGPoNo[i]   = gData.IDXPoNo[2][i];   gData.IDXPoNo[2][i] = 0;
-					/*if (gData.PickerInfor[1][i] > 0) {
+					if (gData.PickerInfor[1][i] > 0) {
 						gLot.nCmJigNo[gData.PickerNGTrayNo-1][cm+i][4] = i+1;
-					}*/
+					}
 				} else {
 					gData.PickerInfor[1][i] = 0;
 					gData.PickerNGPoNo[i] = 0;
@@ -3764,12 +3539,9 @@ BOOL CSequenceMain::NGPicker_Run()
 		{
 			m_sLog.Format("m_nNGPickerCase,%d",m_nNGPickerCase); pLogFile->Save_MCCLog(m_sLog);
 			
-
-
 #ifdef NG_PICKER_3
 			m_nNGPickerCase = 241;
 #else
-
 			m_nNGPickerCase = 240;
 #endif
 
@@ -3782,18 +3554,13 @@ BOOL CSequenceMain::NGPicker_Run()
 		   (gData.NGPicNo==1 && m_pDX3->iNGPicker1CMCheck) ||
 		   (gData.NGPicNo==2 && m_pDX3->iNGPicker2CMCheck) ||
 		   (gData.NGPicNo==3 && m_pDX3->iNGPicker3CMCheck) ||
-		   (gData.NGPicNo==4 && m_pDX3->iNGPicker4CMCheck) 
-#ifdef NG_PICKER_5
-		    || (gData.NGPicNo==5 && m_pDX3->iNGPicker5CMCheck) 
-#endif		  
-		   ) {
+		   (gData.NGPicNo==4 && m_pDX3->iNGPicker4CMCheck) ||
+		   (gData.NGPicNo==5 && m_pDX3->iNGPicker5CMCheck) ) {
 			if (gData.NGPicNo==1) { m_pDY3->oNGPicker1Up = FALSE; m_pDY3->oNGPicker1Down = TRUE; }
 			if (gData.NGPicNo==2) { m_pDY3->oNGPicker2Up = FALSE; m_pDY3->oNGPicker2Down = TRUE; }
 			if (gData.NGPicNo==3) { m_pDY3->oNGPicker3Up = FALSE; m_pDY3->oNGPicker3Down = TRUE; }
 			if (gData.NGPicNo==4) { m_pDY3->oNGPicker4Up = FALSE; m_pDY3->oNGPicker4Down = TRUE; }
-#ifdef NG_PICKER_5
 			if (gData.NGPicNo==5) { m_pDY3->oNGPicker5Up = FALSE; m_pDY3->oNGPicker5Down = TRUE; }
-#endif
 			m_pAJinAXL->Write_Output(3);
 			m_sLog.Format("m_nNGPickerCase,%d",m_nNGPickerCase); pLogFile->Save_MCCLog(m_sLog);
 			m_nNGPickerCase = 250;
@@ -3820,21 +3587,14 @@ BOOL CSequenceMain::NGPicker_Run()
 		if((gData.NGPicNo==1 && !m_pDX3->iNGPicker1Up && m_pDX3->iNGPicker1Down) ||
 		   (gData.NGPicNo==2 && !m_pDX3->iNGPicker2Up && m_pDX3->iNGPicker2Down) ||
 		   (gData.NGPicNo==3 && !m_pDX3->iNGPicker3Up && m_pDX3->iNGPicker3Down) ||
-		   (gData.NGPicNo==4 && !m_pDX3->iNGPicker4Up && m_pDX3->iNGPicker4Down) 
-#ifdef NG_PICKER_5 
-		   || (gData.NGPicNo==5 && !m_pDX3->iNGPicker5Up && m_pDX3->iNGPicker5Down)
-#endif
-		   
-		   ) 
-		{
+		   (gData.NGPicNo==4 && !m_pDX3->iNGPicker4Up && m_pDX3->iNGPicker4Down) ||
+		   (gData.NGPicNo==5 && !m_pDX3->iNGPicker5Up && m_pDX3->iNGPicker5Down) ) {
 			if (!m_pCommon->Delay_LoopTime(AUTO_NGPICKER, 100)) break;
 			if (gData.NGPicNo==1) { m_pDY3->oNGPicker1Open = TRUE; m_pDY3->oNGPicker1Close = FALSE; }
 			if (gData.NGPicNo==2) { m_pDY3->oNGPicker2Open = TRUE; m_pDY3->oNGPicker2Close = FALSE; }
 			if (gData.NGPicNo==3) { m_pDY3->oNGPicker3Open = TRUE; m_pDY3->oNGPicker3Close = FALSE; }
 			if (gData.NGPicNo==4) { m_pDY3->oNGPicker4Open = TRUE; m_pDY3->oNGPicker4Close = FALSE; }
-#ifdef NG_PICKER_5 
 			if (gData.NGPicNo==5) { m_pDY3->oNGPicker5Open = TRUE; m_pDY3->oNGPicker5Close = FALSE; }
-#endif
 			m_pAJinAXL->Write_Output(3);
 			m_sLog.Format("m_nNGPickerCase,%d",m_nNGPickerCase); pLogFile->Save_MCCLog(m_sLog);
 			m_nNGPickerCase = 260;
@@ -3860,20 +3620,14 @@ BOOL CSequenceMain::NGPicker_Run()
 		if((gData.NGPicNo==1 && m_pDX3->iNGPicker1Open) ||
 		   (gData.NGPicNo==2 && m_pDX3->iNGPicker2Open) ||
 		   (gData.NGPicNo==3 && m_pDX3->iNGPicker3Open) ||
-		   (gData.NGPicNo==4 && m_pDX3->iNGPicker4Open) 
-#ifdef NG_PICKER_5
-		   || (gData.NGPicNo==5 && m_pDX3->iNGPicker5Open) 
-#endif
-		   
-		   ) {
+		   (gData.NGPicNo==4 && m_pDX3->iNGPicker4Open) ||
+		   (gData.NGPicNo==5 && m_pDX3->iNGPicker5Open) ) {
 			if (!m_pCommon->Delay_LoopTime(AUTO_NGPICKER, 100)) break;
 			if (gData.NGPicNo==1) { m_pDY3->oNGPicker1Up = TRUE; m_pDY3->oNGPicker1Down = FALSE; }
 			if (gData.NGPicNo==2) { m_pDY3->oNGPicker2Up = TRUE; m_pDY3->oNGPicker2Down = FALSE; }
 			if (gData.NGPicNo==3) { m_pDY3->oNGPicker3Up = TRUE; m_pDY3->oNGPicker3Down = FALSE; }
 			if (gData.NGPicNo==4) { m_pDY3->oNGPicker4Up = TRUE; m_pDY3->oNGPicker4Down = FALSE; }
-#ifdef NG_PICKER_5
 			if (gData.NGPicNo==5) { m_pDY3->oNGPicker5Up = TRUE; m_pDY3->oNGPicker5Down = FALSE; }
-#endif
 			m_pAJinAXL->Write_Output(3);
 			m_sLog.Format("m_nNGPickerCase,%d",m_nNGPickerCase); pLogFile->Save_MCCLog(m_sLog);
 			m_nNGPickerCase = 270;
@@ -3899,11 +3653,8 @@ BOOL CSequenceMain::NGPicker_Run()
 		if((gData.NGPicNo==1 && m_pDX3->iNGPicker1Up && !m_pDX3->iNGPicker1Down) ||
 		   (gData.NGPicNo==2 && m_pDX3->iNGPicker2Up && !m_pDX3->iNGPicker2Down) ||
 		   (gData.NGPicNo==3 && m_pDX3->iNGPicker3Up && !m_pDX3->iNGPicker3Down) ||
-		   (gData.NGPicNo==4 && m_pDX3->iNGPicker4Up && !m_pDX3->iNGPicker4Down) 
-#ifdef NG_PICKER_5
-		   || (gData.NGPicNo==5 && m_pDX3->iNGPicker5Up && !m_pDX3->iNGPicker5Down) 
-#endif
-		   ) {
+		   (gData.NGPicNo==4 && m_pDX3->iNGPicker4Up && !m_pDX3->iNGPicker4Down) ||
+		   (gData.NGPicNo==5 && m_pDX3->iNGPicker5Up && !m_pDX3->iNGPicker5Down) ) {
 
 			int nTNo = (gData.PickerNGTrayNo > 0 ? (gData.PickerNGTrayNo - 1) : 0);
 			int nPno = (gData.PickerNGPoNo[gData.NGPicNo-1] > 0 ? (gData.PickerNGPoNo[gData.NGPicNo-1] - 1) : 0);
@@ -3929,14 +3680,10 @@ BOOL CSequenceMain::NGPicker_Run()
 				CWorkDlg *pWorkDlg = CWorkDlg::Get_Instance();
 				pWorkDlg->SendMessage(UM_UPDATE_SHIFT_LIST, (WPARAM)OP_INSERT, (LPARAM)NULL);
 			}
-			// NG Picker Jig 정보 저장 
-			if (gData.PickerInfor[1][gData.NGPicNo-1] >= 2) {
-				gLot.nCmJigNo[gData.PickerNGTrayNo-1][gData.nNGTrayCmNo-1][4] = gData.NGPicNo;
-			}	
 
 			gData.PickerInfor[1][gData.NGPicNo-1] = 0;
 //			g_objMES.Set_Result(gLot.sLotID, gLot.sBarLoad[nTNo][nPno], "NG", gLot.sNGCode[nTNo][nPno], gLot.sNGText[nTNo][nPno], nTNo+1, nPno+1, 0,0, gData.nNGTrayPos, nNGPos);
-			
+			CLogFile *pLogFile = CLogFile::Get_Instance();
 			pLogFile->Save_CmTrackingLog("NG", gData.nNGTrayPos, gData.NGIdxNo, nYY, gData.PickerNGTrayNo, gData.PickerNGPoNo[gData.NGPicNo-1]);
 			m_sLog.Format("m_nNGPickerCase,%d",m_nNGPickerCase); pLogFile->Save_MCCLog(m_sLog);
 			m_nNGPickerCase = 280;
@@ -3972,14 +3719,10 @@ BOOL CSequenceMain::NGPicker_Run()
 				CWorkDlg *pWorkDlg = CWorkDlg::Get_Instance();
 				pWorkDlg->SendMessage(UM_UPDATE_SHIFT_LIST, (WPARAM)OP_INSERT, (LPARAM)NULL);
 			}
-			// NG Picker Jig 정보 저장 
-			if (gData.PickerInfor[1][gData.NGPicNo-1] >= 2) {
-				gLot.nCmJigNo[gData.PickerNGTrayNo-1][gData.nNGTrayCmNo-1][4] = gData.NGPicNo;
-			}	
 
 			gData.PickerInfor[1][gData.NGPicNo-1] = 0;
 //			g_objMES.Set_Result(gLot.sLotID, gLot.sBarLoad[nTNo][nPno], "NG", gLot.sNGCode[nTNo][nPno], gLot.sNGText[nTNo][nPno], nTNo+1, nPno+1, 0,0, gData.nNGTrayPos, nNGPos);
-			
+			CLogFile *pLogFile = CLogFile::Get_Instance();
 			pLogFile->Save_CmTrackingLog("NG", gData.nNGTrayPos, gData.NGIdxNo, nYY, gData.PickerNGTrayNo, gData.PickerNGPoNo[gData.NGPicNo-1]);
 			m_sLog.Format("m_nNGPickerCase,%d",m_nNGPickerCase); pLogFile->Save_MCCLog(m_sLog);
 			m_nNGPickerCase = 280;
@@ -3997,15 +3740,7 @@ BOOL CSequenceMain::NGPicker_Run()
 		break;
 
 	case 290:
-		if (gData.PickerInfor[1][0] > 0 
-			|| gData.PickerInfor[1][1] > 0 
-			|| gData.PickerInfor[1][2] > 0 
-			|| gData.PickerInfor[1][3] > 0 
-#ifdef PICKER_5
-			|| gData.PickerInfor[1][4] > 0
-#endif
-			
-			) {
+		if (gData.PickerInfor[1][0] > 0 || gData.PickerInfor[1][1] > 0 || gData.PickerInfor[1][2] > 0 || gData.PickerInfor[1][3] > 0 || gData.PickerInfor[1][4] > 0) {
 			if (gData.bUseSeparationMode) m_nNGPickerCase = 221;
 			else						  m_nNGPickerCase = 220;
 			m_pCommon->Set_LoopTime(AUTO_NGPICKER, 90000);
@@ -4032,12 +3767,7 @@ BOOL CSequenceMain::NGPicker_Run()
 #ifdef NG_PICKER_3
 		if((gData.bUseDryRun) ||
 			(m_pCommon->Check_Position(AX_NG_PICKER_Z, 0) && !m_pDX3->iNGPicker1CMCheck && !m_pDX3->iNGPicker2CMCheck && !m_pDX3->iNGPicker3CMCheck) )
-#endif
-#ifdef NG_PICKER_4
-		if((gData.bUseDryRun) ||
-		   (m_pCommon->Check_Position(AX_NG_PICKER_Z, 0) && !m_pDX3->iNGPicker1CMCheck && !m_pDX3->iNGPicker2CMCheck && !m_pDX3->iNGPicker3CMCheck && !m_pDX3->iNGPicker4CMCheck ) )
-#endif
-#ifdef NG_PICKER_5
+#else
 		if((gData.bUseDryRun) ||
 		   (m_pCommon->Check_Position(AX_NG_PICKER_Z, 0) && !m_pDX3->iNGPicker1CMCheck && !m_pDX3->iNGPicker2CMCheck && !m_pDX3->iNGPicker3CMCheck && !m_pDX3->iNGPicker4CMCheck && !m_pDX3->iNGPicker5CMCheck) )
 #endif
@@ -4057,41 +3787,28 @@ BOOL CSequenceMain::NGPicker_Run()
 			if(gData.NGJobPic[1]==1 && (m_pDX3->iNGPicker2Up || !m_pDX3->iNGPicker2Down)) gData.NGPicNo = gData.NGIdxNo=2;
 			if(gData.NGJobPic[2]==1 && (m_pDX3->iNGPicker3Up || !m_pDX3->iNGPicker3Down)) gData.NGPicNo = gData.NGIdxNo=3;
 			if(gData.NGJobPic[3]==1 && (m_pDX3->iNGPicker4Up || !m_pDX3->iNGPicker4Down)) gData.NGPicNo = gData.NGIdxNo=4;
-#ifdef NG_PICKER_5
 			if(gData.NGJobPic[4]==1 && (m_pDX3->iNGPicker5Up || !m_pDX3->iNGPicker5Down)) gData.NGPicNo = gData.NGIdxNo=5;
-#endif
-			
 		}
 		if (m_nNGPickerCase == 162) {
 			if(gData.NGJobPic[0]==1 && m_pDX3->iNGPicker1Open) gData.NGPicNo = gData.NGIdxNo=1;
 			if(gData.NGJobPic[1]==1 && m_pDX3->iNGPicker2Open) gData.NGPicNo = gData.NGIdxNo=2;
 			if(gData.NGJobPic[2]==1 && m_pDX3->iNGPicker3Open) gData.NGPicNo = gData.NGIdxNo=3;
 			if(gData.NGJobPic[3]==1 && m_pDX3->iNGPicker4Open) gData.NGPicNo = gData.NGIdxNo=4;
-#ifdef NG_PICKER_5
 			if(gData.NGJobPic[4]==1 && m_pDX3->iNGPicker5Open) gData.NGPicNo = gData.NGIdxNo=5;
-#endif
-			
 		}
 		if (m_nNGPickerCase == 170) {
 			if(gData.NGJobPic[0]==1 && (!m_pDX3->iNGPicker1Up || m_pDX3->iNGPicker1Down)) gData.NGPicNo = gData.NGIdxNo=1;
 			if(gData.NGJobPic[1]==1 && (!m_pDX3->iNGPicker2Up || m_pDX3->iNGPicker2Down)) gData.NGPicNo = gData.NGIdxNo=2;
 			if(gData.NGJobPic[2]==1 && (!m_pDX3->iNGPicker3Up || m_pDX3->iNGPicker3Down)) gData.NGPicNo = gData.NGIdxNo=3;
 			if(gData.NGJobPic[3]==1 && (!m_pDX3->iNGPicker4Up || m_pDX3->iNGPicker4Down)) gData.NGPicNo = gData.NGIdxNo=4;
-#ifdef NG_PICKER_5
 			if(gData.NGJobPic[4]==1 && (!m_pDX3->iNGPicker5Up || m_pDX3->iNGPicker5Down)) gData.NGPicNo = gData.NGIdxNo=5;
-#endif
-
-			
 		}
 		if (m_nNGPickerCase == 180) {
 			if(gData.NGJobPic[0]==1 && !m_pDX3->iNGPicker1CMCheck) gData.NGPicNo = gData.NGIdxNo=1;
 			if(gData.NGJobPic[1]==1 && !m_pDX3->iNGPicker2CMCheck) gData.NGPicNo = gData.NGIdxNo=2;
 			if(gData.NGJobPic[2]==1 && !m_pDX3->iNGPicker3CMCheck) gData.NGPicNo = gData.NGIdxNo=3;
 			if(gData.NGJobPic[3]==1 && !m_pDX3->iNGPicker4CMCheck) gData.NGPicNo = gData.NGIdxNo=4;
-#ifdef NG_PICKER_5
 			if(gData.NGJobPic[4]==1 && !m_pDX3->iNGPicker5CMCheck) gData.NGPicNo = gData.NGIdxNo=5;
-#endif
-			
 		}
 
 		if (m_nNGPickerCase == 151) {
@@ -4121,9 +3838,7 @@ BOOL CSequenceMain::NGPicker_Run()
 			if(m_pDX3->iNGPicker3CMCheck) gData.nPicNo = 3;
 #ifndef NG_PICKER_3
 			if(m_pDX3->iNGPicker4CMCheck) gData.nPicNo = 4;
-	#ifndef NG_PICKER_4
 			if(m_pDX3->iNGPicker5CMCheck) gData.nPicNo = 5;
-	#endif
 #endif
 		}
 
@@ -4204,8 +3919,7 @@ BOOL CSequenceMain::GDPicker_Run()
 	case 130:
 		if (Check_GdPickerAllUp()==TRUE) {
 			gData.GDPicNo = gData.GDIdxNo = 0;
-			if (Check_GoodAllPick()==TRUE)//Good Picker가 인덱스에 있는 모듈, 모두를 집어야 하는지 체크한다.  
-			{
+			if (Check_GoodAllPick()==TRUE) {
 				m_pCommon->PickerGood_Move(1, 1, 1);
 				m_dGDPickerY = m_pCommon->m_dP4Y;
 				m_dGDPickerZ = m_pCommon->m_dP4Z;
@@ -4214,9 +3928,7 @@ BOOL CSequenceMain::GDPicker_Run()
 				m_sLog.Format("m_nGDPickerCase,%d",m_nGDPickerCase); pLogFile->Save_MCCLog(m_sLog);
 				m_nGDPickerCase = 300;
 				m_pCommon->Set_LoopTime(AUTO_GDPICKER, 10000);
-			} 
-			else if (Check_GoodPickJobUp()==TRUE) // Picker가 집을 모듈이 있는 경우 , Z축 up 케이스
-			{
+			} else if (Check_GoodPickJobUp()==TRUE) {
 				m_pDY2->oInspCMAlign3In = TRUE;
 				m_pDY2->oInspCMAlign3Out = FALSE;
 				m_pAJinAXL->Write_Output(2);
@@ -4232,9 +3944,7 @@ BOOL CSequenceMain::GDPicker_Run()
 				m_sLog.Format("m_nGDPickerCase,%d",m_nGDPickerCase); pLogFile->Save_MCCLog(m_sLog);
 				m_nGDPickerCase = 140;
 				m_pCommon->Set_LoopTime(AUTO_GDPICKER, 10000);
-			} 
-			else //Picker가 집고 있었던 모듈을 NG가 생겨서 Good Index의 빈자리에 놓아야 할 경우 
-			{
+			} else {
 				Check_GoodPickDownSelect();
 				m_pCommon->PickerGood_Move(2, gData.GDPicNo, gData.GDIdxNo);
 				m_dGDPickerY = m_pCommon->m_dP4Y;
@@ -4749,10 +4459,6 @@ BOOL CSequenceMain::LDPicker_Run()
 			m_pDY2->oMLPicker2Close = TRUE;
 			m_pDY2->oMLPicker3Open = FALSE;
 			m_pDY2->oMLPicker3Close = TRUE;
-#ifdef PICKER_4
-			m_pDY2->oMLPicker4Open = FALSE;
-			m_pDY2->oMLPicker4Close = TRUE;
-#endif
 #ifdef PICKER_5
 			m_pDY2->oMLPicker4Open = FALSE;
 			m_pDY2->oMLPicker4Close = TRUE;
@@ -4777,10 +4483,6 @@ BOOL CSequenceMain::LDPicker_Run()
 #ifdef PICKER_3
 		if (!m_pDX2->iMLPicker1Open && !m_pDX2->iMLPicker2Open && !m_pDX2->iMLPicker3Open )
 #endif
-#ifdef PICKER_4
-			if (!m_pDX2->iMLPicker1Open && !m_pDX2->iMLPicker2Open && !m_pDX2->iMLPicker3Open && 
-				!m_pDX2->iMLPicker4Open )
-#endif
 #ifdef PICKER_5
 		if (!m_pDX2->iMLPicker1Open && !m_pDX2->iMLPicker2Open && !m_pDX2->iMLPicker3Open && 
 			!m_pDX2->iMLPicker4Open && !m_pDX2->iMLPicker5Open )
@@ -4798,7 +4500,6 @@ BOOL CSequenceMain::LDPicker_Run()
 		}
 		break;
 	case 150:
-
 		//x=gData.PickerLoadLineNo-1;
 		//x=Get_TrayLineConvert(gData.nTrayPos[0])-1;
 		x=gData.nTrayPos[0]-1;
@@ -4813,12 +4514,11 @@ BOOL CSequenceMain::LDPicker_Run()
 			 ((gData.LoadTrayInfo[x][5]>0 && m_pDX2->iMLPicker6CMCheck) || gData.LoadTrayInfo[x][5]==0)) )) {
 			if (!m_pCommon->Delay_LoopTime(AUTO_LDPICKER, 100)) break;
 
-			//Info Exchange
 			gData.PickerLoadTrayNo = gData.LoadTrayNo;
 			gData.PickerLoadLineNo = gData.nTrayPos[0];
 			//x=Get_TrayLineConvert(gData.PickerLoadLineNo)-1;
 
-			int cm = (gData.PickerLoadLineNo - 1) * gData.nPickCnt; //각 라인의 첫번째 cm 넘버 임시 저장 
+			int cm = (gData.PickerLoadLineNo - 1) * gData.nPickCnt;
 			for(int i=0; i<gData.nPickCnt; i++) {
 				gData.PickerInfor[0][i] = gData.LoadTrayInfo[x][i]; gData.LoadTrayInfo[x][i] = 0;
 				if (gData.PickerInfor[0][i] > 0) {
@@ -4827,7 +4527,7 @@ BOOL CSequenceMain::LDPicker_Run()
 				}
 			}
 
-			m_pCommon->Move_Position(AX_LOAD_PICKER_Y1, 2); // Move to Index Position 
+			m_pCommon->Move_Position(AX_LOAD_PICKER_Y1, 2);
 			m_pCommon->Move_Position(AX_LOAD_PICKER_Y2, 1);
 			if (m_nLoad1Case==300) m_nLoad1Case = 310;
 			if (m_nLoad2Case==300) m_nLoad2Case = 310;
@@ -4889,10 +4589,6 @@ BOOL CSequenceMain::LDPicker_Run()
 			m_pDY2->oMLPicker2Close = FALSE;
 			m_pDY2->oMLPicker3Open = TRUE;
 			m_pDY2->oMLPicker3Close = FALSE;
-#ifdef PICKER_4
-			m_pDY2->oMLPicker4Open = TRUE;
-			m_pDY2->oMLPicker4Close = FALSE;
-#endif
 #ifdef PICKER_5
 			m_pDY2->oMLPicker4Open = TRUE;
 			m_pDY2->oMLPicker4Close = FALSE;
@@ -4916,10 +4612,6 @@ BOOL CSequenceMain::LDPicker_Run()
 	case 220:
 #ifdef PICKER_3
 		if (m_pDX2->iMLPicker1Open && m_pDX2->iMLPicker2Open && m_pDX2->iMLPicker3Open )
-#endif
-#ifdef PICKER_4
-			if (m_pDX2->iMLPicker1Open && m_pDX2->iMLPicker2Open && m_pDX2->iMLPicker3Open && 
-				m_pDX2->iMLPicker4Open )
 #endif
 #ifdef PICKER_5
 		if (m_pDX2->iMLPicker1Open && m_pDX2->iMLPicker2Open && m_pDX2->iMLPicker3Open && 
@@ -4956,7 +4648,7 @@ BOOL CSequenceMain::LDPicker_Run()
 			gData.PickerLoadLineNo = 0;
 			//int cm = (Get_TrayLineConvert(gData.IDXLineNo[0]) -1) * 5;
 			int cm = (gData.IDXLineNo[0] - 1) * gData.nPickCnt;
-			for(int i=0; i<4; i++) {
+			for(int i=0; i<6; i++) {
 				gData.IDXTrayNo[0][i] = gData.PickerLoadTrayNo;
 				gData.IndexInfo[0][i] = gData.PickerInfor[0][i]; gData.PickerInfor[0][i] = 0;
 				gData.IDXPoNo[0][i] = cm+i+1;	//Pocket No Set
@@ -4993,9 +4685,6 @@ BOOL CSequenceMain::LDPicker_Run()
 			if (m_pDX2->iMLPicker1Open) gData.nPicNo = 1;
 			if (m_pDX2->iMLPicker2Open) gData.nPicNo = 2;
 			if (m_pDX2->iMLPicker3Open) gData.nPicNo = 3;
-#ifdef PICKER_4
-			if (m_pDX2->iMLPicker4Open) gData.nPicNo = 4;
-#endif
 #ifdef PICKER_5
 			if (m_pDX2->iMLPicker4Open) gData.nPicNo = 4;
 			if (m_pDX2->iMLPicker5Open) gData.nPicNo = 5;
@@ -5028,9 +4717,6 @@ BOOL CSequenceMain::LDPicker_Run()
 			if (!m_pDX2->iMLPicker1Open) gData.nPicNo = 1;
 			if (!m_pDX2->iMLPicker2Open) gData.nPicNo = 2;
 			if (!m_pDX2->iMLPicker3Open) gData.nPicNo = 3;
-#ifdef PICKER_4
-			if (!m_pDX2->iMLPicker4Open) gData.nPicNo = 4;
-#endif
 #ifdef PICKER_5
 			if (!m_pDX2->iMLPicker4Open) gData.nPicNo = 4;
 			if (!m_pDX2->iMLPicker5Open) gData.nPicNo = 5;
@@ -5100,11 +4786,6 @@ BOOL CSequenceMain::ULPicker_Run()
 			m_pDY5->oMUPicker2Close = TRUE;
 			m_pDY5->oMUPicker3Open = FALSE;
 			m_pDY5->oMUPicker3Close = TRUE;
-#ifdef PICKER_4
-			m_pDY5->oMUPicker4Open = FALSE;
-			m_pDY5->oMUPicker4Close = TRUE;
-			
-#endif
 #ifdef PICKER_5
 			m_pDY5->oMUPicker4Open = FALSE;
 			m_pDY5->oMUPicker4Close = TRUE;
@@ -5135,10 +4816,6 @@ BOOL CSequenceMain::ULPicker_Run()
 	case 142:
 #ifdef PICKER_3
 		if (!m_pDX5->iMUPicker1Open && !m_pDX5->iMUPicker2Open && !m_pDX5->iMUPicker3Open )
-#endif
-#ifdef PICKER_4
-			if (!m_pDX5->iMUPicker1Open && !m_pDX5->iMUPicker2Open && !m_pDX5->iMUPicker3Open && 
-				!m_pDX5->iMUPicker4Open )
 #endif
 #ifdef PICKER_5
 		if (!m_pDX5->iMUPicker1Open && !m_pDX5->iMUPicker2Open && !m_pDX5->iMUPicker3Open && 
@@ -5301,10 +4978,6 @@ BOOL CSequenceMain::ULPicker_Run()
 			m_pDY5->oMUPicker2Close = FALSE;
 			m_pDY5->oMUPicker3Open = TRUE;
 			m_pDY5->oMUPicker3Close = FALSE;
-#ifdef PICKER_4
-			m_pDY5->oMUPicker4Open = TRUE;
-			m_pDY5->oMUPicker4Close = FALSE;
-#endif
 #ifdef PICKER_5
 			m_pDY5->oMUPicker4Open = TRUE;
 			m_pDY5->oMUPicker4Close = FALSE;
@@ -5328,10 +5001,6 @@ BOOL CSequenceMain::ULPicker_Run()
 	case 220:
 #ifdef PICKER_3
 		if (m_pDX5->iMUPicker1Open && m_pDX5->iMUPicker2Open && m_pDX5->iMUPicker3Open )
-#endif
-#ifdef PICKER_4
-			if (m_pDX5->iMUPicker1Open && m_pDX5->iMUPicker2Open && m_pDX5->iMUPicker3Open && 
-				m_pDX5->iMUPicker4Open )
 #endif
 #ifdef PICKER_5
 		if (m_pDX5->iMUPicker1Open && m_pDX5->iMUPicker2Open && m_pDX5->iMUPicker3Open && 
@@ -5416,11 +5085,6 @@ BOOL CSequenceMain::ULPicker_Run()
 #ifdef PICKER_3
 		if ((gData.bUseDryRun) ||
 			(!m_pDX5->iMUPicker1CMCheck && !m_pDX5->iMUPicker2CMCheck && !m_pDX5->iMUPicker3CMCheck) )
-#endif
-#ifdef PICKER_4
-			if ((gData.bUseDryRun) ||
-				(!m_pDX5->iMUPicker1CMCheck && !m_pDX5->iMUPicker2CMCheck && !m_pDX5->iMUPicker3CMCheck &&
-				!m_pDX5->iMUPicker4CMCheck ))
 #endif
 #ifdef PICKER_5
 		if ((gData.bUseDryRun) ||
@@ -5618,9 +5282,6 @@ BOOL CSequenceMain::ULPicker_Run()
 			if (m_pDX5->iMUPicker1Open) gData.nPicNo = 1;
 			if (m_pDX5->iMUPicker2Open) gData.nPicNo = 2;
 			if (m_pDX5->iMUPicker3Open) gData.nPicNo = 3;
-#ifdef PICKER_4
-			if (m_pDX5->iMUPicker4Open) gData.nPicNo = 4;
-#endif
 #ifdef PICKER_5
 			if (m_pDX5->iMUPicker4Open) gData.nPicNo = 4;
 			if (m_pDX5->iMUPicker5Open) gData.nPicNo = 5;
@@ -5651,10 +5312,6 @@ BOOL CSequenceMain::ULPicker_Run()
 			if (!m_pDX5->iMUPicker1Open) gData.nPicNo = 1;
 			if (!m_pDX5->iMUPicker2Open) gData.nPicNo = 2;
 			if (!m_pDX5->iMUPicker3Open) gData.nPicNo = 3;
-#ifdef PICKER_4
-			if (!m_pDX5->iMUPicker4Open) gData.nPicNo = 4;
-			
-#endif
 #ifdef PICKER_5
 			if (!m_pDX5->iMUPicker4Open) gData.nPicNo = 4;
 			if (!m_pDX5->iMUPicker5Open) gData.nPicNo = 5;
@@ -5670,10 +5327,6 @@ BOOL CSequenceMain::ULPicker_Run()
 			if (m_pDX5->iMUPicker1CMCheck) gData.nPicNo = 1;
 			if (m_pDX5->iMUPicker2CMCheck) gData.nPicNo = 2;
 			if (m_pDX5->iMUPicker3CMCheck) gData.nPicNo = 3;
-#ifdef PICKER_4
-			if (m_pDX5->iMUPicker4CMCheck) gData.nPicNo = 4;
-			
-#endif
 #ifdef PICKER_5
 			if (m_pDX5->iMUPicker4CMCheck) gData.nPicNo = 4;
 			if (m_pDX5->iMUPicker5CMCheck) gData.nPicNo = 5;
@@ -5765,16 +5418,6 @@ BOOL CSequenceMain::IndexT_Run()
 		break;
 	case 131:
 		if (gData.IndexJob[0] == 1 || (gData.bCleanOutMode == TRUE) ) {
-
-			m_pDY3->oInspVacuumPad1On = FALSE;
-			m_pDY3->oInspVacuumPad2On = FALSE;
-			m_pDY3->oInspVacuumPad3On = FALSE;
-			m_pDY3->oInspVacuumPad4On = FALSE;
-			m_pDY3->oInspVacuumPad5On = FALSE;
-			m_pDY3->oInspVacuumPad6On = FALSE;
-			m_pAJinAXL->Write_Output(3);
-			if (!m_pCommon->Delay_LoopTime(AUTO_INDEXT, 200)) break;
-
 			m_pDY2->oInspCMAlign1In = TRUE;
 			m_pDY2->oInspCMAlign1Out = FALSE;
 			m_pAJinAXL->Write_Output(2);
@@ -5793,7 +5436,13 @@ BOOL CSequenceMain::IndexT_Run()
 				((gData.IndexInfo[0][3]>0 && m_pDX3->iInspVacuumPad4Check) || gData.IndexInfo[0][3]==0) &&
 				((gData.IndexInfo[0][4]>0 && m_pDX3->iInspVacuumPad5Check) || gData.IndexInfo[0][4]==0))) {
 
-				
+				m_pDY3->oInspVacuumPad1On = FALSE;
+				m_pDY3->oInspVacuumPad2On = FALSE;
+				m_pDY3->oInspVacuumPad3On = FALSE;
+				m_pDY3->oInspVacuumPad4On = FALSE;
+				m_pDY3->oInspVacuumPad5On = FALSE;
+				m_pDY3->oInspVacuumPad6On = FALSE;
+				m_pAJinAXL->Write_Output(3);
 				m_sLog.Format("m_nIndexTCase,%d",m_nIndexTCase); pLogFile->Save_MCCLog(m_sLog);
 				m_nIndexTCase = 150;
 				m_pCommon->Set_LoopTime(AUTO_INDEXT, 5000);
@@ -6089,11 +5738,6 @@ BOOL CSequenceMain::NGTray_Run()
 			if (gData.bUseSeparationMode) {
 				if (Check_NGTrayEmpty(1)) gData.nTrayPos[1] = 1;
 				if (Check_NGTrayEmpty(2)) gData.nTrayPos[2] = 1;
-
-				if (!Check_NGTrayEmpty(2) || !Check_NGTrayEmpty(1)) 
-				{
-					break;
-				}
 				m_sLog.Format("m_nNGTrayCase,%d",m_nNGTrayCase); pLogFile->Save_MCCLog(m_sLog);
 				m_nNGTrayCase = 140;
 			} else {
@@ -6316,17 +5960,7 @@ BOOL CSequenceMain::Check_NGPickerAllUp()
 		!m_pDX3->iNGPicker1Down && !m_pDX3->iNGPicker2Down && !m_pDX3->iNGPicker3Down ) {
 			return TRUE;
 	}
-#endif
-
-#ifdef NG_PICKER_4
-	if ( m_pDX3->iNGPicker1Up   &&  m_pDX3->iNGPicker2Up   &&  m_pDX3->iNGPicker3Up   &&  m_pDX3->iNGPicker4Up    && 
-		!m_pDX3->iNGPicker1Down && !m_pDX3->iNGPicker2Down && !m_pDX3->iNGPicker3Down && !m_pDX3->iNGPicker4Down  ) {
-		return TRUE;
-	}
-#endif
-
-
-#ifdef NG_PICKER_5
+#else
 	if ( m_pDX3->iNGPicker1Up   &&  m_pDX3->iNGPicker2Up   &&  m_pDX3->iNGPicker3Up   &&  m_pDX3->iNGPicker4Up   &&  m_pDX3->iNGPicker5Up && 
 		!m_pDX3->iNGPicker1Down && !m_pDX3->iNGPicker2Down && !m_pDX3->iNGPicker3Down && !m_pDX3->iNGPicker4Down && !m_pDX3->iNGPicker5Down ) {
 		return TRUE;
@@ -6343,16 +5977,6 @@ BOOL CSequenceMain::Check_GdPickerAllUp()
 		return TRUE;
 	}
 #endif
-
-#ifdef PICKER_4
-	if (m_pDX4->iGoodPicker1Up && m_pDX4->iGoodPicker2Up && m_pDX4->iGoodPicker3Up && 
-		m_pDX4->iGoodPicker4Up &&
-		!m_pDX4->iGoodPicker1Down && !m_pDX4->iGoodPicker2Down && !m_pDX4->iGoodPicker3Down && 
-		!m_pDX4->iGoodPicker4Down) {
-			return TRUE;
-	}
-#endif
-
 #ifdef PICKER_5
 	if (m_pDX4->iGoodPicker1Up && m_pDX4->iGoodPicker2Up && m_pDX4->iGoodPicker3Up && 
 		m_pDX4->iGoodPicker4Up && m_pDX4->iGoodPicker5Up &&
@@ -6380,17 +6004,7 @@ BOOL CSequenceMain::Check_UnloadPickerOpen(int nCmd)
 		if (!m_pDX5->iMUPicker1Open) gData.nPicNo = 1;
 		if (!m_pDX5->iMUPicker2Open) gData.nPicNo = 2;
 		if (!m_pDX5->iMUPicker3Open) gData.nPicNo = 3;
-#endif
-#ifdef PICKER_4
-		if (m_pDX5->iMUPicker1Open && m_pDX5->iMUPicker2Open && m_pDX5->iMUPicker3Open && m_pDX5->iMUPicker4Open ) return TRUE;
-		if (!m_pDX5->iMUPicker1Open) gData.nPicNo = 1;
-		if (!m_pDX5->iMUPicker2Open) gData.nPicNo = 2;
-		if (!m_pDX5->iMUPicker3Open) gData.nPicNo = 3;
-		if (!m_pDX5->iMUPicker4Open) gData.nPicNo = 4;
-		
-#endif
-
-#ifdef PICKER_5
+#else
 		if (m_pDX5->iMUPicker1Open && m_pDX5->iMUPicker2Open && m_pDX5->iMUPicker3Open && m_pDX5->iMUPicker4Open && m_pDX5->iMUPicker5Open) return TRUE;
 		if (!m_pDX5->iMUPicker1Open) gData.nPicNo = 1;
 		if (!m_pDX5->iMUPicker2Open) gData.nPicNo = 2;
@@ -6408,16 +6022,7 @@ BOOL CSequenceMain::Check_UnloadPickerOpen(int nCmd)
 		if (m_pDX5->iMUPicker1Open) gData.nPicNo = 1;
 		if (m_pDX5->iMUPicker2Open) gData.nPicNo = 2;
 		if (m_pDX5->iMUPicker3Open) gData.nPicNo = 3;
-#endif
-#ifdef PICKER_4
-		if (!m_pDX5->iMUPicker1Open && !m_pDX5->iMUPicker2Open && !m_pDX5->iMUPicker3Open && !m_pDX5->iMUPicker4Open ) return TRUE;
-		if (m_pDX5->iMUPicker1Open) gData.nPicNo = 1;
-		if (m_pDX5->iMUPicker2Open) gData.nPicNo = 2;
-		if (m_pDX5->iMUPicker3Open) gData.nPicNo = 3;
-		if (m_pDX5->iMUPicker4Open) gData.nPicNo = 4;
-		
-#endif
-#ifdef PICKER_5
+#else
 		if (!m_pDX5->iMUPicker1Open && !m_pDX5->iMUPicker2Open && !m_pDX5->iMUPicker3Open && !m_pDX5->iMUPicker4Open && !m_pDX5->iMUPicker5Open) return TRUE;
 		if (m_pDX5->iMUPicker1Open) gData.nPicNo = 1;
 		if (m_pDX5->iMUPicker2Open) gData.nPicNo = 2;
@@ -6431,15 +6036,7 @@ BOOL CSequenceMain::Check_UnloadPickerOpen(int nCmd)
 		if ( m_pDX5->iMUPicker1Open && !m_pDX5->iMUPicker2Open && !m_pDX5->iMUPicker3Open) return TRUE;
 		if (m_pDX5->iMUPicker2Open) gData.nPicNo = 2;
 		if (m_pDX5->iMUPicker3Open) gData.nPicNo = 3;
-#endif
-#ifdef PICKER_4
-		if ( m_pDX5->iMUPicker1Open && !m_pDX5->iMUPicker2Open && !m_pDX5->iMUPicker3Open && !m_pDX5->iMUPicker4Open ) return TRUE;
-		if (m_pDX5->iMUPicker2Open) gData.nPicNo = 2;
-		if (m_pDX5->iMUPicker3Open) gData.nPicNo = 3;
-		if (m_pDX5->iMUPicker4Open) gData.nPicNo = 4;
-		
-#endif
-#ifdef PICKER_5
+#else
 		if ( m_pDX5->iMUPicker1Open && !m_pDX5->iMUPicker2Open && !m_pDX5->iMUPicker3Open && !m_pDX5->iMUPicker4Open && !m_pDX5->iMUPicker5Open) return TRUE;
 		if (m_pDX5->iMUPicker2Open) gData.nPicNo = 2;
 		if (m_pDX5->iMUPicker3Open) gData.nPicNo = 3;
@@ -6451,13 +6048,7 @@ BOOL CSequenceMain::Check_UnloadPickerOpen(int nCmd)
 #ifdef PICKER_3
 		if ( m_pDX5->iMUPicker1Open &&  m_pDX5->iMUPicker2Open && !m_pDX5->iMUPicker3Open) return TRUE;
 		if (m_pDX5->iMUPicker3Open) gData.nPicNo = 3;
-#endif
-#ifdef PICKER_4
-		if ( m_pDX5->iMUPicker1Open &&  m_pDX5->iMUPicker2Open && !m_pDX5->iMUPicker3Open && !m_pDX5->iMUPicker4Open ) return TRUE;
-		if (m_pDX5->iMUPicker3Open) gData.nPicNo = 3;
-		if (m_pDX5->iMUPicker4Open) gData.nPicNo = 4;		
-#endif
-#ifdef PICKER_5
+#else
 		if ( m_pDX5->iMUPicker1Open &&  m_pDX5->iMUPicker2Open && !m_pDX5->iMUPicker3Open && !m_pDX5->iMUPicker4Open && !m_pDX5->iMUPicker5Open) return TRUE;
 		if (m_pDX5->iMUPicker3Open) gData.nPicNo = 3;
 		if (m_pDX5->iMUPicker4Open) gData.nPicNo = 4;
@@ -6465,14 +6056,14 @@ BOOL CSequenceMain::Check_UnloadPickerOpen(int nCmd)
 #endif
 	}
 	if (gData.nDownX==4) {
-		if ( m_pDX5->iMUPicker1Open &&  m_pDX5->iMUPicker2Open &&  m_pDX5->iMUPicker3Open && !m_pDX5->iMUPicker4Open ) return TRUE;
+		if ( m_pDX5->iMUPicker1Open &&  m_pDX5->iMUPicker2Open &&  m_pDX5->iMUPicker3Open && !m_pDX5->iMUPicker4Open && !m_pDX5->iMUPicker5Open) return TRUE;
 		if (m_pDX5->iMUPicker4Open) gData.nPicNo = 4;
-		//if (m_pDX5->iMUPicker5Open) gData.nPicNo = 5;
+		if (m_pDX5->iMUPicker5Open) gData.nPicNo = 5;
 	}
-	// if (gData.nDownX==5) {
-	// 	if ( m_pDX5->iMUPicker1Open &&  m_pDX5->iMUPicker2Open &&  m_pDX5->iMUPicker3Open &&  m_pDX5->iMUPicker4Open ) return TRUE;
-	// 	if (m_pDX5->iMUPicker5Open) gData.nPicNo = 5;
-	// }
+	if (gData.nDownX==5) {
+		if ( m_pDX5->iMUPicker1Open &&  m_pDX5->iMUPicker2Open &&  m_pDX5->iMUPicker3Open &&  m_pDX5->iMUPicker4Open && !m_pDX5->iMUPicker5Open) return TRUE;
+		if (m_pDX5->iMUPicker5Open) gData.nPicNo = 5;
+	}
 
 	return FALSE;
 }
@@ -6483,16 +6074,7 @@ BOOL CSequenceMain::Check_UnloadPickerCM()
 	if(((gData.GoodTrayInfo[gData.nUpNo-1][0]>0 && m_pDX5->iMUPicker1CMCheck) || gData.GoodTrayInfo[gData.nUpNo-1][0]==0) &&
 	   ((gData.GoodTrayInfo[gData.nUpNo-1][1]>0 && m_pDX5->iMUPicker2CMCheck) || gData.GoodTrayInfo[gData.nUpNo-1][1]==0) &&
 	   ((gData.GoodTrayInfo[gData.nUpNo-1][2]>0 && m_pDX5->iMUPicker3CMCheck) || gData.GoodTrayInfo[gData.nUpNo-1][2]==0) ) return TRUE;
-#endif
-#ifdef PICKER_4
-	if(((gData.GoodTrayInfo[gData.nUpNo-1][0]>0 && m_pDX5->iMUPicker1CMCheck) || gData.GoodTrayInfo[gData.nUpNo-1][0]==0) &&
-	   ((gData.GoodTrayInfo[gData.nUpNo-1][1]>0 && m_pDX5->iMUPicker2CMCheck) || gData.GoodTrayInfo[gData.nUpNo-1][1]==0) &&
-	   ((gData.GoodTrayInfo[gData.nUpNo-1][2]>0 && m_pDX5->iMUPicker3CMCheck) || gData.GoodTrayInfo[gData.nUpNo-1][2]==0) &&
-	   ((gData.GoodTrayInfo[gData.nUpNo-1][3]>0 && m_pDX5->iMUPicker4CMCheck) || gData.GoodTrayInfo[gData.nUpNo-1][3]==0) 
-	    ) return TRUE;
-#endif
-
-#ifdef PICKER_5
+#else
 	if(((gData.GoodTrayInfo[gData.nUpNo-1][0]>0 && m_pDX5->iMUPicker1CMCheck) || gData.GoodTrayInfo[gData.nUpNo-1][0]==0) &&
 	   ((gData.GoodTrayInfo[gData.nUpNo-1][1]>0 && m_pDX5->iMUPicker2CMCheck) || gData.GoodTrayInfo[gData.nUpNo-1][1]==0) &&
 	   ((gData.GoodTrayInfo[gData.nUpNo-1][2]>0 && m_pDX5->iMUPicker3CMCheck) || gData.GoodTrayInfo[gData.nUpNo-1][2]==0) &&
@@ -6506,15 +6088,7 @@ BOOL CSequenceMain::Check_UnloadPickerCM()
 		if (!m_pDX5->iMUPicker1CMCheck) gData.nPicNo = 1;
 		if (!m_pDX5->iMUPicker2CMCheck) gData.nPicNo = 2;
 		if (!m_pDX5->iMUPicker3CMCheck) gData.nPicNo = 3;
-#endif
-#ifdef PICKER_4
-		if (m_pDX5->iMUPicker1CMCheck && m_pDX5->iMUPicker2CMCheck && m_pDX5->iMUPicker3CMCheck && m_pDX5->iMUPicker4CMCheck ) return TRUE;
-		if (!m_pDX5->iMUPicker1CMCheck) gData.nPicNo = 1;
-		if (!m_pDX5->iMUPicker2CMCheck) gData.nPicNo = 2;
-		if (!m_pDX5->iMUPicker3CMCheck) gData.nPicNo = 3;
-		if (!m_pDX5->iMUPicker4CMCheck) gData.nPicNo = 4;
-#endif
-#ifdef PICKER_5
+#else
 		if (m_pDX5->iMUPicker1CMCheck && m_pDX5->iMUPicker2CMCheck && m_pDX5->iMUPicker3CMCheck && m_pDX5->iMUPicker4CMCheck && m_pDX5->iMUPicker5CMCheck) return TRUE;
 		if (!m_pDX5->iMUPicker1CMCheck) gData.nPicNo = 1;
 		if (!m_pDX5->iMUPicker2CMCheck) gData.nPicNo = 2;
@@ -6528,14 +6102,7 @@ BOOL CSequenceMain::Check_UnloadPickerCM()
 		if (m_pDX5->iMUPicker2CMCheck && m_pDX5->iMUPicker3CMCheck) return TRUE;
 		if (!m_pDX5->iMUPicker2CMCheck) gData.nPicNo = 2;
 		if (!m_pDX5->iMUPicker3CMCheck) gData.nPicNo = 3;
-#endif
-#ifdef PICKER_4
-		if (m_pDX5->iMUPicker2CMCheck && m_pDX5->iMUPicker3CMCheck && m_pDX5->iMUPicker4CMCheck ) return TRUE;
-		if (!m_pDX5->iMUPicker2CMCheck) gData.nPicNo = 2;
-		if (!m_pDX5->iMUPicker3CMCheck) gData.nPicNo = 3;
-		if (!m_pDX5->iMUPicker4CMCheck) gData.nPicNo = 4;		
-#endif
-#ifdef PICKER_5
+#else
 		if (m_pDX5->iMUPicker2CMCheck && m_pDX5->iMUPicker3CMCheck && m_pDX5->iMUPicker4CMCheck && m_pDX5->iMUPicker5CMCheck) return TRUE;
 		if (!m_pDX5->iMUPicker2CMCheck) gData.nPicNo = 2;
 		if (!m_pDX5->iMUPicker3CMCheck) gData.nPicNo = 3;
@@ -6547,13 +6114,7 @@ BOOL CSequenceMain::Check_UnloadPickerCM()
 #ifdef PICKER_3
 		if (m_pDX5->iMUPicker3CMCheck) return TRUE;
 		if (!m_pDX5->iMUPicker3CMCheck) gData.nPicNo = 3;
-#endif
-#ifdef PICKER_4
-		if (m_pDX5->iMUPicker3CMCheck && m_pDX5->iMUPicker4CMCheck ) return TRUE;
-		if (!m_pDX5->iMUPicker3CMCheck) gData.nPicNo = 3;
-		if (!m_pDX5->iMUPicker4CMCheck) gData.nPicNo = 4;		
-#endif
-#ifdef PICKER_5
+#else
 		if (m_pDX5->iMUPicker3CMCheck && m_pDX5->iMUPicker4CMCheck && m_pDX5->iMUPicker5CMCheck) return TRUE;
 		if (!m_pDX5->iMUPicker3CMCheck) gData.nPicNo = 3;
 		if (!m_pDX5->iMUPicker4CMCheck) gData.nPicNo = 4;
@@ -6563,12 +6124,12 @@ BOOL CSequenceMain::Check_UnloadPickerCM()
 	if (gData.nDownX==4) {
 		if (m_pDX5->iMUPicker4CMCheck && m_pDX5->iMUPicker5CMCheck) return TRUE;
 		if (!m_pDX5->iMUPicker4CMCheck) gData.nPicNo = 4;
-		//if (!m_pDX5->iMUPicker5CMCheck) gData.nPicNo = 5;
+		if (!m_pDX5->iMUPicker5CMCheck) gData.nPicNo = 5;
 	}
-	// if (gData.nDownX==5) {
-	// 	if (m_pDX5->iMUPicker5CMCheck) return TRUE;
-	// 	if (!m_pDX5->iMUPicker5CMCheck) gData.nPicNo = 5;
-	// }
+	if (gData.nDownX==5) {
+		if (m_pDX5->iMUPicker5CMCheck) return TRUE;
+		if (!m_pDX5->iMUPicker5CMCheck) gData.nPicNo = 5;
+	}
 	return FALSE;
 }
 
@@ -6591,10 +6152,6 @@ void CSequenceMain::Set_UnloadPickerOpen(int nCmd)
 		m_pDY5->oMUPicker2Close = bClose;
 		m_pDY5->oMUPicker3Open = bOpne;
 		m_pDY5->oMUPicker3Close = bClose;
-#ifdef PICKER_4
-		m_pDY5->oMUPicker4Open = bOpne;
-		m_pDY5->oMUPicker4Close = bClose;
-#endif
 #ifdef PICKER_5
 		m_pDY5->oMUPicker4Open = bOpne;
 		m_pDY5->oMUPicker4Close = bClose;
@@ -6608,11 +6165,6 @@ void CSequenceMain::Set_UnloadPickerOpen(int nCmd)
 		m_pDY5->oMUPicker2Close = bClose;
 		m_pDY5->oMUPicker3Open = bOpne;
 		m_pDY5->oMUPicker3Close = bClose;
-#ifdef PICKER_4
-		m_pDY5->oMUPicker4Open = bOpne;
-		m_pDY5->oMUPicker4Close = bClose;
-		
-#endif
 #ifdef PICKER_5
 		m_pDY5->oMUPicker4Open = bOpne;
 		m_pDY5->oMUPicker4Close = bClose;
@@ -6624,11 +6176,6 @@ void CSequenceMain::Set_UnloadPickerOpen(int nCmd)
 	if (gData.nDownX==3) {
 		m_pDY5->oMUPicker3Open = bOpne;
 		m_pDY5->oMUPicker3Close = bClose;
-#ifdef PICKER_4
-		m_pDY5->oMUPicker4Open = bOpne;
-		m_pDY5->oMUPicker4Close = bClose;
-		
-#endif
 #ifdef PICKER_5
 		m_pDY5->oMUPicker4Open = bOpne;
 		m_pDY5->oMUPicker4Close = bClose;
@@ -6640,14 +6187,15 @@ void CSequenceMain::Set_UnloadPickerOpen(int nCmd)
 	if (gData.nDownX==4) {
 		m_pDY5->oMUPicker4Open = bOpne;
 		m_pDY5->oMUPicker4Close = bClose;
-	
+		m_pDY5->oMUPicker5Open = bOpne;
+		m_pDY5->oMUPicker5Close = bClose;
 		m_pAJinAXL->Write_Output(5);
 	}
-	// if (gData.nDownX==5) {
-	// 	m_pDY5->oMUPicker5Open = bOpne;
-	// 	m_pDY5->oMUPicker5Close = bClose;
-	// 	m_pAJinAXL->Write_Output(5);
-	// }
+	if (gData.nDownX==5) {
+		m_pDY5->oMUPicker5Open = bOpne;
+		m_pDY5->oMUPicker5Close = bClose;
+		m_pAJinAXL->Write_Output(5);
+	}
 }
 
 BOOL CSequenceMain::Check_NGTrayEmpty(int nNo)
@@ -6988,49 +6536,51 @@ BOOL CSequenceMain::Check_GoodPickJobUp()
 	}
 	nCntTot = nCntIdx + nCntPick;
 
-	for (int w = 0; w < 4; w++)
-	{
-		for (int l = 0; l < gData.nPickCnt; l++)
-		{
-			if (gData.IndexInfo[w][l] > 0)
-				nIndexCnt++;
-		}
-	}
-
-	if (nIndexCnt == 0)
-	{
-		if (nCntIdx == 0 || nCntTot >= gData.nPickCnt)
-			return FALSE;
-
+	if (m_pEquipData->bUseContinueLot) {	// 옵션처리
 		int x = 0;
-		if (gData.bGDPickerSort1)
-		{
+		if (gData.bGDPickerSort1) {
 			// 인덱스 안쪽 1번부터 채워준다.
-			for (int i = gData.nPickCnt - 1; i >= 0; i--)
-			{
-				if (x == 1 && gData.IndexInfo[4][i] == 0)
-					return TRUE;
-				if (x == 0 && gData.IndexInfo[4][i] > 0)
-					x = 1;
+			for(int i=gData.nPickCnt-1; i>=0; i--) {
+				if (x==1 && gData.IndexInfo[4][i]==0) return TRUE;
+				if (x==0 && gData.IndexInfo[4][i] > 0 ) x=1;
+			}
+		} else {
+			for(int i=0; i<gData.nPickCnt; i++) {
+				// 인덱스 바깥쪽 5번부터 채워준다.
+				if (x==1 && gData.IndexInfo[4][i]==0) return TRUE;
+				if (x==0 && gData.IndexInfo[4][i] > 0 ) x=1;
+			}
+		}		
+
+	} else {
+		for(int w=0; w<4; w++) {
+			for(int l=0; l<gData.nPickCnt; l++) {
+				if (gData.IndexInfo[w][l] > 0) nIndexCnt++;
 			}
 		}
-		else
-		{
-			// 인덱스 바깥쪽 5번부터 채워준다.
-			for (int i = 0; i < gData.nPickCnt; i++)
-			{
-				if (x == 1 && gData.IndexInfo[4][i] == 0)
-					return TRUE;
-				if (x == 0 && gData.IndexInfo[4][i] > 0)
-					x = 1;
+
+		if (nIndexCnt==0) {
+			if (nCntIdx==0 || nCntTot >= gData.nPickCnt) return FALSE;
+
+			int x = 0;
+			if (gData.bGDPickerSort1) {
+				// 인덱스 안쪽 1번부터 채워준다.
+				for(int i=gData.nPickCnt-1; i>=0; i--) {
+					if (x==1 && gData.IndexInfo[4][i]==0) return TRUE;
+					if (x==0 && gData.IndexInfo[4][i] > 0 ) x=1;
+				}
+			} else {
+				// 인덱스 바깥쪽 5번부터 채워준다.
+				for(int i=0; i<gData.nPickCnt; i++) {
+					if (x==1 && gData.IndexInfo[4][i]==0) return TRUE;
+					if (x==0 && gData.IndexInfo[4][i] > 0 ) x=1;
+				}
 			}
+			return FALSE;
 		}
-		return FALSE;
+
+		if (nCntIdx > 0 && nCntTot < gData.nPickCnt) return TRUE;
 	}
-
-	if (nCntIdx > 0 && nCntTot < gData.nPickCnt)
-		return TRUE;
-
 	return FALSE;
 }
 
@@ -7045,14 +6595,14 @@ BOOL CSequenceMain::Check_GoodAllPick()
 		if (gData.IndexInfo[4][l] > 0 ) nCntIdx++;
 		if (gData.PickerInfor[2][l] > 0 ) nCntPick++;
 	}
-	if (nCntIdx==0 || nCntPick > 0) return FALSE; //인덱스에 모듈이 없거나 피커가 모듈을 한개 이상 집고 있는 경우 FALSE
+	if (nCntIdx==0 || nCntPick > 0) return FALSE;
 
 	for(int w=0; w<4; w++) {
 		for(int l=0; l<gData.nPickCnt; l++) {
 			if (gData.IndexInfo[w][l] > 0) nIndexCnt++;
 		}
 	}
-	if (nIndexCnt==0) return FALSE; //인덱스에 아무것도 없을경우 FALSE
+	if (nIndexCnt==0) return FALSE;
 	
 	return TRUE;
 }
@@ -7072,16 +6622,7 @@ void CSequenceMain::Check_NGPickUpSelect()
 			break;
 		}
 	}
-#endif
-#ifdef NG_PICKER_4
-	for(int l=3; l>=0; l--) {
-		if (gData.PickerInfor[1][l] == 0) {
-			gData.NGPicNo = l + 1;
-			break;
-		}
-	}
-#endif
-#ifdef NG_PICKER_5
+#else
 	for(int l=4; l>=0; l--) {
 		if (gData.PickerInfor[1][l] == 0) {
 			gData.NGPicNo = l + 1;
@@ -7187,7 +6728,7 @@ void CSequenceMain::Check_GoodPickDownSelect()
 {
 	if (gData.bGDPickerSort1) {
 		// 인덱스 안쪽 1번부터 채워준다.
-		for(int l=0; l<gData.nArrayL; l++) {
+		for(int l=0; l<gData.nPickCnt; l++) {
 			if (gData.IndexInfo[4][l] == 0) {
 				gData.GDIdxNo = l + 1;
 				break;
@@ -7202,7 +6743,7 @@ void CSequenceMain::Check_GoodPickDownSelect()
 
 	} else {
 		// 인덱스 바깥쪽 5번부터 채워준다.
-		for(int l=gData.nArrayL-1; l>=0; l--) {
+		for(int l=gData.nPickCnt-1; l>=0; l--) {
 			if (gData.IndexInfo[4][l] == 0) {
 				gData.GDIdxNo = l + 1;
 				break;
@@ -7229,7 +6770,6 @@ void CSequenceMain::Check_NGPickDownSelect()
 			if((gData.nNGTrayPos == 1 && gData.NG1TrayInfo[w][l] == 0) ||
 			   (gData.nNGTrayPos == 2 && gData.NG2TrayInfo[w][l] == 0) ) {
 				gData.NGIdxNo = l + 1;
-				gData.nNGTrayCmNo = gData.NGIdxNo;
 				break;
 			}
 		}
@@ -7238,7 +6778,6 @@ void CSequenceMain::Check_NGPickDownSelect()
 			if((gData.nNGTrayPos == 1 && gData.NG1TrayInfo[w][l] == 0) ||
 			   (gData.nNGTrayPos == 2 && gData.NG2TrayInfo[w][l] == 0) ) {
 				gData.NGIdxNo = l + 1;
-				gData.nNGTrayCmNo + gData.nPickCnt +gData.NGIdxNo;
 				break;
 			}
 		}
@@ -7263,7 +6802,6 @@ BOOL CSequenceMain::Check_NGTray1PickDownSelect()
 		for(int l=0; l<gData.nPickCnt; l++) {
 			if(gData.NG1TrayInfo[w][l] == 0) {
 				gData.NGIdxNo = l + 1;
-				gData.nNGTrayCmNo = gData.NGIdxNo;
 				break;
 			}
 		}
@@ -7271,7 +6809,6 @@ BOOL CSequenceMain::Check_NGTray1PickDownSelect()
 		for(int l=gData.nPickCnt-1; l>=0; l--) {
 			if(gData.NG1TrayInfo[w][l] == 0) {
 				gData.NGIdxNo = l + 1;
-				gData.nNGTrayCmNo + gData.nPickCnt +gData.NGIdxNo;
 				break;
 			}
 		}
@@ -7337,7 +6874,6 @@ BOOL CSequenceMain::Check_NGTray2PickDownSelect()
 		for(int l=0; l<gData.nPickCnt; l++) {
 			if(gData.NG2TrayInfo[w][l] == 0) {
 				gData.NGIdxNo = l + 1;
-				gData.nNGTrayCmNo = gData.NGIdxNo;
 				break;
 			}
 		}
@@ -7345,7 +6881,6 @@ BOOL CSequenceMain::Check_NGTray2PickDownSelect()
 		for(int l=gData.nPickCnt-1; l>=0; l--) {
 			if(gData.NG2TrayInfo[w][l] == 0) {
 				gData.NGIdxNo = l + 1;
-				gData.nNGTrayCmNo + gData.nPickCnt +gData.NGIdxNo;
 				break;
 			}
 		}
@@ -7672,8 +7207,11 @@ void CSequenceMain::Job_LotEnd()
 	}
 	CWorkDlg *pWorkDlg = CWorkDlg::Get_Instance();
 	pWorkDlg->Clear_LotInfo();
-	pWorkDlg->Enable_LotInfo(TRUE);
+	
 	pWorkDlg->PostMessage(UM_LOT_START_END, (WPARAM)2, NULL);	// LotEnd
+
+	gData.nLotInfoBlockDelay = 1;
+
 }
 
 ///////////////////////////////////////////////////////////////////////////////

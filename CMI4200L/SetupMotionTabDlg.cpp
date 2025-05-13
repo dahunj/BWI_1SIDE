@@ -533,48 +533,39 @@ BOOL CSetupMotionTabDlg::Check_Interlock(int nAxis)
 #ifdef NG_PICKER_3
 		if (!pDX3->iNGPicker1Up || !pDX3->iNGPicker2Up || !pDX3->iNGPicker3Up ||
 			pDX3->iNGPicker1Down || pDX3->iNGPicker2Down || pDX3->iNGPicker3Down ) {
-				AfxMessageBox(_T("NG Picker Z Sylinder Up후에 진행하세요....."));
+				AfxMessageBox(_T("NG Picker Z Up후에 진행하세요....."));
 				return FALSE;
 		}
-#endif
-#ifdef NG_PICKER_4
-		if (!pDX3->iNGPicker1Up || !pDX3->iNGPicker2Up || !pDX3->iNGPicker3Up || !pDX3->iNGPicker4Up  ||
-			pDX3->iNGPicker1Down || pDX3->iNGPicker2Down || pDX3->iNGPicker3Down || pDX3->iNGPicker4Down ) {
-			AfxMessageBox(_T("NG Picker Z Sylinder Up후에 진행하세요....."));
-			return FALSE;
-		}
-#endif
-#ifdef NG_PICKER_5
+#else
 		if (!pDX3->iNGPicker1Up || !pDX3->iNGPicker2Up || !pDX3->iNGPicker3Up || !pDX3->iNGPicker4Up || !pDX3->iNGPicker5Up ||
 			pDX3->iNGPicker1Down || pDX3->iNGPicker2Down || pDX3->iNGPicker3Down || pDX3->iNGPicker4Down || pDX3->iNGPicker5Down ) {
-			AfxMessageBox(_T("NG Picker Z Sylinder Up후에 진행하세요....."));
+			AfxMessageBox(_T("NG Picker Z Up후에 진행하세요....."));
 			return FALSE;
 		}
 #endif
-		if (!pCommon->Check_Position(AX_NG_PICKER_Z, 0) ) {
+		if (!pCommon->Check_Position(AX_NG_PICKER_Z, 0) && !pCommon->Check_Position(AX_NG_PICKER_Z, 1)) {
 			AfxMessageBox(_T("NG Picker Z축 Ready Position 위치후에 진행하세요....."));
 			return FALSE;
 		}
 	}
-	if (nAxis == AX_NG_STAGE_Y) {
+	if (nAxis == AX_NG_STAGE_Y) 
+	{
+		if(!(pCommon->Check_Position(AX_NG_PICKER_Z, 0) )) {
+			AfxMessageBox(_T("NG Picker Z Axis Ready Position 이동후 진행하세요. ...."));
+			return FALSE;
+		}
+
+
 #ifdef NG_PICKER_3
 		if (!pDX3->iNGPicker1Up || !pDX3->iNGPicker2Up || !pDX3->iNGPicker3Up ||
 			pDX3->iNGPicker1Down || pDX3->iNGPicker2Down || pDX3->iNGPicker3Down ) {
-				AfxMessageBox(_T("NG Picker Z Sylinder Up후에 진행하세요....."));
+				AfxMessageBox(_T("NG Picker Z Up후에 진행하세요....."));
 				return FALSE;
 		}
-#endif
-#ifdef NG_PICKER_4
-		if (!pDX3->iNGPicker1Up || !pDX3->iNGPicker2Up || !pDX3->iNGPicker3Up || !pDX3->iNGPicker4Up ||
-			pDX3->iNGPicker1Down || pDX3->iNGPicker2Down || pDX3->iNGPicker3Down || pDX3->iNGPicker4Down ) {
-				AfxMessageBox(_T("NG Picker Z Sylinder Up후에 진행하세요....."));
-				return FALSE;
-		}
-#endif
-#ifdef NG_PICKER_5
+#else
 		if (!pDX3->iNGPicker1Up || !pDX3->iNGPicker2Up || !pDX3->iNGPicker3Up || !pDX3->iNGPicker4Up || !pDX3->iNGPicker5Up ||
 			pDX3->iNGPicker1Down || pDX3->iNGPicker2Down || pDX3->iNGPicker3Down || pDX3->iNGPicker4Down || pDX3->iNGPicker5Down ) {
-			AfxMessageBox(_T("NG Picker Z Sylinder Up후에 진행하세요....."));
+			AfxMessageBox(_T("NG Picker Z Up후에 진행하세요....."));
 			return FALSE;
 		}
 #endif
@@ -583,12 +574,6 @@ BOOL CSetupMotionTabDlg::Check_Interlock(int nAxis)
 #ifdef PICKER_3
 		if (!pDX4->iGoodPicker1Up || !pDX4->iGoodPicker2Up || !pDX4->iGoodPicker3Up || 
 			pDX4->iGoodPicker1Down || pDX4->iGoodPicker2Down || pDX4->iGoodPicker3Down)
-#endif
-#ifdef PICKER_4
-			if (!pDX4->iGoodPicker1Up || !pDX4->iGoodPicker2Up || !pDX4->iGoodPicker3Up || 
-				!pDX4->iGoodPicker4Up ||
-				pDX4->iGoodPicker1Down || pDX4->iGoodPicker2Down || pDX4->iGoodPicker3Down || 
-				pDX4->iGoodPicker4Down )
 #endif
 #ifdef PICKER_5
 		if (!pDX4->iGoodPicker1Up || !pDX4->iGoodPicker2Up || !pDX4->iGoodPicker3Up || 
@@ -603,7 +588,7 @@ BOOL CSetupMotionTabDlg::Check_Interlock(int nAxis)
 			pDX4->iGoodPicker4Down || pDX4->iGoodPicker5Down || pDX4->iGoodPicker6Down)
 #endif
 		{
-			AfxMessageBox(_T("Good Picker Sylinder Up후 진행하세요............."));
+			AfxMessageBox(_T("Good Picker Up후 진행하세요............."));
 			return FALSE;
 		}
 	}
@@ -633,15 +618,7 @@ BOOL CSetupMotionTabDlg::Check_Interlock(int nAxis)
 				AfxMessageBox(_T("NG Picker Up후 진행하세요............."));
 				return FALSE;
 		}
-#endif
-#ifdef NG_PICKER_4
-		if (!pDX3->iNGPicker1Up  || !pDX3->iNGPicker2Up  || !pDX3->iNGPicker3Up || !pDX3->iNGPicker4Up   ||
-			pDX3->iNGPicker1Down || pDX3->iNGPicker2Down || pDX3->iNGPicker3Down || pDX3->iNGPicker4Down  ) {
-			AfxMessageBox(_T("NG Picker Up후 진행하세요............."));
-			return FALSE;
-		}
-#endif
-#ifdef NG_PICKER_5
+#else
 		if (!pDX3->iNGPicker1Up  || !pDX3->iNGPicker2Up  || !pDX3->iNGPicker3Up || !pDX3->iNGPicker4Up  || !pDX3->iNGPicker5Up ||
 			pDX3->iNGPicker1Down || pDX3->iNGPicker2Down || pDX3->iNGPicker3Down || pDX3->iNGPicker4Down || pDX3->iNGPicker5Down ) {
 			AfxMessageBox(_T("NG Picker Up후 진행하세요............."));
@@ -652,12 +629,6 @@ BOOL CSetupMotionTabDlg::Check_Interlock(int nAxis)
 #ifdef PICKER_3
 		if (!pDX4->iGoodPicker1Up || !pDX4->iGoodPicker2Up || !pDX4->iGoodPicker3Up || 
 			pDX4->iGoodPicker1Down || pDX4->iGoodPicker2Down || pDX4->iGoodPicker3Down )
-#endif
-#ifdef PICKER_4
-			if (!pDX4->iGoodPicker1Up || !pDX4->iGoodPicker2Up || !pDX4->iGoodPicker3Up || 
-				!pDX4->iGoodPicker4Up ||
-				pDX4->iGoodPicker1Down || pDX4->iGoodPicker2Down || pDX4->iGoodPicker3Down || 
-				pDX4->iGoodPicker4Down )
 #endif
 #ifdef PICKER_5
 		if (!pDX4->iGoodPicker1Up || !pDX4->iGoodPicker2Up || !pDX4->iGoodPicker3Up || 

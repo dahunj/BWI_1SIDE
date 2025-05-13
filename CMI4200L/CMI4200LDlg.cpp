@@ -309,12 +309,7 @@ void CCMI4200LDlg::OnShowWindow(BOOL bShow, UINT nStatus)
 
 		m_dwEquipProcTime = (DWORD)INI_E.Get_Integer("EQUIPMENT", "PROC_TIME", 0);
 
-#ifdef PICKER_6
 		gData.nPickCnt = 6;
-#endif
-#ifdef PICKER_4
-		gData.nPickCnt = 4;
-#endif
 #ifdef PICKER_5
 		gData.nPickCnt = 5;
 #endif
@@ -352,32 +347,14 @@ void CCMI4200LDlg::OnBnClickedRdoMainInitial()
 
 void CCMI4200LDlg::OnBnClickedRdoMainWork()
 {
-	/*if (gData.bOpMode) {
-		if (m_pCommon->Show_Password() != IDOK) {
-			if (m_nCurrMode == MODE_INITIAL) m_rdoMainInitial.SetCheck(TRUE);
-			if (m_nCurrMode == MODE_WORK) m_rdoMainWork.SetCheck(TRUE);
-			if (m_nCurrMode == MODE_MANUAL) m_rdoMainManual.SetCheck(TRUE);
-			if (m_nCurrMode == MODE_SETUP) m_rdoMainSetup.SetCheck(TRUE);
-			if (m_nCurrMode == MODE_PROHIBIT) m_rdoMainPause.SetCheck(TRUE);
-			return;
-		}
-	}*/
+	
 	Set_CurrentMode(MODE_WORK);
 	Invalidate(FALSE);
 }
 
 void CCMI4200LDlg::OnBnClickedRdoMainManual()
 {
-	/*if (gData.bOpMode) {
-		if (m_pCommon->Show_Password() != IDOK) {
-			if (m_nCurrMode == MODE_INITIAL) m_rdoMainInitial.SetCheck(TRUE);
-			if (m_nCurrMode == MODE_WORK) m_rdoMainWork.SetCheck(TRUE);
-			if (m_nCurrMode == MODE_MANUAL) m_rdoMainManual.SetCheck(TRUE);
-			if (m_nCurrMode == MODE_SETUP) m_rdoMainSetup.SetCheck(TRUE);
-			if (m_nCurrMode == MODE_PROHIBIT) m_rdoMainPause.SetCheck(TRUE);
-			return;
-		}
-	}*/
+	
 	Set_CurrentMode(MODE_MANUAL);
 	Invalidate(FALSE);
 }

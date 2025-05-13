@@ -510,22 +510,6 @@ void CInspector::Get_InspectComplete(int nInspector, CString strRecv)
 		AfxExtractSubString(sDiameterMin[i], strRecv, i+30, chSep);
 	}
 #endif
-#ifdef PICKER_4
-	for(int i=0; i<4; i++) {
-		AfxExtractSubString(sData[i],    strRecv, i+6,  chSep);
-		AfxExtractSubString(sBarcode[i], strRecv, i+10, chSep);
-		AfxExtractSubString(sNGcode[i], strRecv, i+14, chSep);
-		AfxExtractSubString(sNGText[i], strRecv, i+28, chSep);
-
-		//SBC 관련 측정값
-		AfxExtractSubString(sDiameter[i],   strRecv, i+26, chSep);
-		AfxExtractSubString(sCenterX[i],    strRecv, i+31, chSep);
-		AfxExtractSubString(sCenterY[i],    strRecv, i+36, chSep);
-		AfxExtractSubString(sO1O2Dist[i],   strRecv, i+41, chSep);
-		AfxExtractSubString(sDiameterMin[i], strRecv, i+46, chSep);
-	}
-#endif
-
 #ifdef PICKER_5
 	for(int i=0; i<5; i++) {
 		AfxExtractSubString(sData[i],    strRecv, i+6,  chSep);

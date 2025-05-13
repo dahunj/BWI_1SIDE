@@ -40,7 +40,6 @@ public:
 	void Save_PCLog(CString sLog);
 	void Save_MCCLog(CString strLog);
 
-
 	void Set_ThreadLog(BOOL bOn) { m_bThreadLog = bOn; }
 	BOOL Get_ThreadLog() { return m_bThreadLog; }
 };

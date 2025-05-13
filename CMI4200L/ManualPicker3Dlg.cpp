@@ -200,12 +200,7 @@ BOOL CManualPicker3Dlg::OnInitDialog()
 		m_ledMLPickIO[i].ShowWindow(FALSE);
 	}
 #endif
-#ifdef PICKER_4
-	for (int i=20; i<24; i++) {
-		m_btnMLPickIO[i].ShowWindow(FALSE);
-		m_ledMLPickIO[i].ShowWindow(FALSE);
-	}
-#endif
+
 #ifdef PICKER_5
 	for (int i=22; i<24; i++) {
 		m_btnMLPickIO[i].ShowWindow(FALSE);
@@ -484,18 +479,6 @@ void CManualPicker3Dlg::OnBtnMLNGPickZClick(UINT nID)
 			return;
 		}
 #endif
-#ifdef PICKER_4
-		if (pDX2->iInspCMAlign4In && pCommon->Check_Position(AX_UNLOAD_PICKER_X1, 0) &&
-			(pDX5->iMUPicker1CMCheck || pDX5->iMUPicker2CMCheck || pDX5->iMUPicker3CMCheck || pDX5->iMUPicker4CMCheck )) {
-				AfxMessageBox(_T("Can not move......(Unload Picker CM Check And Align 4 In)"));
-				return;
-		}
-		if((!pDX5->iMUPicker1Open && !pDX5->iMUPicker1CMCheck) || (!pDX5->iMUPicker2Open && !pDX5->iMUPicker2CMCheck) || (!pDX5->iMUPicker3Open && !pDX5->iMUPicker3CMCheck) ||
-			(!pDX5->iMUPicker4Open && !pDX5->iMUPicker4CMCheck) ) {
-				AfxMessageBox(_T("Can not move......(Unload Picker Close And CM Check Off)"));
-				return;
-		}
-#endif
 #ifdef PICKER_5
 		if (pDX2->iInspCMAlign4In && pCommon->Check_Position(AX_UNLOAD_PICKER_X1, 0) &&
 		   (pDX5->iMUPicker1CMCheck || pDX5->iMUPicker2CMCheck || pDX5->iMUPicker3CMCheck || pDX5->iMUPicker4CMCheck || pDX5->iMUPicker5CMCheck)) {
@@ -534,18 +517,6 @@ void CManualPicker3Dlg::OnBtnMLNGPickZClick(UINT nID)
 		if((!pDX5->iMUPicker1Open && !pDX5->iMUPicker1CMCheck) || (!pDX5->iMUPicker2Open && !pDX5->iMUPicker2CMCheck) || (!pDX5->iMUPicker3Open && !pDX5->iMUPicker3CMCheck) ) {
 			AfxMessageBox(_T("Can not move......(Unload Picker Close And CM Check Off)"));
 			return;
-		}
-#endif
-#ifdef PICKER_4
-		if (pDX2->iInspCMAlign4In && pCommon->Check_Position(AX_UNLOAD_PICKER_X1, 0) &&
-			(pDX5->iMUPicker1CMCheck || pDX5->iMUPicker2CMCheck || pDX5->iMUPicker3CMCheck || pDX5->iMUPicker4CMCheck )) {
-				AfxMessageBox(_T("Can not move......(Unload Picker CM Check And Align 4 In)"));
-				return;
-		}
-		if((!pDX5->iMUPicker1Open && !pDX5->iMUPicker1CMCheck) || (!pDX5->iMUPicker2Open && !pDX5->iMUPicker2CMCheck) || (!pDX5->iMUPicker3Open && !pDX5->iMUPicker3CMCheck) ||
-			(!pDX5->iMUPicker4Open && !pDX5->iMUPicker4CMCheck) ) {
-				AfxMessageBox(_T("Can not move......(Unload Picker Close And CM Check Off)"));
-				return;
 		}
 #endif
 #ifdef PICKER_5
@@ -733,10 +704,6 @@ void CManualPicker3Dlg::OnBtnMLPickIOClick(UINT nID)
 		pDY5->oMUPicker2Close = FALSE;
 		pDY5->oMUPicker3Open = TRUE;
 		pDY5->oMUPicker3Close = FALSE;
-#ifdef PICKER_4
-		pDY5->oMUPicker4Open = TRUE;
-		pDY5->oMUPicker4Close = FALSE;
-#endif
 #ifdef PICKER_5
 		pDY5->oMUPicker4Open = TRUE;
 		pDY5->oMUPicker4Close = FALSE;
@@ -759,10 +726,6 @@ void CManualPicker3Dlg::OnBtnMLPickIOClick(UINT nID)
 		pDY5->oMUPicker2Close = TRUE;
 		pDY5->oMUPicker3Open = FALSE;
 		pDY5->oMUPicker3Close = TRUE;
-#ifdef PICKER_4
-		pDY5->oMUPicker4Open = FALSE;
-		pDY5->oMUPicker4Close = TRUE;
-#endif
 #ifdef PICKER_5
 		pDY5->oMUPicker4Open = FALSE;
 		pDY5->oMUPicker4Close = TRUE;

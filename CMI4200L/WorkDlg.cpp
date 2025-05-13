@@ -220,6 +220,9 @@ BEGIN_MESSAGE_MAP(CWorkDlg, CDialogEx)
 	ON_MESSAGE(UM_UPDATE_LOTID, OnUpdateLotID)
 	ON_MESSAGE(UM_LOT_START_END, &CWorkDlg::OnLotStartEnd)
 
+	
+	ON_BN_CLICKED(IDC_BUTTON1, &CWorkDlg::OnBnClickedButton1)
+	ON_BN_CLICKED(IDC_BUTTON2, &CWorkDlg::OnBnClickedButton2)
 END_MESSAGE_MAP()
 
 // CWorkDlg 메시지 처리기입니다.
@@ -253,30 +256,6 @@ BOOL CWorkDlg::OnInitDialog()
 	gData.nTrayJobCount = gData.nCMJobCount = 0;
 	m_sCurLotID = "";
 	gData.nLotIdsIndex = 0;
-#ifdef PICKER_4
-	m_ledIndexSlot[0][4].ShowWindow(FALSE);
-	m_ledIndexSlot[1][4].ShowWindow(FALSE);
-	m_ledIndexSlot[2][4].ShowWindow(FALSE);
-	m_ledIndexSlot[3][4].ShowWindow(FALSE);
-	m_ledIndexSlot[4][4].ShowWindow(FALSE);
-
-	m_ledPicker[0][4].ShowWindow(FALSE);
-	m_ledPicker[1][4].ShowWindow(FALSE);
-	m_ledPicker[2][4].ShowWindow(FALSE);
-	m_ledPicker[3][4].ShowWindow(FALSE);
-
-	m_ledIndexSlot[0][5].ShowWindow(FALSE);
-	m_ledIndexSlot[1][5].ShowWindow(FALSE);
-	m_ledIndexSlot[2][5].ShowWindow(FALSE);
-	m_ledIndexSlot[3][5].ShowWindow(FALSE);
-	m_ledIndexSlot[4][5].ShowWindow(FALSE);
-
-	m_ledPicker[0][5].ShowWindow(FALSE);
-	m_ledPicker[1][5].ShowWindow(FALSE);
-	m_ledPicker[2][5].ShowWindow(FALSE);
-	m_ledPicker[3][5].ShowWindow(FALSE);
-
-#endif
 
 #ifdef PICKER_5
 	m_ledIndexSlot[0][5].ShowWindow(FALSE);
@@ -382,6 +361,7 @@ void CWorkDlg::OnTimer(UINT_PTR nIDEvent)
 	CSequenceMain *pSequenceMain = CSequenceMain::Get_Instance();
 	
 
+
 	if (pDX0->iStartSw && !m_rdoWorkStart.GetCheck()) {
 		if (Check_Start()==FALSE) {
 			SetTimer(0, 100, NULL);
@@ -391,15 +371,12 @@ void CWorkDlg::OnTimer(UINT_PTR nIDEvent)
 		sLog.Format("[Work Mode] START S/W push....  LotID[%s] CM[%d] OperID[%s]", gData.sLotID, gData.nCMJobCount, gData.sOperID);
 		pLogFile->Save_HandlerLog(sLog);
 		m_rdoWorkStart.SetCheck(TRUE);
-		
 		Display_Status();
 		SetTimer(0, 100, NULL);
 		return;
 	} else if (pDX0->iStopSw && !m_rdoWorkStop.GetCheck()) {
-		
 		pLogFile->Save_HandlerLog("[Work Mode] STOP S/W push");
 		m_rdoWorkStop.SetCheck(TRUE);
-		
 		pMainDlg->Set_MainState(STATE_INITEND);
 	}
 
@@ -430,7 +407,7 @@ void CWorkDlg::OnTimer(UINT_PTR nIDEvent)
 				m_rdoWorkStop.Set_Color(RGB(0x00, 0x00, 0x00), COLOR_DEFAULT);
 				m_rdoWorkStop.Invalidate(FALSE);
 				m_chkStripStop.EnableWindow(TRUE);
-				
+
 				g_objMES.m_bStart = TRUE;
 				if (g_objMES.m_bMESUse==FALSE || g_objMES.m_nMESSequence==3 || gData.bCleanOutMode==TRUE) {
 					CInspector *pInspector = CInspector::Get_Instance();
@@ -1007,39 +984,29 @@ void CWorkDlg::Display_Status()
 	i = time.wHour;
 	nTCnt = 0;
 	dTackTime[0] = dTackTime[1] = dTackTime[2] = 0.0;
-	for(j=0; j<gTD.dTack[i][49]; j++) 
-	{
+	for(j=0; j<gTD.dTack[i][49]; j++) {
 		dTackTime[0] = dTackTime[0] + gTD.dTack[i][j];
 		nTCnt++;
 	}
 	if (nTCnt>1) dTackTime[0] = dTackTime[0] / nTCnt;
 
 	nTCnt = 0;
-	if (i>=7 && i<=18) 
-	{
-		for(i=7; i<=18; i++) 
-		{
-			for(j=0; j<gTD.dTack[i][49]; j++) 
-			{
+	if (i>=7 && i<=18) {
+		for(i=7; i<=18; i++) {
+			for(j=0; j<gTD.dTack[i][49]; j++) {
 				dTackTime[1] = dTackTime[1] + gTD.dTack[i][j];
 				nTCnt++;
 			}
 		}
-	} 
-	else 
-	{
-		for(i=0; i<7; i++) 
-		{
-			for(j=0; j<gTD.dTack[i][49]; j++) 
-			{
+	} else {
+		for(i=0; i<7; i++) {
+			for(j=0; j<gTD.dTack[i][49]; j++) {
 				dTackTime[1] = dTackTime[1] + gTD.dTack[i][j];
 				nTCnt++;
 			}
 		}
-		for(i=19; i<=23; i++)
-		{
-			for(j=0; j<gTD.dTack[i][49]; j++) 
-			{
+		for(i=19; i<=23; i++) {
+			for(j=0; j<gTD.dTack[i][49]; j++) {
 				dTackTime[1] = dTackTime[1] + gTD.dTack[i][j];
 				nTCnt++;
 			}
@@ -1048,10 +1015,8 @@ void CWorkDlg::Display_Status()
 	if (nTCnt>1) dTackTime[1] = dTackTime[1] / nTCnt;
 
 	nTCnt = 0;
-	for(i=0; i<=23; i++) 
-	{
-		for(j=0; j<gTD.dTack[i][49]; j++)
-		{
+	for(i=0; i<=23; i++) {
+		for(j=0; j<gTD.dTack[i][49]; j++) {
 			dTackTime[2] = dTackTime[2] + gTD.dTack[i][j];
 			nTCnt++;
 		}
@@ -1138,10 +1103,8 @@ void CWorkDlg::Display_Status()
 	CAJinAXL *pAJinAXL = CAJinAXL::Get_Instance();
 	DY_DATA_0 *pDY0 = pAJinAXL->Get_pDY0();
 
-	for(int i=0; i<4; i++) 
-	{
-		for(int j=0; j<6; j++)
-		{
+	for(int i=0; i<4; i++) {
+		for(int j=0; j<6; j++) {
 			if(gData.PickerInfor[i][j] == 0) m_ledPicker[i][j].Set_On(FALSE);
 			else							 m_ledPicker[i][j].Set_On(TRUE);
 		}
@@ -1174,56 +1137,59 @@ void CWorkDlg::Display_Status()
 	sData = "";
 	CBarcode_DS1100 *pBarcode_DS1100 = CBarcode_DS1100::Get_Instance();
 	pBarcode_DS1100->GetBarcode(sData);
+
+	//sData = gData.strTest;
+
 	nData = sData.GetLength();
 	if(nData > 0 && gData.nLotInfoBlockDelay == 0) 
 	{
-		if (m_bUseContinueLot) 
-		{
-			sBarcode.Format("%sT1", sData);
-			if (gData.nLotIdsIndex == 0) m_stcLotsId[4].GetWindowText(strTemp);
-			else m_stcLotsId[gData.nLotIdsIndex - 1].GetWindowText(strTemp);
-			if (sBarcode == strTemp) return;
+			if (m_bUseContinueLot) 
+			{
+				sBarcode.Format("%sT1", sData);
+				if (gData.nLotIdsIndex == 0) m_stcLotsId[4].GetWindowText(strTemp);
+				else m_stcLotsId[gData.nLotIdsIndex - 1].GetWindowText(strTemp);
+				if (sBarcode == strTemp) return;
 
-			m_stcLotsId[gData.nLotIdsIndex].SetWindowText(sBarcode);
-			gData.sLotsID[gData.nLotIdsIndex] = sBarcode;
+				m_stcLotsId[gData.nLotIdsIndex].SetWindowText(sBarcode);
+				gData.sLotsID[gData.nLotIdsIndex] = sBarcode;
 
-			if (gData.nLotIdsIndex < 4) gData.nLotIdsIndex++;
-			else gData.nLotIdsIndex = 0;
+				if (gData.nLotIdsIndex < 4) gData.nLotIdsIndex++;
+				else gData.nLotIdsIndex = 0;
 
-			pDY0->oAlarmBuzzer2 = TRUE;
-			pAJinAXL->Write_Output(0);
-			Sleep(500);
-			pDY0->oAlarmBuzzer2 = FALSE;
-			pAJinAXL->Write_Output(0);
-
-		} 
-		else 
-		{
-			m_stcLotId1.SetWindowText(sData);
-
-			if (gData.sLotID != sData) {
 				pDY0->oAlarmBuzzer2 = TRUE;
 				pAJinAXL->Write_Output(0);
-				Sleep(1000);
+				Sleep(500);
 				pDY0->oAlarmBuzzer2 = FALSE;
 				pAJinAXL->Write_Output(0);
 
-				SendMessage(UM_UPDATE_LOTID, (WPARAM)NULL, (LPARAM)NULL);
+			} 
+			else 
+			{
+				m_stcLotId1.SetWindowText(sData);
+
+				if (gData.sLotID != sData) {
+					pDY0->oAlarmBuzzer2 = TRUE;
+					pAJinAXL->Write_Output(0);
+					Sleep(1000);
+					pDY0->oAlarmBuzzer2 = FALSE;
+					pAJinAXL->Write_Output(0);
+
+					SendMessage(UM_UPDATE_LOTID, (WPARAM)NULL, (LPARAM)NULL);
+				}
+				gData.sLotID = sData;
+
+				COperatorDlg *pOperatorDlg = COperatorDlg::Get_Instance();
+				pOperatorDlg->m_stcOperLotID.SetWindowText(gData.sLotID);
+
+				CString sLog;
+				sLog.Format("[Work Mode] Barcode Input....  Barcode : [%s]", sData);
+				pLogFile->Save_HandlerLog(sLog);
 			}
-			gData.sLotID = sData;
-
-			COperatorDlg *pOperatorDlg = COperatorDlg::Get_Instance();
-			pOperatorDlg->m_stcOperLotID.SetWindowText(gData.sLotID);
-
-			CString sLog;
-			sLog.Format("[Work Mode] Barcode Input....  Barcode : [%s]", sData);
-			pLogFile->Save_HandlerLog(sLog);
-		}
 		sData.Empty();
 		nData = 0;
 
 	} 
-	/*
+/*
 	if		(gData.sLotID.Mid(0, 6) == "GSY481") sData = "K12";
 	else if (gData.sLotID.Mid(0, 6) == "GSY487") sData = "K14";
 	else if (gData.sLotID.Mid(0, 6) == "GSY518") sData = "K51";
@@ -1286,8 +1252,7 @@ void CWorkDlg::Display_LotInfo()
 {
 	CString strText;
 
-	if (m_bUseContinueLot) 
-	{
+	if (m_bUseContinueLot) {
 		for (int i = 10; i < 15; i++) m_Label[i].ShowWindow(SW_SHOW);
 		for (int i = 0; i < 5; i++) m_stcLotsId[i].ShowWindow(SW_SHOW);
 		for (int i = 0; i < 5; i++) m_stcTraysCount[i].ShowWindow(SW_SHOW);
@@ -1310,9 +1275,7 @@ void CWorkDlg::Display_LotInfo()
 			m_stcCmsCount[i].SetWindowText(strText);
 		}
 
-	} 
-	else 
-	{
+	} else {
 		for (int i = 6; i < 8; i++) m_Label[i].ShowWindow(SW_SHOW);
 		m_LabelstcCMCnt.ShowWindow(SW_SHOW);
 		m_stcLotId1.ShowWindow(SW_SHOW);
@@ -1489,8 +1452,8 @@ void CWorkDlg::Display_Tray()
 
     //////////////////////////////////////////////////////////////////////////
     // 실제 출력될 내용
-	if (gData.nArrayL == 0) gData.nArrayL = 4;	//[L]=[X]=5
-	if (gData.nArrayW == 0) gData.nArrayW = 3;	//[W]=[Y]=8
+	if (gData.nArrayL == 0) gData.nArrayL = 5;	//[L]=[X]=5
+	if (gData.nArrayW == 0) gData.nArrayW = 8;	//[W]=[Y]=8
 
 	int xxt = (310 / gData.nArrayL) - 4 - 2;
 	int yyt = (260 / gData.nArrayW) - 4 - 2 ;
@@ -1707,4 +1670,16 @@ void CWorkDlg::OnBnClickedBtnBuzzerOff()
 	CLogFile *pLogFile = CLogFile::Get_Instance();
 	pLogFile->Save_Interlock(1);
 #endif
+}
+
+
+void CWorkDlg::OnBnClickedButton1()
+{
+	g_objCapAttachUDP.Set_TrayLoad(gData.nPortNo);
+}
+
+
+void CWorkDlg::OnBnClickedButton2()
+{
+	gData.strTest.Empty();
 }

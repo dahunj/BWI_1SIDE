@@ -5,6 +5,7 @@
 
 #include "LogFile.h"
 
+
 #define UM_UPDATE_MODEL			WM_USER+1
 #define UM_UPDATE_RFID			WM_USER+2
 #define	UM_UPDATE_JOB_LIST		WM_USER+3
@@ -85,7 +86,6 @@ public:
 	CStaticCS		m_stcTraysCount[5];
 	CStaticCS		m_stcCmsCount[5];
 
-
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV 지원입니다.
 	DECLARE_MESSAGE_MAP()
@@ -153,6 +153,8 @@ public:
 
 	void Enable_LotInfo(BOOL on);
 
+	afx_msg void OnBnClickedButton1();
+	afx_msg void OnBnClickedButton2();
 };
 
 ///////////////////////////////////////////////////////////////////////////////

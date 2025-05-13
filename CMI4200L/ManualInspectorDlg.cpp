@@ -322,11 +322,8 @@ void CManualInspectorDlg::OnBtnTR1YClick(UINT nID)
 		return;
 	}
 
-	if(!pDX6->iUS_Z1AlignS12In || pDX6->iUS_Z1AlignS12Out || !pDX6->iUS_Z1AlignM34In || pDX6->iUS_Z1AlignM34Out)
-	{
-		AfxMessageBox(_T("Tray Aliner Master/Slave In 후 진행하세요. ...."));
-		return;
-	}
+	
+
 
 	if((pCommon->Check_Position(AX_UNLOAD_TRAY_Z1, 0) && pCommon->Check_Position(AX_UNLOAD_TRAY_Z2, 1)) ||
 	   (pCommon->Check_Position(AX_UNLOAD_TRAY_Z1, 1) && pCommon->Check_Position(AX_UNLOAD_TRAY_Z2, 0)) ) {
@@ -453,12 +450,7 @@ void CManualInspectorDlg::OnBtnTR2YClick(UINT nID)
 		return;
 	}
 
-	if(!pDX6->iUS_Z2AlignS12In || pDX6->iUS_Z2AlignS12Out || !pDX6->iUS_Z2AlignM34In || pDX6->iUS_Z2AlignM34Out)
-	{
-		AfxMessageBox(_T("Tray Aliner Master/Slave In 후 진행하세요. ...."));
-		return;
-	}
-
+	
 
 	if((pCommon->Check_Position(AX_UNLOAD_TRAY_Z2, 0) && pCommon->Check_Position(AX_UNLOAD_TRAY_Z1, 1)) ||
 	   (pCommon->Check_Position(AX_UNLOAD_TRAY_Z2, 1) && pCommon->Check_Position(AX_UNLOAD_TRAY_Z1, 0)) ) {

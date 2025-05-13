@@ -275,17 +275,6 @@ BOOL CManualElevatorDlg::OnInitDialog()
 	for (int i=5; i<6; i++) m_ledGDVacIO[i].ShowWindow(FALSE);
 #endif
 
-#ifdef PICKER_4
-	for (int i=8; i<12; i++) m_btnVacIO[i].ShowWindow(FALSE);
-	for (int i=4; i<6; i++) m_ledVacIO[i].ShowWindow(FALSE);
-
-	for (int i=8; i<12; i++) m_btnNGVacIO[i].ShowWindow(FALSE);
-	for (int i=4; i<6; i++) m_ledNGVacIO[i].ShowWindow(FALSE);
-
-	for (int i=8; i<12; i++) m_btnGDVacIO[i].ShowWindow(FALSE);
-	for (int i=4; i<6; i++) m_ledGDVacIO[i].ShowWindow(FALSE);
-#endif
-
 	m_bThreadElevator1 = FALSE;
 	m_pThreadElevator1 = NULL;
 	m_nMRunCase = 0;
@@ -445,8 +434,8 @@ void CManualElevatorDlg::Display_Status()
 	if (gData.bUseNGVacuum) bShow = TRUE;
 	m_ledTRIO[15].ShowWindow(bShow);
 	m_ledTRIO[16].ShowWindow(bShow);
-	//for(int i=0; i<6; i++) m_ledNGVacIO[i].ShowWindow(bShow);
-	//for(int i=0; i<14; i++) m_btnNGVacIO[i].ShowWindow(bShow);
+	for(int i=0; i<6; i++) m_ledNGVacIO[i].ShowWindow(bShow);
+	for(int i=0; i<14; i++) m_btnNGVacIO[i].ShowWindow(bShow);
 	m_btnTRIO[12].ShowWindow(bShow);
 	m_btnTRIO[13].ShowWindow(bShow);
 
@@ -454,8 +443,8 @@ void CManualElevatorDlg::Display_Status()
 	if (gData.bUseGDVacuum) bShow = TRUE;
 	m_ledTRIO[17].ShowWindow(bShow);
 	m_ledTRIO[18].ShowWindow(bShow);
-	//for(int i=0; i<6; i++) m_ledGDVacIO[i].ShowWindow(bShow);
-	//for(int i=0; i<14; i++) m_btnGDVacIO[i].ShowWindow(bShow);
+	for(int i=0; i<6; i++) m_ledGDVacIO[i].ShowWindow(bShow);
+	for(int i=0; i<14; i++) m_btnGDVacIO[i].ShowWindow(bShow);
 	m_btnTRIO[14].ShowWindow(bShow);
 	m_btnTRIO[15].ShowWindow(bShow);
 
@@ -470,19 +459,6 @@ void CManualElevatorDlg::Display_Status()
 
 	for (int i=6; i<12; i++) m_btnGDVacIO[i].ShowWindow(bShow);
 	for (int i=3; i<6; i++) m_ledGDVacIO[i].ShowWindow(bShow);
-#endif
-
-#ifdef PICKER_4
-	// Vacuum4,5,6번 disable처리
-	bShow = FALSE;
-	for (int i=8; i<12; i++) m_btnVacIO[i].ShowWindow(bShow);
-	for (int i=4; i<6; i++) m_ledVacIO[i].ShowWindow(bShow);
-
-	for (int i=8; i<12; i++) m_btnNGVacIO[i].ShowWindow(bShow);
-	for (int i=4; i<6; i++) m_ledNGVacIO[i].ShowWindow(FALSE);
-
-	for (int i=8; i<12; i++) m_btnGDVacIO[i].ShowWindow(bShow);
-	for (int i=4; i<6; i++) m_ledGDVacIO[i].ShowWindow(bShow);
 #endif
 
 #ifdef PICKER_5
@@ -545,16 +521,7 @@ void CManualElevatorDlg::OnBtnVisionYClick(UINT nID)
 			AfxMessageBox(_T("NG Picker Up후 진행하세요............."));
 			return;
 	}
-#endif
-#ifdef NG_PICKER_4
-	if (!pDX3->iNGPicker1Up  || !pDX3->iNGPicker2Up  || !pDX3->iNGPicker3Up || !pDX3->iNGPicker4Up  || 
-	    pDX3->iNGPicker1Down || pDX3->iNGPicker2Down || pDX3->iNGPicker3Down || pDX3->iNGPicker4Down ) {
-		AfxMessageBox(_T("NG Picker Up후 진행하세요............."));
-		return;
-	}
-#endif
-
-#ifdef NG_PICKER_5
+#else
 	if (!pDX3->iNGPicker1Up  || !pDX3->iNGPicker2Up  || !pDX3->iNGPicker3Up || !pDX3->iNGPicker4Up  || !pDX3->iNGPicker5Up ||
 	    pDX3->iNGPicker1Down || pDX3->iNGPicker2Down || pDX3->iNGPicker3Down || pDX3->iNGPicker4Down || pDX3->iNGPicker5Down ) {
 		AfxMessageBox(_T("NG Picker Up후 진행하세요............."));
@@ -566,14 +533,6 @@ void CManualElevatorDlg::OnBtnVisionYClick(UINT nID)
 	if (!pDX4->iGoodPicker1Up || !pDX4->iGoodPicker2Up || !pDX4->iGoodPicker3Up || 
 		pDX4->iGoodPicker1Down || pDX4->iGoodPicker2Down || pDX4->iGoodPicker3Down )
 #endif	
-
-#ifdef PICKER_4
-		if (!pDX4->iGoodPicker1Up || !pDX4->iGoodPicker2Up || !pDX4->iGoodPicker3Up || 
-			!pDX4->iGoodPicker4Up || 
-			pDX4->iGoodPicker1Down || pDX4->iGoodPicker2Down || pDX4->iGoodPicker3Down || 
-			pDX4->iGoodPicker4Down )
-#endif	
-
 #ifdef PICKER_5
 	if (!pDX4->iGoodPicker1Up || !pDX4->iGoodPicker2Up || !pDX4->iGoodPicker3Up || 
 		!pDX4->iGoodPicker4Up || !pDX4->iGoodPicker5Up ||
@@ -704,15 +663,16 @@ void CManualElevatorDlg::OnBtnNGStageYClick(UINT nID)
 	if (!pAJinAXL->Is_Home(AX_NG_STAGE_Y)) return;
 	if (!pCommon->Check_MainDoor()) return;
 
+
+	if(!(pCommon->Check_Position(AX_NG_PICKER_Z, 0) )) {
+		AfxMessageBox(_T("NG Picker Z Axis Ready Position 이동후 진행하세요. ...."));
+		return;
+	}
+
 #ifdef NG_PICKER_3
 	if (pDX3->iNGPicker1Up   && pDX3->iNGPicker2Up    && pDX3->iNGPicker3Up &&
 		!pDX3->iNGPicker1Down && !pDX3->iNGPicker2Down && !pDX3->iNGPicker3Down ) {
-#endif
-#ifdef NG_PICKER_4
-	if (pDX3->iNGPicker1Up   && pDX3->iNGPicker2Up    && pDX3->iNGPicker3Up &&  pDX3->iNGPicker4Up && 
-	   !pDX3->iNGPicker1Down && !pDX3->iNGPicker2Down && !pDX3->iNGPicker3Down && !pDX3->iNGPicker4Down  ) {
-#endif
-#ifdef NG_PICKER_5
+#else
 	if (pDX3->iNGPicker1Up   && pDX3->iNGPicker2Up    && pDX3->iNGPicker3Up &&  pDX3->iNGPicker4Up && pDX3->iNGPicker5Up && 
 	   !pDX3->iNGPicker1Down && !pDX3->iNGPicker2Down && !pDX3->iNGPicker3Down && !pDX3->iNGPicker4Down && !pDX3->iNGPicker5Down ) {
 #endif
@@ -766,11 +726,6 @@ void CManualElevatorDlg::OnBtnVacIOClick(UINT nID)
 		pDY3->oInspVacuumPad1On = TRUE;
 		pDY3->oInspVacuumPad2On = TRUE;
 		pDY3->oInspVacuumPad3On = TRUE;
-
-#ifdef PICKER_4
-		pDY3->oInspVacuumPad4On = TRUE;
-#endif
-
 #ifdef PICKER_5
 		pDY3->oInspVacuumPad4On = TRUE;
 		pDY3->oInspVacuumPad5On = TRUE;
@@ -784,9 +739,6 @@ void CManualElevatorDlg::OnBtnVacIOClick(UINT nID)
 		pDY3->oInspVacuumPad1On = FALSE;
 		pDY3->oInspVacuumPad2On = FALSE;
 		pDY3->oInspVacuumPad3On = FALSE;
-#ifdef PICKER_4
-		pDY3->oInspVacuumPad4On = FALSE;
-#endif
 #ifdef PICKER_5
 		pDY3->oInspVacuumPad4On = FALSE;
 		pDY3->oInspVacuumPad5On = FALSE;
@@ -836,9 +788,6 @@ void CManualElevatorDlg::OnBtnNGVacIOClick(UINT nID)
 		pDY5->oNGVacuumPad1On = TRUE;
 		pDY5->oNGVacuumPad2On = TRUE;
 		pDY5->oNGVacuumPad3On = TRUE;
-#ifdef PICKER_4
-		pDY5->oNGVacuumPad4On = TRUE;
-#endif
 #ifdef PICKER_5
 		pDY5->oNGVacuumPad4On = TRUE;
 		pDY5->oNGVacuumPad5On = TRUE;
@@ -852,9 +801,6 @@ void CManualElevatorDlg::OnBtnNGVacIOClick(UINT nID)
 		pDY5->oNGVacuumPad1On = FALSE;
 		pDY5->oNGVacuumPad2On = FALSE;
 		pDY5->oNGVacuumPad3On = FALSE;
-#ifdef PICKER_4
-		pDY5->oNGVacuumPad4On = FALSE;
-#endif
 #ifdef PICKER_5
 		pDY5->oNGVacuumPad4On = FALSE;
 		pDY5->oNGVacuumPad5On = FALSE;
@@ -904,9 +850,6 @@ void CManualElevatorDlg::OnBtnGDVacIOClick(UINT nID)
 		pDY5->oGoodVacuumPad1On = TRUE;
 		pDY5->oGoodVacuumPad2On = TRUE;
 		pDY5->oGoodVacuumPad3On = TRUE;
-#ifdef PICKER_4
-		pDY5->oGoodVacuumPad4On = TRUE;
-#endif
 #ifdef PICKER_5
 		pDY5->oGoodVacuumPad4On = TRUE;
 		pDY5->oGoodVacuumPad5On = TRUE;
@@ -920,9 +863,6 @@ void CManualElevatorDlg::OnBtnGDVacIOClick(UINT nID)
 		pDY5->oGoodVacuumPad1On = FALSE;
 		pDY5->oGoodVacuumPad2On = FALSE;
 		pDY5->oGoodVacuumPad3On = FALSE;
-#ifdef PICKER_4
-		pDY5->oGoodVacuumPad4On = FALSE;
-#endif
 #ifdef PICKER_5
 		pDY5->oGoodVacuumPad4On = FALSE;
 		pDY5->oGoodVacuumPad5On = FALSE;

@@ -297,12 +297,6 @@ void CManualLoadingDlg::OnBtnTR1YClick(UINT nID)
 		return;
 	}
 
-	if(!pDX1->iLS_Z1AlignS12In || pDX1->iLS_Z1AlignS12Out || !pDX1->iLS_Z1AlignM34In || pDX1->iLS_Z1AlignM34Out)
-	{
-		AfxMessageBox(_T("Tray Aliner Master/Slave In 후 진행하세요. ...."));
-		return;
-	}
-
 	if((pCommon->Check_Position(AX_LOAD_TRAY_Z1, 0) && pCommon->Check_Position(AX_LOAD_TRAY_Z2, 1)) ||
 	   (pCommon->Check_Position(AX_LOAD_TRAY_Z1, 1) && pCommon->Check_Position(AX_LOAD_TRAY_Z2, 0)) ) {
 		if (nID == IDC_BTN_TR1_Y_0) {
@@ -425,12 +419,6 @@ void CManualLoadingDlg::OnBtnTR2YClick(UINT nID)
 
 	if(!(pCommon->Check_Position(AX_LOAD_PICKER_Z, 0) )) {
 		AfxMessageBox(_T("Load Picker Z Axis Ready Position 이동후 진행하세요. ...."));
-		return;
-	}
-
-	if(!pDX1->iLS_Z2AlignS12In || pDX1->iLS_Z2AlignS12Out || !pDX1->iLS_Z2AlignM34In || pDX1->iLS_Z2AlignM34Out)
-	{
-		AfxMessageBox(_T("Tray Aliner Master/Slave In 후 진행하세요. ...."));
 		return;
 	}
 

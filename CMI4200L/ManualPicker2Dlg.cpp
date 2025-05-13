@@ -205,18 +205,6 @@ BOOL CManualPicker2Dlg::OnInitDialog()
 	}
 #endif
 
-#ifdef PICKER_4
-	for (int i=8; i<12; i++) {
-		m_btnMLPickIO[i].ShowWindow(FALSE);
-		m_ledMLPickIO[i].ShowWindow(FALSE);
-	}
-	for (int i=20; i<24; i++) {
-		m_btnMLPickIO[i].ShowWindow(FALSE);
-		m_ledMLPickIO[i].ShowWindow(FALSE);
-	}
-#endif
-
-
 #ifdef PICKER_5
 	for (int i=10; i<12; i++) {
 		m_btnMLPickIO[i].ShowWindow(FALSE);
@@ -488,18 +476,6 @@ void CManualPicker2Dlg::OnBtnMLNGPickZClick(UINT nID)
 			return;
 		}
 #endif
-#ifdef PICKER_4
-		if (pDX2->iInspCMAlign1In && pCommon->Check_Position(AX_LOAD_PICKER_Y1, 2) &&
-			(pDX2->iMLPicker1CMCheck || pDX2->iMLPicker2CMCheck || pDX2->iMLPicker3CMCheck || pDX2->iMLPicker4CMCheck )) {
-				AfxMessageBox(_T("Can not move......(Load Picker CM Check And Align 1 In)"));
-				return;
-		}
-		if((!pDX2->iMLPicker1Open && !pDX2->iMLPicker1CMCheck) || (!pDX2->iMLPicker2Open && !pDX2->iMLPicker2CMCheck) || (!pDX2->iMLPicker3Open && !pDX2->iMLPicker3CMCheck) ||
-			(!pDX2->iMLPicker4Open && !pDX2->iMLPicker4CMCheck) ) {
-				AfxMessageBox(_T("Can not move......(Load Picker Close And CM Check Off)"));
-				return;
-		}
-#endif
 #ifdef PICKER_5
 		if (pDX2->iInspCMAlign1In && pCommon->Check_Position(AX_LOAD_PICKER_Y1, 2) &&
 		   (pDX2->iMLPicker1CMCheck || pDX2->iMLPicker2CMCheck || pDX2->iMLPicker3CMCheck || pDX2->iMLPicker4CMCheck || pDX2->iMLPicker5CMCheck)) {
@@ -538,18 +514,6 @@ void CManualPicker2Dlg::OnBtnMLNGPickZClick(UINT nID)
 		if((!pDX2->iMLPicker1Open && !pDX2->iMLPicker1CMCheck) || (!pDX2->iMLPicker2Open && !pDX2->iMLPicker2CMCheck) || (!pDX2->iMLPicker3Open && !pDX2->iMLPicker3CMCheck) ) {
 			AfxMessageBox(_T("Can not move......(Load Picker Close And CM Check Off)"));
 			return;
-		}
-#endif
-#ifdef PICKER_4
-		if (pDX2->iInspCMAlign1In && pCommon->Check_Position(AX_LOAD_PICKER_Y1, 2) &&
-			(pDX2->iMLPicker1CMCheck || pDX2->iMLPicker2CMCheck || pDX2->iMLPicker3CMCheck || pDX2->iMLPicker4CMCheck )) {
-				AfxMessageBox(_T("Can not move......(Load Picker CM Check And Align 1 In)"));
-				return;
-		}
-		if((!pDX2->iMLPicker1Open && !pDX2->iMLPicker1CMCheck) || (!pDX2->iMLPicker2Open && !pDX2->iMLPicker2CMCheck) || (!pDX2->iMLPicker3Open && !pDX2->iMLPicker3CMCheck) ||
-			(!pDX2->iMLPicker4Open && !pDX2->iMLPicker4CMCheck) ) {
-				AfxMessageBox(_T("Can not move......(Load Picker Close And CM Check Off)"));
-				return;
 		}
 #endif
 #ifdef PICKER_5
@@ -657,10 +621,6 @@ void CManualPicker2Dlg::OnBtnMLPickIOClick(UINT nID)
 		pDY2->oMLPicker2Close = FALSE;
 		pDY2->oMLPicker3Open = TRUE;
 		pDY2->oMLPicker3Close = FALSE;
-#ifdef PICKER_4
-		pDY2->oMLPicker4Open = TRUE;
-		pDY2->oMLPicker4Close = FALSE;
-#endif
 #ifdef PICKER_5
 		pDY2->oMLPicker4Open = TRUE;
 		pDY2->oMLPicker4Close = FALSE;
@@ -683,10 +643,6 @@ void CManualPicker2Dlg::OnBtnMLPickIOClick(UINT nID)
 		pDY2->oMLPicker2Close = TRUE;
 		pDY2->oMLPicker3Open = FALSE;
 		pDY2->oMLPicker3Close = TRUE;
-#ifdef PICKER_4
-		pDY2->oMLPicker4Open = FALSE;
-		pDY2->oMLPicker4Close = TRUE;
-#endif
 #ifdef PICKER_5
 		pDY2->oMLPicker4Open = FALSE;
 		pDY2->oMLPicker4Close = TRUE;
@@ -758,10 +714,6 @@ void CManualPicker2Dlg::OnBtnMLPickIOClick(UINT nID)
 		pDY5->oMUPicker2Close = FALSE;
 		pDY5->oMUPicker3Open = TRUE;
 		pDY5->oMUPicker3Close = FALSE;
-#ifdef PICKER_4
-		pDY5->oMUPicker4Open = TRUE;
-		pDY5->oMUPicker4Close = FALSE;
-#endif
 #ifdef PICKER_5
 		pDY5->oMUPicker4Open = TRUE;
 		pDY5->oMUPicker4Close = FALSE;
@@ -784,10 +736,6 @@ void CManualPicker2Dlg::OnBtnMLPickIOClick(UINT nID)
 		pDY5->oMUPicker2Close = TRUE;
 		pDY5->oMUPicker3Open = FALSE;
 		pDY5->oMUPicker3Close = TRUE;
-#ifdef PICKER_4
-		pDY5->oMUPicker4Open = FALSE;
-		pDY5->oMUPicker4Close = TRUE;
-#endif
 #ifdef PICKER_5
 		pDY5->oMUPicker4Open = FALSE;
 		pDY5->oMUPicker4Close = TRUE;

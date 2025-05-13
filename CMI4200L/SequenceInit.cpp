@@ -337,31 +337,23 @@ BOOL CSequenceInit::Initial_Load1Run()
 			m_pDY1->oLS_LoadSupport12In = TRUE;
 			m_pDY1->oLS_LoadSupport12Out = FALSE;
 
-			m_pDY1->oLS_Z1AlignS12In = TRUE;
-			m_pDY1->oLS_Z1AlignS12Out = FALSE;
-			m_pDY1->oLS_Z1AlignM34In = TRUE;
-			m_pDY1->oLS_Z1AlignM34Out = FALSE;
-
-			m_pDY1->oLS_Z2AlignS12In = TRUE;
-			m_pDY1->oLS_Z2AlignS12Out = FALSE;
-			m_pDY1->oLS_Z2AlignM34In = TRUE;
-			m_pDY1->oLS_Z2AlignM34Out = FALSE;
+			m_pDY1->oLS_Z1AlignS12In = FALSE;
+			m_pDY1->oLS_Z1AlignS12Out = TRUE;
+			m_pDY1->oLS_Z1AlignM34In = FALSE;
+			m_pDY1->oLS_Z1AlignM34Out = TRUE;
 
 			m_pAJinAXL->Write_Output(1);
 			m_nInitLoad1Case = 112;
 			m_pCommon->Set_LoopTime(INITIAL_LOAD1, 5000);
 		break;
 	case 112:
-		if (m_pDX1->iLS_LoadSupport1In && !m_pDX1->iLS_LoadSupport1Out 
-			&& m_pDX1->iLS_LoadSupport2In && !m_pDX1->iLS_LoadSupport2Out &&
-			m_pDX1->iLS_Z2AlignS12In && !m_pDX1->iLS_Z2AlignS12Out && 
-			m_pDX1->iLS_Z2AlignM34In && !m_pDX1->iLS_Z2AlignM34Out) {
+		if (m_pDX1->iLS_LoadSupport1In && !m_pDX1->iLS_LoadSupport1Out && m_pDX1->iLS_LoadSupport2In && !m_pDX1->iLS_LoadSupport2Out) {
 			m_nInitLoad1Case = 113;
 			m_pCommon->Set_LoopTime(INITIAL_LOAD1, 5000);
 		}
 		break;
 	case 113:
-		if (m_pDX1->iLS_Z1AlignS12In && !m_pDX1->iLS_Z1AlignS12Out && m_pDX1->iLS_Z1AlignM34In && !m_pDX1->iLS_Z1AlignM34Out) {
+		if (!m_pDX1->iLS_Z1AlignS12In && m_pDX1->iLS_Z1AlignS12Out && !m_pDX1->iLS_Z1AlignM34In && m_pDX1->iLS_Z1AlignM34Out) {
 			m_nInitLoad1Case = 150;
 			m_pCommon->Set_LoopTime(INITIAL_LOAD1, 60000);
 		}
@@ -435,26 +427,12 @@ BOOL CSequenceInit::Initial_Load1Run()
 	case 166:
 		if (m_pCommon->Check_Position(AX_LOAD_TRAY_X1, 0) && m_pCommon->Check_Position(AX_LOAD_TRAY_X2, 3)) {
 			m_nInitLoad1Case = 200;
-
-			m_pDY1->oLS_Z1AlignS12In = FALSE;
-			m_pDY1->oLS_Z1AlignS12Out = TRUE;
-			m_pDY1->oLS_Z1AlignM34In = FALSE;
-			m_pDY1->oLS_Z1AlignM34Out = TRUE;
-
-			m_pDY1->oLS_Z2AlignS12In = FALSE;
-			m_pDY1->oLS_Z2AlignS12Out = TRUE;
-			m_pDY1->oLS_Z2AlignM34In = FALSE;
-			m_pDY1->oLS_Z2AlignM34Out = TRUE;
-			m_pAJinAXL->Write_Output(1);
 			m_pCommon->Set_LoopTime(INITIAL_LOAD1, 30000);
 		}
 		break;
 
 	case 200:	// Load Initialize Complete
-		if (!m_pDX1->iLS_LoadSupport1In && m_pDX1->iLS_LoadSupport1Out && !m_pDX1->iLS_LoadSupport2In && m_pDX1->iLS_LoadSupport2Out
-			 && !m_pDX1->iLS_Z2AlignS12In && m_pDX1->iLS_Z2AlignS12Out && !m_pDX1->iLS_Z2AlignM34In && m_pDX1->iLS_Z2AlignM34Out){
-			m_pCommon->Set_LoopTime(INITIAL_LOAD1, 5000);
-		} 		
+		m_pCommon->Set_LoopTime(INITIAL_LOAD1, 5000);
 		break;
 	}
 
@@ -487,6 +465,12 @@ BOOL CSequenceInit::Initial_Load2Run()
 	case 111:
 			m_pDY1->oLS_UnloadSupport12In = TRUE;
 			m_pDY1->oLS_UnloadSupport12Out = FALSE;
+
+			m_pDY1->oLS_Z2AlignS12In = FALSE;
+			m_pDY1->oLS_Z2AlignS12Out = TRUE;
+			m_pDY1->oLS_Z2AlignM34In = FALSE;
+			m_pDY1->oLS_Z2AlignM34Out = TRUE;
+
 			m_pAJinAXL->Write_Output(1);
 			m_nInitLoad2Case = 112;
 			m_pCommon->Set_LoopTime(INITIAL_LOAD2, 5000);
@@ -498,17 +482,14 @@ BOOL CSequenceInit::Initial_Load2Run()
 		}
 		break;
 	case 113:
-		if (1) {
+		if (!m_pDX1->iLS_Z2AlignS12In && m_pDX1->iLS_Z2AlignS12Out && !m_pDX1->iLS_Z2AlignM34In && m_pDX1->iLS_Z2AlignM34Out) {
 			m_nInitLoad2Case = 200;
 			m_pCommon->Set_LoopTime(INITIAL_LOAD2, 60000);
 		}
 		break;
 
 	case 200:	// Load Initialize Complete
-		if (1)
-		{	
-			m_pCommon->Set_LoopTime(INITIAL_LOAD2, 5000);
-		}
+		m_pCommon->Set_LoopTime(INITIAL_LOAD2, 5000);
 		break;
 	}
 
@@ -544,16 +525,11 @@ BOOL CSequenceInit::Initial_Unload1Run()
 			m_pDY6->oUS_LoadSupport12In = TRUE;
 			m_pDY6->oUS_LoadSupport12Out = FALSE;
 					 
-			m_pDY6->oUS_Z1AlignS12In = TRUE;
-			m_pDY6->oUS_Z1AlignS12Out = FALSE;
-			m_pDY6->oUS_Z1AlignM34In = TRUE;
-			m_pDY6->oUS_Z1AlignM34Out = FALSE;
-			
-			m_pDY6->oUS_Z2AlignS12In = TRUE;
-			m_pDY6->oUS_Z2AlignS12Out = FALSE;
-			m_pDY6->oUS_Z2AlignM34In = TRUE;
-			m_pDY6->oUS_Z2AlignM34Out = FALSE;
-			
+			m_pDY6->oUS_Z1AlignS12In = FALSE;
+			m_pDY6->oUS_Z1AlignS12Out = TRUE;
+			m_pDY6->oUS_Z1AlignM34In = FALSE;
+			m_pDY6->oUS_Z1AlignM34Out = TRUE;
+
 			m_pAJinAXL->Write_Output(6);
 			m_nInitUnload1Case = 112;
 			m_pCommon->Set_LoopTime(INITIAL_UNLOAD1, 5000);
@@ -565,8 +541,7 @@ BOOL CSequenceInit::Initial_Unload1Run()
 		}
 		break;
 	case 113:
-		if (m_pDX6->iUS_Z1AlignS12In && !m_pDX6->iUS_Z1AlignS12Out && m_pDX6->iUS_Z1AlignM34In && !m_pDX6->iUS_Z1AlignM34Out
-			&& m_pDX6->iUS_Z2AlignS12In && !m_pDX6->iUS_Z2AlignS12Out && m_pDX6->iUS_Z2AlignM34In && !m_pDX6->iUS_Z2AlignM34Out) {
+		if (!m_pDX6->iUS_Z1AlignS12In && m_pDX6->iUS_Z1AlignS12Out && !m_pDX6->iUS_Z1AlignM34In && m_pDX6->iUS_Z1AlignM34Out) {
 			m_nInitUnload1Case = 150;
 			m_pCommon->Set_LoopTime(INITIAL_UNLOAD1, 60000);
 		}
@@ -639,16 +614,6 @@ BOOL CSequenceInit::Initial_Unload1Run()
 		break;
 	case 166:
 		if (m_pCommon->Check_Position(AX_UNLOAD_TRAY_Y1, 0) && m_pCommon->Check_Position(AX_UNLOAD_TRAY_Y2, 3)) {
-			m_pDY6->oUS_Z1AlignS12In = FALSE;
-			m_pDY6->oUS_Z1AlignS12Out = TRUE;
-			m_pDY6->oUS_Z1AlignM34In = FALSE;
-			m_pDY6->oUS_Z1AlignM34Out = TRUE;
-
-			m_pDY6->oUS_Z2AlignS12In = FALSE;
-			m_pDY6->oUS_Z2AlignS12Out = TRUE;
-			m_pDY6->oUS_Z2AlignM34In = FALSE;
-			m_pDY6->oUS_Z2AlignM34Out = TRUE;
-			m_pAJinAXL->Write_Output(6);
 			m_nInitUnload1Case = 200;
 			m_pCommon->Set_LoopTime(INITIAL_UNLOAD1, 30000);
 		}
@@ -656,10 +621,7 @@ BOOL CSequenceInit::Initial_Unload1Run()
 
 
 	case 200:	// Load Initialize Complete
-		if (!m_pDX6->iUS_Z1AlignS12In && m_pDX6->iUS_Z1AlignS12Out && !m_pDX6->iUS_Z1AlignM34In && m_pDX6->iUS_Z1AlignM34Out
-			&& !m_pDX6->iUS_Z2AlignS12In && m_pDX6->iUS_Z2AlignS12Out && !m_pDX6->iUS_Z2AlignM34In && m_pDX6->iUS_Z2AlignM34Out) {
-			m_pCommon->Set_LoopTime(INITIAL_UNLOAD1, 5000);
-		}
+		m_pCommon->Set_LoopTime(INITIAL_UNLOAD1, 5000);
 		break;
 	}
 
@@ -692,7 +654,12 @@ BOOL CSequenceInit::Initial_Unload2Run()
 	case 111:
 			m_pDY6->oUS_UnloadSupport12In = TRUE;
 			m_pDY6->oUS_UnloadSupport12Out = FALSE;
-		
+					 
+			m_pDY6->oUS_Z2AlignS12In = FALSE;
+			m_pDY6->oUS_Z2AlignS12Out = TRUE;
+			m_pDY6->oUS_Z2AlignM34In = FALSE;
+			m_pDY6->oUS_Z2AlignM34Out = TRUE;
+
 			m_pAJinAXL->Write_Output(6);
 			m_nInitUnload2Case = 112;
 			m_pCommon->Set_LoopTime(INITIAL_UNLOAD2, 5000);
@@ -704,17 +671,14 @@ BOOL CSequenceInit::Initial_Unload2Run()
 		}
 		break;
 	case 113:
-		if (1) {
-			
+		if (!m_pDX6->iUS_Z2AlignS12In && m_pDX6->iUS_Z2AlignS12Out && !m_pDX6->iUS_Z2AlignM34In && m_pDX6->iUS_Z2AlignM34Out) {
 			m_nInitUnload2Case = 200;
 			m_pCommon->Set_LoopTime(INITIAL_UNLOAD2, 60000);
 		}
 		break;
 
 	case 200:	// Load Initialize Complete
-		if (1) {
 		m_pCommon->Set_LoopTime(INITIAL_UNLOAD2, 5000);
-		}
 		break;
 	}
 
@@ -876,10 +840,8 @@ BOOL CSequenceInit::Initial_NGPickerRun()
 #ifndef NG_PICKER_3
 			m_pDY3->oNGPicker4Open = TRUE;
 			m_pDY3->oNGPicker4Close = FALSE;
-		#ifndef NG_PICKER_4
 			m_pDY3->oNGPicker5Open = TRUE;
 			m_pDY3->oNGPicker5Close = FALSE;
-		#endif
 #endif
 
 			m_pDY3->oNGPicker1Up = TRUE;
@@ -891,10 +853,8 @@ BOOL CSequenceInit::Initial_NGPickerRun()
 #ifndef NG_PICKER_3
 			m_pDY3->oNGPicker4Up = TRUE;
 			m_pDY3->oNGPicker4Down = FALSE;
-		#ifndef NG_PICKER_4
 			m_pDY3->oNGPicker5Up = TRUE;
 			m_pDY3->oNGPicker5Down = FALSE;
-		#endif
 #endif
 
 			m_pAJinAXL->Write_Output(3);
@@ -904,11 +864,7 @@ BOOL CSequenceInit::Initial_NGPickerRun()
 	case 112:
 #ifdef NG_PICKER_3
 		if (m_pDX3->iNGPicker1Open && m_pDX3->iNGPicker2Open && m_pDX3->iNGPicker3Open)
-#endif
-#ifdef NG_PICKER_4
-	if (m_pDX3->iNGPicker1Open && m_pDX3->iNGPicker2Open && m_pDX3->iNGPicker3Open && m_pDX3->iNGPicker4Open)
-#endif
-#ifdef NG_PICKER_5
+#else
 		if (m_pDX3->iNGPicker1Open && m_pDX3->iNGPicker2Open && m_pDX3->iNGPicker3Open && m_pDX3->iNGPicker4Open && m_pDX3->iNGPicker5Open )
 #endif
 		{
@@ -921,12 +877,7 @@ BOOL CSequenceInit::Initial_NGPickerRun()
 #ifdef NG_PICKER_3
 		if (m_pDX3->iNGPicker1Up && m_pDX3->iNGPicker2Up && m_pDX3->iNGPicker3Up &&
 			!m_pDX3->iNGPicker1Down && !m_pDX3->iNGPicker2Down && !m_pDX3->iNGPicker3Down )
-#endif
-#ifdef NG_PICKER_4
-		if (m_pDX3->iNGPicker1Up && m_pDX3->iNGPicker2Up && m_pDX3->iNGPicker3Up && m_pDX3->iNGPicker4Up &&  
-			!m_pDX3->iNGPicker1Down && !m_pDX3->iNGPicker2Down && !m_pDX3->iNGPicker3Down && !m_pDX3->iNGPicker4Down )
-#endif
-#ifdef NG_PICKER_5
+#else
 		if (m_pDX3->iNGPicker1Up && m_pDX3->iNGPicker2Up && m_pDX3->iNGPicker3Up && m_pDX3->iNGPicker4Up && m_pDX3->iNGPicker5Up && 
 			!m_pDX3->iNGPicker1Down && !m_pDX3->iNGPicker2Down && !m_pDX3->iNGPicker3Down && !m_pDX3->iNGPicker4Down && !m_pDX3->iNGPicker5Down )
 #endif
@@ -939,12 +890,7 @@ BOOL CSequenceInit::Initial_NGPickerRun()
 #ifdef NG_PICKER_3
 		if((!m_pEquipData->bUseVisionInspect) ||
 			(!m_pDX3->iNGPicker1CMCheck && !m_pDX3->iNGPicker2CMCheck && !m_pDX3->iNGPicker3CMCheck))
-#endif
-#ifdef NG_PICKER_4
-		if((!m_pEquipData->bUseVisionInspect) ||
-		   (!m_pDX3->iNGPicker1CMCheck && !m_pDX3->iNGPicker2CMCheck && !m_pDX3->iNGPicker3CMCheck && !m_pDX3->iNGPicker4CMCheck ))
-#endif
-#ifdef NG_PICKER_5
+#else
 		if((!m_pEquipData->bUseVisionInspect) ||
 		   (!m_pDX3->iNGPicker1CMCheck && !m_pDX3->iNGPicker2CMCheck && !m_pDX3->iNGPicker3CMCheck && !m_pDX3->iNGPicker4CMCheck && !m_pDX3->iNGPicker5CMCheck))
 #endif
@@ -1033,10 +979,6 @@ BOOL CSequenceInit::Initial_GDPickerRun()
 			m_pDY4->oGoodPicker2Down = FALSE;
 			m_pDY4->oGoodPicker3Up = TRUE;
 			m_pDY4->oGoodPicker3Down = FALSE;
-#ifdef PICKER_4
-			m_pDY4->oGoodPicker4Up = TRUE;
-			m_pDY4->oGoodPicker4Down = FALSE;
-#endif
 #ifdef PICKER_5
 			m_pDY4->oGoodPicker4Up = TRUE;
 			m_pDY4->oGoodPicker4Down = FALSE;
@@ -1063,10 +1005,6 @@ BOOL CSequenceInit::Initial_GDPickerRun()
 #ifdef PICKER_3
 		if (m_pDX4->iGoodPicker1Open && m_pDX4->iGoodPicker2Open && m_pDX4->iGoodPicker3Open)
 #endif
-#ifdef PICKER_4
-			if (m_pDX4->iGoodPicker1Open && m_pDX4->iGoodPicker2Open && m_pDX4->iGoodPicker3Open && 
-				m_pDX4->iGoodPicker4Open )
-#endif
 #ifdef PICKER_5
 		if (m_pDX4->iGoodPicker1Open && m_pDX4->iGoodPicker2Open && m_pDX4->iGoodPicker3Open && 
 			m_pDX4->iGoodPicker4Open && m_pDX4->iGoodPicker5Open )
@@ -1085,12 +1023,6 @@ BOOL CSequenceInit::Initial_GDPickerRun()
 #ifdef PICKER_3
 		if (m_pDX4->iGoodPicker1Up && m_pDX4->iGoodPicker2Up && m_pDX4->iGoodPicker3Up && 
 			!m_pDX4->iGoodPicker1Down && !m_pDX4->iGoodPicker2Down && !m_pDX4->iGoodPicker3Down )
-#endif
-#ifdef PICKER_4
-			if (m_pDX4->iGoodPicker1Up && m_pDX4->iGoodPicker2Up && m_pDX4->iGoodPicker3Up && 
-				m_pDX4->iGoodPicker4Up && 
-				!m_pDX4->iGoodPicker1Down && !m_pDX4->iGoodPicker2Down && !m_pDX4->iGoodPicker3Down && 
-				!m_pDX4->iGoodPicker4Down)
 #endif
 #ifdef PICKER_5
 		if (m_pDX4->iGoodPicker1Up && m_pDX4->iGoodPicker2Up && m_pDX4->iGoodPicker3Up && 
@@ -1113,11 +1045,6 @@ BOOL CSequenceInit::Initial_GDPickerRun()
 #ifdef PICKER_3
 		if((!m_pEquipData->bUseVisionInspect) ||
 		   (!m_pDX4->iGoodPicker1CMCheck && !m_pDX4->iGoodPicker2CMCheck && !m_pDX4->iGoodPicker3CMCheck ))
-#endif
-#ifdef PICKER_4
-		   if((!m_pEquipData->bUseVisionInspect) ||
-			   (!m_pDX4->iGoodPicker1CMCheck && !m_pDX4->iGoodPicker2CMCheck && !m_pDX4->iGoodPicker3CMCheck && 
-			   !m_pDX4->iGoodPicker4CMCheck))
 #endif
 #ifdef PICKER_5
 		if((!m_pEquipData->bUseVisionInspect) ||
@@ -1203,11 +1130,6 @@ BOOL CSequenceInit::Initial_LDPickerRun()
 			m_pDY2->oMLPicker2Close = FALSE;
 			m_pDY2->oMLPicker3Open = TRUE;
 			m_pDY2->oMLPicker3Close = FALSE;
-#ifdef PICKER_4
-			m_pDY2->oMLPicker4Open = TRUE;
-			m_pDY2->oMLPicker4Close = FALSE;
-
-#endif
 #ifdef PICKER_5
 			m_pDY2->oMLPicker4Open = TRUE;
 			m_pDY2->oMLPicker4Close = FALSE;
@@ -1230,10 +1152,6 @@ BOOL CSequenceInit::Initial_LDPickerRun()
 #ifdef PICKER_3
 		if (m_pDX2->iMLPicker1Open && m_pDX2->iMLPicker2Open && m_pDX2->iMLPicker3Open )
 #endif
-#ifdef PICKER_4
-			if (m_pDX2->iMLPicker1Open && m_pDX2->iMLPicker2Open && m_pDX2->iMLPicker3Open && 
-				m_pDX2->iMLPicker4Open)
-#endif
 #ifdef PICKER_5
 		if (m_pDX2->iMLPicker1Open && m_pDX2->iMLPicker2Open && m_pDX2->iMLPicker3Open && 
 			m_pDX2->iMLPicker4Open && m_pDX2->iMLPicker5Open )
@@ -1252,11 +1170,6 @@ BOOL CSequenceInit::Initial_LDPickerRun()
 #ifdef PICKER_3
 		if((!m_pEquipData->bUseVisionInspect) ||
 		   (!m_pDX2->iMLPicker1CMCheck && !m_pDX2->iMLPicker2CMCheck && !m_pDX2->iMLPicker3CMCheck ))
-#endif
-#ifdef PICKER_4
-		   if((!m_pEquipData->bUseVisionInspect) ||
-			   (!m_pDX2->iMLPicker1CMCheck && !m_pDX2->iMLPicker2CMCheck && !m_pDX2->iMLPicker3CMCheck && 
-			   !m_pDX2->iMLPicker4CMCheck ))
 #endif
 #ifdef PICKER_5
 		if((!m_pEquipData->bUseVisionInspect) ||
@@ -1365,11 +1278,6 @@ BOOL CSequenceInit::Initial_ULPickerRun()
 			m_pDY5->oMUPicker2Close = FALSE;
 			m_pDY5->oMUPicker3Open = TRUE;
 			m_pDY5->oMUPicker3Close = FALSE;
-#ifdef PICKER_4
-			m_pDY5->oMUPicker4Open = TRUE;
-			m_pDY5->oMUPicker4Close = FALSE;
-			
-#endif
 #ifdef PICKER_5
 			m_pDY5->oMUPicker4Open = TRUE;
 			m_pDY5->oMUPicker4Close = FALSE;
@@ -1392,10 +1300,6 @@ BOOL CSequenceInit::Initial_ULPickerRun()
 #ifdef PICKER_3
 		if (m_pDX5->iMUPicker1Open && m_pDX5->iMUPicker2Open && m_pDX5->iMUPicker3Open)
 #endif
-#ifdef PICKER_4
-			if (m_pDX5->iMUPicker1Open && m_pDX5->iMUPicker2Open && m_pDX5->iMUPicker3Open && 
-				m_pDX5->iMUPicker4Open )
-#endif
 #ifdef PICKER_5
 		if (m_pDX5->iMUPicker1Open && m_pDX5->iMUPicker2Open && m_pDX5->iMUPicker3Open && 
 			m_pDX5->iMUPicker4Open && m_pDX5->iMUPicker5Open )
@@ -1414,11 +1318,6 @@ BOOL CSequenceInit::Initial_ULPickerRun()
 #ifdef PICKER_3
 		if((!m_pEquipData->bUseVisionInspect) ||
 		   (!m_pDX5->iMUPicker1CMCheck && !m_pDX5->iMUPicker2CMCheck && !m_pDX5->iMUPicker3CMCheck ))
-#endif
-#ifdef PICKER_4
-		   if((!m_pEquipData->bUseVisionInspect) ||
-			   (!m_pDX5->iMUPicker1CMCheck && !m_pDX5->iMUPicker2CMCheck && !m_pDX5->iMUPicker3CMCheck && 
-			   !m_pDX5->iMUPicker4CMCheck))
 #endif
 #ifdef PICKER_5
 		if((!m_pEquipData->bUseVisionInspect) ||

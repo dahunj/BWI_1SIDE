@@ -156,8 +156,8 @@ void COperatorDlg::OnShowWindow(BOOL bShow, UINT nStatus)
 		strText.Format("%d", gData.nCMJobCount);
 		m_stcOperCMCnt.SetWindowText(strText);
 
-		/*gData.bOpMode = TRUE;
-		Enable_ModeButton(FALSE, FALSE);*/
+		//gData.bOpMode = TRUE;
+		//Enable_ModeButton(FALSE, FALSE);
 		Display_Status();
 		SetTimer(0, 200, NULL);
 	} else {

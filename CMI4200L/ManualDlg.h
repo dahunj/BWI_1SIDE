@@ -64,7 +64,7 @@ protected:
 	afx_msg void OnBnClickedRdoManualElevator2();
 
 public:
-	
+	CManualFlowDlg		*m_pManualFlowDlg;
 	CManualElevatorDlg	*m_pManualElevatorDlg;
 	CManualPickerDlg	*m_pManualPickerDlg;
 	CManualInspectorDlg	*m_pManualInspectorDlg;
@@ -72,7 +72,7 @@ public:
 	CManualPicker2Dlg	*m_pManualPicker2Dlg;
 	CManualPicker3Dlg	*m_pManualPicker3Dlg;
 	CManualLotDataDlg	*m_pManualLotDataDlg;
-	CManualLoadingDlg	*m_pManualLoadTrayDlg;
+	CManualLoadingDlg	*m_pManualLoadingDlg;
 
 private:
 	void Initial_Controls();

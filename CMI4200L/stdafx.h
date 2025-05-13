@@ -58,27 +58,24 @@
 #define ECM_LOG			"D:\\EVMS\\TP\\log\\"
 #define LOG_DELETE_DAY	 180		//6개월
 #define TRAY_MAX_CNT	 30			//30개
-#define SIM_WAITTIMES	 1		//
-#define SIM_WAITTIMEM	 1		//
+#define SIM_WAITTIMES	 5		//
+#define SIM_WAITTIMEM	 5		//
 
-//#define AJIN_BOARD_USE
+#define AJIN_BOARD_USE
 
 //BWI Model Only(5x2)
 #define EQ_TYPE_A1	//R44A,BWI
 //#define EQ_TYPE_A2	//R44A,BWI
 
 #if defined(EQ_TYPE_A1)		//R44A(MainAir1)
-	#define MAIN_VERSION	"V3.4.24.a1"
-	#define PICKER_4		// Load/Good/Unload Picker 5개 (최대 6개)
+	#define MAIN_VERSION	"V3.4.8.a1"
+	#define PICKER_5		// Load/Good/Unload Picker 5개 (기본 6개)
 #elif defined(EQ_TYPE_A2)	//R44A(MainAir2)
-	#define MAIN_VERSION	"V3.4.17.a2"
+	#define MAIN_VERSION	"V3.4.8.a2"
 	#define ALIGN_NEW		// Main Air 2개 (기본 1개), 스테이지 Master/Slave I/O 순서 뒤바뀌어 있음.
 	#define TRAY_CHECK2		// Tray Check Sensor 2개 (기본 1개)
-	#define PICKER_4		// Load/Good/Unload Picker 5개 (최대 6개)
+	#define PICKER_5		// Load/Good/Unload Picker 5개 (기본 6개)
 #endif
-
-#define NG_PICKER_4
-
 
 // #define PICKER_3			// Load/Good/Unload Picker 3
 // #define PICKER_5			// Load/Good/Unload Picker 5개 (기본 6개)
@@ -113,8 +110,8 @@ typedef struct {
 	BOOL		bContinueLotEnd[5];
 
 	CString		sRecipeName;		//Recipe Item
-	int			nArrayW;			//[W]=[Y]= 모델 데이터에서 불러온다
-	int			nArrayL;			//[L]=[X]= 모델 데이터에서 불러온다 
+	int			nArrayW;			//[W]=[Y]=8 출번호
+	int			nArrayL;			//[L]=[X]=5
 	double		dCMSizeW;
 	double		dCMSizeL;
 	double		dTrayFirstW;
@@ -166,8 +163,6 @@ typedef struct {
 	int			nDownNo;				//Unload Picker Down line no
 	int			nDownX;					//Unload Picker Down line네 X Array
 	int			NGJobPic[10];			//1:작업대상 NG Picker No
-
-	int			nNGTrayCmNo;			//NG 트레이 몇번에 놓였는지 저장 
 
 	int			nErrType;				//1:정보있음, 2:검사있음
 	int			nErrCnt;				//Error 수량
@@ -250,6 +245,8 @@ typedef struct {
 
 	int		nInsTrayNo;
 	int		nInsLineNo;
+
+	CString strTest;
 	int		nLotInfoBlockDelay;
 } GLOVAL_DATA;
 extern  GLOVAL_DATA	gData;

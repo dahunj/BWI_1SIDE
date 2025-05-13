@@ -384,28 +384,6 @@ void CSetupMoveTab3Dlg::Initial_Controls()
 	m_stcNGPickerX[5].ShowWindow(FALSE);
 #endif
 
-#ifdef NG_PICKER_4
-	//m_Label[30].ShowWindow(FALSE);
-	//m_stcNGPickerX[4].ShowWindow(FALSE);
-	m_stcNGPickerX[5].ShowWindow(FALSE);
-#endif
-
-#ifdef PICKER_4
-	m_Label[17].ShowWindow(FALSE);
-	m_Label[26].ShowWindow(FALSE);
-	m_Label[27].ShowWindow(FALSE);
-	m_stcGOODPickerY[5].ShowWindow(FALSE);
-	m_stcGOODPickerZ[9].ShowWindow(FALSE);
-	m_stcGOODPickerZ[10].ShowWindow(FALSE);
-
-	m_Label[21].ShowWindow(FALSE);
-	m_Label[28].ShowWindow(FALSE);
-	m_Label[29].ShowWindow(FALSE);
-	m_stcGOODPickerY[6].ShowWindow(FALSE);
-	m_stcGOODPickerZ[11].ShowWindow(FALSE);
-	m_stcGOODPickerZ[12].ShowWindow(FALSE);
-#endif
-
 #ifdef PICKER_5
 	m_Label[21].ShowWindow(FALSE);
 	m_Label[28].ShowWindow(FALSE);
