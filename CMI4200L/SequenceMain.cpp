@@ -619,6 +619,10 @@ void CSequenceMain::Set_ClearRunData(int nType)
 	gData.nLotIdsIndex = 0;
 
 	memset(gLot.nCmJigNo, 0x00, sizeof(int) * 30 * 60 * 10);
+
+	CWorkDlg *pWorkDlg = CWorkDlg::Get_Instance();
+	pWorkDlg->Enable_LotInfo(TRUE);
+
 }
 
 void CSequenceMain::Beep_Post(int nTime)
@@ -1610,7 +1614,8 @@ BOOL CSequenceMain::Unload1_Run()
 					m_pCommon->Set_LoopTime(AUTO_UNLOAD1, 30000);
 				} else {
 					m_sLog.Format("m_nUnload1Case,%d",m_nUnload1Case); pLogFile->Save_MCCLog(m_sLog);
-					m_nUnload1Case = 351;
+					if(m_pEquipData->bUseInlineMode) m_nUnload1Case = 351;
+					else m_nUnload1Case = 360;
 					m_pCommon->Set_LoopTime(AUTO_UNLOAD1, 30000);
 				}
 				if(m_nUnload2Case==250) m_nUnload2Case=260;
@@ -1693,13 +1698,21 @@ BOOL CSequenceMain::Unload1_Run()
 		break;
 	case 400:
 		if (!m_pDX6->iUS_UnloadSupport1In && m_pDX6->iUS_UnloadSupport1Out && !m_pDX6->iUS_UnloadSupport2In && m_pDX6->iUS_UnloadSupport2Out) {
-			if (!m_pCommon->Delay_LoopTime(AUTO_UNLOAD1, 500)) break;
-			if ( m_pDX6->iUS_Unload1FCheck ) break;
-			if (!m_pCommon->Delay_LoopTime(AUTO_UNLOAD1, 500)) break;
-			m_pCommon->Move_Position(AX_UNLOAD_TRAY_Z1, 2);	// Tray Up
-			m_sLog.Format("m_nUnload1Case,%d",m_nUnload1Case); pLogFile->Save_MCCLog(m_sLog);
-			if (m_pEquipData->bUseInlineMode) m_nUnload1Case = 401;
-			else							  m_nUnload1Case = 410;
+			if (m_pEquipData->bUseInlineMode)
+			{
+				if (!m_pCommon->Delay_LoopTime(AUTO_UNLOAD1, 500)) break;
+				if ( m_pDX6->iUS_Unload1FCheck ) break;
+				if (!m_pCommon->Delay_LoopTime(AUTO_UNLOAD1, 500)) break;
+				m_pCommon->Move_Position(AX_UNLOAD_TRAY_Z1, 2);	// Tray Up
+				m_sLog.Format("m_nUnload1Case,%d",m_nUnload1Case); pLogFile->Save_MCCLog(m_sLog);
+				m_nUnload1Case = 401;
+			}
+			else
+			{
+				if (!m_pCommon->Delay_LoopTime(AUTO_UNLOAD1, 300)) break;
+				m_pCommon->Move_Position(AX_UNLOAD_TRAY_Z1, 2);	// Tray Up
+				m_nUnload1Case = 410;
+			}
 			m_pCommon->Set_LoopTime(AUTO_UNLOAD1, 30000);
 		}
 		break;
@@ -2410,7 +2423,8 @@ BOOL CSequenceMain::Unload2_Run()
 					m_pCommon->Set_LoopTime(AUTO_UNLOAD2, 30000);
 				} else {
 					m_sLog.Format("m_nUnload2Case,%d",m_nUnload2Case); pLogFile->Save_MCCLog(m_sLog);
-					m_nUnload2Case = 351;
+					if(m_pEquipData->bUseInlineMode) m_nUnload2Case = 351;
+					else m_nUnload2Case = 360;
 					m_pCommon->Set_LoopTime(AUTO_UNLOAD2, 30000);
 				}
 				if(m_nUnload1Case==250) m_nUnload1Case=260;
@@ -2490,14 +2504,21 @@ BOOL CSequenceMain::Unload2_Run()
 		break;
 	case 400:
 		if (!m_pDX6->iUS_UnloadSupport1In && m_pDX6->iUS_UnloadSupport1Out && !m_pDX6->iUS_UnloadSupport2In && m_pDX6->iUS_UnloadSupport2Out) {
-			if (!m_pCommon->Delay_LoopTime(AUTO_UNLOAD2, 300)) break;
-			if( m_pDX6->iUS_Unload1FCheck ) break;
-			if (!m_pCommon->Delay_LoopTime(AUTO_UNLOAD2, 500)) break;
-			m_pCommon->Move_Position(AX_UNLOAD_TRAY_Z2, 2);
-			m_sLog.Format("m_nUnload2Case,%d",m_nUnload2Case); pLogFile->Save_MCCLog(m_sLog);
-
-			if (m_pEquipData->bUseInlineMode) m_nUnload2Case = 401;
-			else							  m_nUnload2Case = 410;
+			if (m_pEquipData->bUseInlineMode)
+			{
+				if (!m_pCommon->Delay_LoopTime(AUTO_UNLOAD2, 300)) break;
+				if( m_pDX6->iUS_Unload1FCheck ) break;
+				if (!m_pCommon->Delay_LoopTime(AUTO_UNLOAD2, 500)) break;
+				m_pCommon->Move_Position(AX_UNLOAD_TRAY_Z2, 2);
+				m_sLog.Format("m_nUnload2Case,%d",m_nUnload2Case); pLogFile->Save_MCCLog(m_sLog);
+				m_nUnload2Case = 401;
+			}
+			else
+			{			
+				if (!m_pCommon->Delay_LoopTime(AUTO_UNLOAD2, 300)) break;
+				m_pCommon->Move_Position(AX_UNLOAD_TRAY_Z2, 2);
+				m_nUnload2Case = 410;
+			}
 			m_pCommon->Set_LoopTime(AUTO_UNLOAD2, 30000);
 		}
 		break;
