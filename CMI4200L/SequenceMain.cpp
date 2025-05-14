@@ -621,6 +621,9 @@ void CSequenceMain::Set_ClearRunData(int nType)
 	gData.nLotIdsIndex = 0;
 
 	memset(gLot.nCmJigNo, 0x00, sizeof(int) * 30 * 60 * 10);
+
+	CWorkDlg *pWorkDlg = CWorkDlg::Get_Instance();
+	pWorkDlg->Enable_LotInfo(TRUE);
 }
 
 void CSequenceMain::Beep_Post(int nTime)
