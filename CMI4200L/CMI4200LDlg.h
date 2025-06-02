@@ -109,7 +109,6 @@ private:
 	// Dialogs
 	CInitialDlg		*m_pInitialDlg;
 	CWorkDlg		*m_pWorkDlg;
-	CManualDlg		*m_pManualDlg;
 	CSetupDlg		*m_pSetupDlg;
 	CMonitorDlg		*m_pMonitorDlg;
 	CErrorDlg		*m_pErrorDlg;

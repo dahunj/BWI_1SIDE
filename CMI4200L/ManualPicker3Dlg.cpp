@@ -474,7 +474,7 @@ void CManualPicker3Dlg::OnBtnMLNGPickZClick(UINT nID)
 		if (!pAJinAXL->Is_Home(AX_UNLOAD_PICKER_Z)) return;
 
 #ifdef PICKER_3
-		if (pDX2->iInspCMAlign4In && pCommon->Check_Position(AX_UNLOAD_PICKER_X1, 0) &&
+		if (pDX2->i_IndexAlignUnload_In && pCommon->Check_Position(AX_UNLOAD_PICKER_X1, 0) &&
 		   (pDX5->iMUPicker1CMCheck || pDX5->iMUPicker2CMCheck || pDX5->iMUPicker3CMCheck)) {
 			AfxMessageBox(_T("Can not move......(Unload Picker CM Check And Align 4 In)"));
 			return;
@@ -485,7 +485,7 @@ void CManualPicker3Dlg::OnBtnMLNGPickZClick(UINT nID)
 		}
 #endif
 #ifdef PICKER_4
-		if (pDX2->iInspCMAlign4In && pCommon->Check_Position(AX_UNLOAD_PICKER_X1, 0) &&
+		if (pDX2->i_IndexAlignUnload_In && pCommon->Check_Position(AX_UNLOAD_PICKER_X1, 0) &&
 			(pDX5->iMUPicker1CMCheck || pDX5->iMUPicker2CMCheck || pDX5->iMUPicker3CMCheck || pDX5->iMUPicker4CMCheck )) {
 				AfxMessageBox(_T("Can not move......(Unload Picker CM Check And Align 4 In)"));
 				return;
@@ -497,7 +497,7 @@ void CManualPicker3Dlg::OnBtnMLNGPickZClick(UINT nID)
 		}
 #endif
 #ifdef PICKER_5
-		if (pDX2->iInspCMAlign4In && pCommon->Check_Position(AX_UNLOAD_PICKER_X1, 0) &&
+		if (pDX2->i_IndexAlignUnload_In && pCommon->Check_Position(AX_UNLOAD_PICKER_X1, 0) &&
 		   (pDX5->iMUPicker1CMCheck || pDX5->iMUPicker2CMCheck || pDX5->iMUPicker3CMCheck || pDX5->iMUPicker4CMCheck || pDX5->iMUPicker5CMCheck)) {
 			AfxMessageBox(_T("Can not move......(Unload Picker CM Check And Align 4 In)"));
 			return;
@@ -509,7 +509,7 @@ void CManualPicker3Dlg::OnBtnMLNGPickZClick(UINT nID)
 		}
 #endif
 #ifdef PICKER_6
-		if (pDX2->iInspCMAlign4In && pCommon->Check_Position(AX_UNLOAD_PICKER_X1, 0) &&
+		if (pDX2->i_IndexAlignUnload_In && pCommon->Check_Position(AX_UNLOAD_PICKER_X1, 0) &&
 			(pDX5->iMUPicker1CMCheck || pDX5->iMUPicker2CMCheck || pDX5->iMUPicker3CMCheck || pDX5->iMUPicker4CMCheck || pDX5->iMUPicker5CMCheck || pDX5->iMUPicker6CMCheck)) {
 				AfxMessageBox(_T("Can not move......(Unload Picker CM Check And Align 4 In)"));
 				return;
@@ -526,7 +526,7 @@ void CManualPicker3Dlg::OnBtnMLNGPickZClick(UINT nID)
 		if (!pAJinAXL->Is_Home(AX_UNLOAD_PICKER_Z)) return;
 
 #ifdef PICKER_3
-		if (pDX2->iInspCMAlign4In && pCommon->Check_Position(AX_UNLOAD_PICKER_X1, 0) &&
+		if (pDX2->i_IndexAlignUnload_In && pCommon->Check_Position(AX_UNLOAD_PICKER_X1, 0) &&
 		   (pDX5->iMUPicker1CMCheck || pDX5->iMUPicker2CMCheck || pDX5->iMUPicker3CMCheck)) {
 			AfxMessageBox(_T("Can not move......(Unload Picker CM Check And Align 4 In)"));
 			return;
@@ -537,7 +537,7 @@ void CManualPicker3Dlg::OnBtnMLNGPickZClick(UINT nID)
 		}
 #endif
 #ifdef PICKER_4
-		if (pDX2->iInspCMAlign4In && pCommon->Check_Position(AX_UNLOAD_PICKER_X1, 0) &&
+		if (pDX2->i_IndexAlignUnload_In && pCommon->Check_Position(AX_UNLOAD_PICKER_X1, 0) &&
 			(pDX5->iMUPicker1CMCheck || pDX5->iMUPicker2CMCheck || pDX5->iMUPicker3CMCheck || pDX5->iMUPicker4CMCheck )) {
 				AfxMessageBox(_T("Can not move......(Unload Picker CM Check And Align 4 In)"));
 				return;
@@ -549,7 +549,7 @@ void CManualPicker3Dlg::OnBtnMLNGPickZClick(UINT nID)
 		}
 #endif
 #ifdef PICKER_5
-		if (pDX2->iInspCMAlign4In && pCommon->Check_Position(AX_UNLOAD_PICKER_X1, 0) &&
+		if (pDX2->i_IndexAlignUnload_In && pCommon->Check_Position(AX_UNLOAD_PICKER_X1, 0) &&
 		   (pDX5->iMUPicker1CMCheck || pDX5->iMUPicker2CMCheck || pDX5->iMUPicker3CMCheck || pDX5->iMUPicker4CMCheck || pDX5->iMUPicker5CMCheck)) {
 			AfxMessageBox(_T("Can not move......(Unload Picker CM Check And Align 4 In)"));
 			return;
@@ -561,7 +561,7 @@ void CManualPicker3Dlg::OnBtnMLNGPickZClick(UINT nID)
 		}
 #endif
 #ifdef PICKER_6
-		if (pDX2->iInspCMAlign4In && pCommon->Check_Position(AX_UNLOAD_PICKER_X1, 0) &&
+		if (pDX2->i_IndexAlignUnload_In && pCommon->Check_Position(AX_UNLOAD_PICKER_X1, 0) &&
 			(pDX5->iMUPicker1CMCheck || pDX5->iMUPicker2CMCheck || pDX5->iMUPicker3CMCheck || pDX5->iMUPicker4CMCheck || pDX5->iMUPicker5CMCheck || pDX5->iMUPicker6CMCheck)) {
 				AfxMessageBox(_T("Can not move......(Unload Picker CM Check And Align 4 In)"));
 				return;
@@ -577,7 +577,7 @@ void CManualPicker3Dlg::OnBtnMLNGPickZClick(UINT nID)
 	} else if (nID == IDC_BTN_ML_PICKER_Z_6) {
 		if (!pAJinAXL->Is_Home(AX_UNLOAD_PICKER_Z)) return;
 
-		if (pDX2->iInspCMAlign4In && pCommon->Check_Position(AX_UNLOAD_PICKER_X1, 0) &&
+		if (pDX2->i_IndexAlignUnload_In && pCommon->Check_Position(AX_UNLOAD_PICKER_X1, 0) &&
 		   (pDX5->iMUPicker1CMCheck || pDX5->iMUPicker2CMCheck || pDX5->iMUPicker3CMCheck || pDX5->iMUPicker4CMCheck || pDX5->iMUPicker5CMCheck)) {
 			AfxMessageBox(_T("Can not move......(Unload Picker CM Check And Align 4 In)"));
 			return;

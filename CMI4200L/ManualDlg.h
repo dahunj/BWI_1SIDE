@@ -10,6 +10,7 @@
 #include "ManualPicker3Dlg.h"
 #include "ManualLotDataDlg.h"
 #include "ManualLoadingDlg.h"
+#include "Manual_RepeatRunDlg.h"
 
 // CManualDlg 대화 상자입니다.
 
@@ -17,12 +18,6 @@ class CManualDlg : public CDialogEx
 {
 	DECLARE_DYNAMIC(CManualDlg)
 
-private:
-	static CManualDlg *m_pInstance;
-
-public:
-	static CManualDlg *Get_Instance(CWnd *pParent = NULL);
-	void Delete_Instance();
 
 public:
 	CManualDlg(CWnd* pParent = NULL);   // 표준 생성자입니다.
@@ -38,6 +33,7 @@ public:
 	CRadioCS	m_rdoManualInspector;
 	CRadioCS	m_rdoManualDoorLock;
 	CRadioCS	m_rdoManualDoorUnlock;
+	CRadioCS    m_rdoManualRepeatRun;
 
 	CRadioCS	m_rdoManualGripper2;
 	CRadioCS	m_rdoManualPicker2;
@@ -74,6 +70,8 @@ public:
 	CManualLotDataDlg	*m_pManualLotDataDlg;
 	CManualLoadingDlg	*m_pManualLoadTrayDlg;
 
+	CManual_RepeatRunDlg		*m_pManualRepeatRunDlg;
+
 private:
 	void Initial_Controls();
 	void Hide_Windows();
@@ -81,6 +79,10 @@ private:
 public:
 	void MainDoor_Lock();
 	void MainDoor_Unlock();
+
+	afx_msg void OnBnClickedRdoManualRepeat();
 };
+
+extern CManualDlg g_dlgManual;
 
 ///////////////////////////////////////////////////////////////////////////////

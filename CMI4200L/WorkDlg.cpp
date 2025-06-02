@@ -484,8 +484,11 @@ void CWorkDlg::OnTimer(UINT_PTR nIDEvent)
 
 			pMainDlg->Set_LotErrorLog("STOP", 904, "Stop");
 			g_objMES.Set_Status(3);
+			pCommon->Save_MotionPos();
 
-		} else {				// Stop
+		} 
+		else
+		{				// Stop
 			// Auto Start
 			if (!gData.m_bErrorShow) {
 				if (!pCommon->Check_MainEmgAir()) {	// Emg & Main Air

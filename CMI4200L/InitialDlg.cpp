@@ -240,11 +240,7 @@ void CInitialDlg::OnTimer(UINT nIDEvent)
 				pWorkDlg->Clear_ConveyorList();
 				//pWorkDlg->Clear_BufferList();
 				pWorkDlg->Set_CleanOutMode();
-
-				CManualDlg *pManualDlg = CManualDlg::Get_Instance();
-				//pManualDlg->m_pManualInspectorDlg->Set_MoldRunCase(0);
-				//pManualDlg->m_pManualInspectorDlg->Set_PcbRunCase(0);
-				//pManualDlg->m_pManualInspectorDlg->Set_3dRunCase(0);
+				pCommon->Save_MotionPos();
 
 				CInspector *pInspector = CInspector::Get_Instance();
 				

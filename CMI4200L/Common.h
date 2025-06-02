@@ -68,6 +68,8 @@ protected:
 	DECLARE_MESSAGE_MAP()
 
 private:
+	LONGLONG	m_nFreq;		// Frequence
+
 	DWORD	m_dwLoopInitMainStart,		m_dwLoopInitMainDelay;
 	DWORD	m_dwLoopInitLoadS1Start,	m_dwLoopInitLoadS1Delay;
 	DWORD	m_dwLoopInitLoad2Start,		m_dwLoopInitLoad2Delay;
@@ -111,6 +113,10 @@ private:
 
 public:
 	CString	m_sMessage;
+
+	void uSleep(int msec);
+	void Save_MotionPos();
+	int	 Check_MotionPos();
 
 	void DoEvents(int nSleep = 0);
 	void Delay_Time(DWORD msec);
@@ -175,6 +181,18 @@ public:
 	double	m_dP2X1, m_dP2X2, m_dP2Y[2], m_dP2Z;	//Unload
 	double	m_dP3X, m_dP3Y, m_dP3Z;				//NG Picker
 	double	m_dP4Y, m_dP4Z;						//Good Picker
+	
+	BOOL	Get_IndexAlignOut(int nPos); // 1: Load 2: NG 3: GOOD 4:Unload
+
+	void	Set_LoadPickerOpen(int nNo);
+	BOOL	Get_LoadPickerOpen(int nNo);
+	void	Set_LoadPickerClose(int nNo);
+	BOOL	Get_LoadPickerClose(int nNo);
+
+	void	Set_UnloadPickerOpen(int nNo);
+	BOOL	Get_UnloadPickerOpen(int nNo);
+	void	Set_UnloadPickerClose(int nNo);
+	BOOL	Get_UnloadPickerClose(int nNo);
 
 	void	PickerNG_UpMove(int nPNo, int nXX);							// => m_dP3Z, m_dP3X
 	void	PickerNG_DnMove(int nPNo, int nXX, int nYY, int nTrayNo);	// => m_dP3Z, m_dP3X(Picker)
