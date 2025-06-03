@@ -220,6 +220,35 @@ void CManual_RepeatRunDlg::Repeat_Action()
 		}
 	}
 
+	if(m_nRepeatCase == 100 && !pCommon->Check_Position(AX_LOAD_PICKER_Z, 0))
+	{
+		m_bThreadAction = FALSE;
+		m_pThreadAction = NULL;
+		AfxMessageBox("Load Picker Z Ready Up ¾Æ´Õ´Ï´Ù.");
+		return;
+	}
+	if(m_nRepeatCase == 200 && !pCommon->Check_Position(AX_LOAD_PICKER_Z, 0))
+	{
+		m_bThreadAction = FALSE;
+		m_pThreadAction = NULL;
+		AfxMessageBox("Load Picker Z Ready Up ¾Æ´Õ´Ï´Ù.");
+		return;
+	}
+	if(m_nRepeatCase == 300 && !pCommon->Check_Position(AX_UNLOAD_PICKER_Z, 0))
+	{
+		m_bThreadAction = FALSE;
+		m_pThreadAction = NULL;
+		AfxMessageBox("Unload Picker Z Ready Up ¾Æ´Õ´Ï´Ù.");
+		return;
+	}
+	if(m_nRepeatCase == 400 && !pCommon->Check_Position(AX_UNLOAD_PICKER_Z, 0))
+	{
+		m_bThreadAction = FALSE;
+		m_pThreadAction = NULL;
+		AfxMessageBox("Unload Picker Z Ready Up ¾Æ´Õ´Ï´Ù.");
+		return;
+	}
+
 
 	switch(m_nRepeatCase)
 	{
