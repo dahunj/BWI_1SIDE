@@ -168,9 +168,11 @@ void CManual_RepeatRunDlg::OnBnClickedChkRepeatRun()
 		m_cboPicker.ResetContent();
 		AddComboListPicker();
 
-		if (!m_pThreadAction) return;
 		m_bThreadAction = FALSE;
-		WaitForSingleObject(m_pThreadAction->m_hThread, INFINITE);
+		m_pThreadAction = NULL;
+		/*if (!m_pThreadAction) return;
+		m_bThreadAction = FALSE;
+		WaitForSingleObject(m_pThreadAction->m_hThread, INFINITE);*/
 
 		
 	}
