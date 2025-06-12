@@ -1820,7 +1820,7 @@ BOOL CSequenceMain::Unload1_Run()
 	case 401:
 		if (m_pCommon->Check_Position(AX_UNLOAD_TRAY_Z1, 2)) {
 			m_pDY6->oUS_Z1AlignS12In = FALSE;
-			m_pDY6->oUS_Z1AlignS12Out = TRUE;
+			m_pDY6->oUS_Z1AlignS12Out = TRUE;  // slave out 
 			m_pAJinAXL->Write_Output(6);
 			m_sLog.Format("m_nUnload1Case,%d",m_nUnload1Case); pLogFile->Save_MCCLog(m_sLog);
 			m_nUnload1Case = 402;
@@ -1831,7 +1831,7 @@ BOOL CSequenceMain::Unload1_Run()
 		if (!m_pDX6->iUS_Z1AlignS12In && m_pDX6->iUS_Z1AlignS12Out) {
 			if (!m_pCommon->Delay_LoopTime(AUTO_UNLOAD1, 100)) break;
 			m_pDY6->oUS_Z1AlignM34In = FALSE;
-			m_pDY6->oUS_Z1AlignM34Out = TRUE;
+			m_pDY6->oUS_Z1AlignM34Out = TRUE; // master out 
 			m_pAJinAXL->Write_Output(6);
 			m_sLog.Format("m_nUnload1Case,%d",m_nUnload1Case); pLogFile->Save_MCCLog(m_sLog);
 			m_nUnload1Case = 403;
@@ -1849,7 +1849,7 @@ BOOL CSequenceMain::Unload1_Run()
 
 	case 410:
 		if (m_pCommon->Check_Position(AX_UNLOAD_TRAY_Z1, 2)) {
-			m_pDY6->oUS_UnloadSupport12In = TRUE;
+			m_pDY6->oUS_UnloadSupport12In = TRUE; //support in 
 			m_pDY6->oUS_UnloadSupport12Out = FALSE;
 			m_pAJinAXL->Write_Output(6);
 			m_sLog.Format("m_nUnload1Case,%d",m_nUnload1Case); pLogFile->Save_MCCLog(m_sLog);
