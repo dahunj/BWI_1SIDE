@@ -1381,6 +1381,7 @@ BOOL CSequenceMain::Unload1_Run()
 	AXIS_STATUS *pStatus;
 
 	static int nSenseCnt = 0;
+	static int nSenseTrayCnt = 0;
 
 	if (m_pEquipData->bUseDoorLock && gData.nDoorInterlock67 == 1) {
 		if (m_nUnload1Case != 130 && m_nUnload1Case != 140 && m_nUnload1Case != 400 && m_nUnload1Case != 410 &&
@@ -1769,8 +1770,24 @@ BOOL CSequenceMain::Unload1_Run()
 	case 412:
 		if (m_pCommon->Check_Position(AX_UNLOAD_TRAY_Z1, 1)) {
 			m_sLog.Format("m_nUnload1Case,%d",m_nUnload1Case); pLogFile->Save_MCCLog(m_sLog);
-			m_nUnload1Case = 413;
-			m_pCommon->Set_LoopTime(AUTO_UNLOAD1, 5000);
+			m_nUnload1Case = 414; nSenseTrayCnt = 0;
+			m_pCommon->Set_LoopTime(AUTO_UNLOAD1, 2000);
+		}
+		break;
+	case 414:
+		m_sLog.Format("m_nUnload1Case,%d ,%d",m_pDX6->iUS_Z1Check1, m_pDX6->iUS_Z1Check2); pLogFile->Save_MCCLog(m_sLog);
+#ifdef TRAY_CHECK2
+		if (!m_pDX6->iUS_Z1Check1 && !m_pDX6->iUS_Z1Check2)
+#else
+		if (!m_pDX6->iUS_Z1Check1)
+#endif
+		{
+			nSenseTrayCnt++;
+			if(nSenseTrayCnt > 100)
+			{
+				m_nUnload1Case = 413;
+				m_pCommon->Set_LoopTime(AUTO_UNLOAD1, 5000);
+			}
 		}
 		break;
 	case 413:
@@ -2185,6 +2202,7 @@ BOOL CSequenceMain::Unload2_Run()
 	double	dPosY1, dPosY2;
 	AXIS_STATUS *pStatus;
 	static int nSenseCnt = 0;
+	static int nSenseTrayCnt = 0;
 
 	if (m_pEquipData->bUseDoorLock && gData.nDoorInterlock67 == 1) {
 		if (m_nUnload2Case != 130 && m_nUnload2Case != 140 && m_nUnload2Case != 400 && m_nUnload2Case != 410 &&
@@ -2574,8 +2592,24 @@ BOOL CSequenceMain::Unload2_Run()
 	case 412:
 		if (m_pCommon->Check_Position(AX_UNLOAD_TRAY_Z2, 1)) {
 			m_sLog.Format("m_nUnload2Case,%d",m_nUnload2Case); pLogFile->Save_MCCLog(m_sLog);
-			m_nUnload2Case = 413;
-			m_pCommon->Set_LoopTime(AUTO_UNLOAD2, 5000);
+			m_nUnload2Case = 414; nSenseTrayCnt = 0;
+			m_pCommon->Set_LoopTime(AUTO_UNLOAD2, 2000);
+		}
+		break;
+	case 414:
+		m_sLog.Format("m_nUnload2Case,%d ,%d",m_pDX6->iUS_Z2Check1, m_pDX6->iUS_Z2Check2); pLogFile->Save_MCCLog(m_sLog);
+#ifdef TRAY_CHECK2
+		if (!m_pDX6->iUS_Z2Check1 && !m_pDX6->iUS_Z2Check2)
+#else
+		if (!m_pDX6->iUS_Z2Check1)
+#endif
+		{
+			nSenseTrayCnt++;
+			if(nSenseTrayCnt > 100)
+			{
+				m_nUnload2Case = 413;
+				m_pCommon->Set_LoopTime(AUTO_UNLOAD2, 5000);
+			}
 		}
 		break;
 	case 413:
