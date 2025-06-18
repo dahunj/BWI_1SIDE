@@ -469,9 +469,9 @@ void CManualPickerDlg::OnBtnNGPickXClick(UINT nID)
 	}
 #endif
 
-	if (!pCommon->Check_Position(AX_NG_PICKER_Z, 0) ) 
+	if (!pCommon->Check_Position(AX_NG_PICKER_Z, 1) ) 
 	{
-		AfxMessageBox(_T("NG Picker Index Up후 진행하세요............."));
+		AfxMessageBox(_T("NG Picker NG Up후 진행하세요............."));
 		return;
 	}
 
