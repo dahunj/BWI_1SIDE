@@ -444,8 +444,9 @@ void CManualPickerDlg::OnBtnNGPickXClick(UINT nID)
 	}
 #endif
 
-	if (!pCommon->Check_Position(AX_NG_PICKER_Z, 0)) {
-		AfxMessageBox(_T("NG Picker Z축 Index Up 위치후에 진행하세요....."));
+	if (!pCommon->Check_Position(AX_NG_PICKER_Z, 1)) 
+	{
+		AfxMessageBox(_T("NG Picker Z축 NG Up 위치후에 진행하세요....."));
 		return;
 	}
 
@@ -477,11 +478,16 @@ void CManualPickerDlg::OnBtnNGPickZClick(UINT nID)
 	if (!pAJinAXL->Is_Home(AX_NG_PICKER_Z)) return;
 	if (!pCommon->Check_MainDoor()) return;
 
-	if (nID == IDC_BTN_NG_PICKER_Z_0) {
+	if (nID == IDC_BTN_NG_PICKER_Z_0) 
+	{
 		pCommon->Move_Position(AX_NG_PICKER_Z, 0);
-	} else if (nID == IDC_BTN_NG_PICKER_Z_1) {
+	}
+	else if (nID == IDC_BTN_NG_PICKER_Z_1) 
+	{
 		pCommon->Move_Position(AX_NG_PICKER_Z, 1);
-	} else if (nID == IDC_BTN_NG_PICKER_Z_2) {
+	} 
+	else if (nID == IDC_BTN_NG_PICKER_Z_2)
+	{
 		pCommon->Move_Position(AX_NG_PICKER_Z, 2);
 	}
 

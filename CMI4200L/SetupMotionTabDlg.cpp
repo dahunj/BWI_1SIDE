@@ -544,7 +544,7 @@ BOOL CSetupMotionTabDlg::Check_Interlock(int nAxis)
 			return FALSE;
 		}
 #endif
-		if (!pCommon->Check_Position(AX_NG_PICKER_Z, 0) ) {
+		if (!pCommon->Check_Position(AX_NG_PICKER_Z, 1) ) {
 			AfxMessageBox(_T("NG Picker Z축 Index Position 위치후에 진행하세요....."));
 			return FALSE;
 		}
@@ -552,7 +552,7 @@ BOOL CSetupMotionTabDlg::Check_Interlock(int nAxis)
 	}
 	if (nAxis == AX_NG_STAGE_Y) 
 	{
-		if(!(pCommon->Check_Position(AX_NG_PICKER_Z, 0) )) {
+		if(!(pCommon->Check_Position(AX_NG_PICKER_Z, 1) )) {
 			AfxMessageBox(_T("NG Picker Z Axis Index Position 이동후 진행하세요. ...."));
 			return FALSE;
 		}
