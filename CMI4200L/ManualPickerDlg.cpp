@@ -325,6 +325,12 @@ void CManualPickerDlg::OnBtnPickerXClick(UINT nID)
 		return;
 	}
 
+	if (!pCommon->Check_Position(AX_GOOD_PICKER_Z, 0) ) 
+	{
+		AfxMessageBox(_T("Good Picker Ready Up후 진행하세요............."));
+		return;
+	}
+
 	int ID = nID - IDC_BTN_PICKER_X_0;
 
 	switch( ID )
@@ -336,16 +342,10 @@ void CManualPickerDlg::OnBtnPickerXClick(UINT nID)
 		}
 		break;
 	case 1:		// Unload
-		if (pCommon->Check_Position(AX_GOOD_PICKER_Z, 1) ) 
-		{
-			pCommon->Move_Position(AX_GOOD_PICKER_Y, ID);
-		}
+		pCommon->Move_Position(AX_GOOD_PICKER_Y, ID);
 		break;
 	case 2:		// Pitch Move
-		if (pCommon->Check_Position(AX_GOOD_PICKER_Z, 1) ) 
-		{
-			pCommon->Move_Position(AX_GOOD_PICKER_Y, ID);
-		}
+		pCommon->Move_Position(AX_GOOD_PICKER_Y, ID);
 		break;
 	default:
 		break;
@@ -387,6 +387,12 @@ void CManualPickerDlg::OnBtnPickerYClick(UINT nID)
 #endif
 	{
 		AfxMessageBox(_T("Good Picker Up후 진행하세요............."));
+		return;
+	}
+
+	if (!pCommon->Check_Position(AX_GOOD_PICKER_Z, 0) ) 
+	{
+		AfxMessageBox(_T("Good Picker Ready Up후 진행하세요............."));
 		return;
 	}
 
@@ -439,6 +445,8 @@ void CManualPickerDlg::OnBtnNGPickXClick(UINT nID)
 	if (!pAJinAXL->Is_Home(AX_NG_PICKER_X)) return;
 	if (!pCommon->Check_MainDoor()) return;
 
+
+
 #ifdef NG_PICKER_3
 	if (!pDX3->iNGPicker1Up || !pDX3->iNGPicker2Up || !pDX3->iNGPicker3Up ||
 		pDX3->iNGPicker1Down || pDX3->iNGPicker2Down || pDX3->iNGPicker3Down ) {
@@ -461,8 +469,9 @@ void CManualPickerDlg::OnBtnNGPickXClick(UINT nID)
 	}
 #endif
 
-	if (/*!pCommon->Check_Position(AX_NG_PICKER_Z, 0) && */!pCommon->Check_Position(AX_NG_PICKER_Z, 1)) {
-		AfxMessageBox(_T("NG Picker Z축 NG Position 위치후에 진행하세요....."));
+	if (!pCommon->Check_Position(AX_NG_PICKER_Z, 0) ) 
+	{
+		AfxMessageBox(_T("NG Picker Index Up후 진행하세요............."));
 		return;
 	}
 

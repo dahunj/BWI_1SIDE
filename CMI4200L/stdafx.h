@@ -40,6 +40,9 @@
 #include "CSUdpSocket.h"
 #include "CSGrid.h"
 #include "CSClientSocket.h"
+
+#include <math.h>
+
 #ifdef _DEBUG
 	#pragma comment(lib, "CSControlsD.lib")
 	#pragma comment(lib, "CSIniFileD.lib")
