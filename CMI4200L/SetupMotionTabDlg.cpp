@@ -297,7 +297,7 @@ void CSetupMotionTabDlg::OnBtnRelMovePClick(UINT nID)
 	double dDist = atof(strText);
 
 	if (dDist > 2.0) {
-		if (Check_Interlock(m_nMotionIdx + ID)==FALSE) return;
+		//if (Check_Interlock(m_nMotionIdx + ID)==FALSE) return;
 	}
 
 	CAJinAXL *pAJinAXL = CAJinAXL::Get_Instance();
@@ -316,7 +316,7 @@ void CSetupMotionTabDlg::OnBtnRelMoveNClick(UINT nID)
 	double dDist = atof(strText) * -1.0;
 
 	if (dDist < -2.0) {
-		if (Check_Interlock(m_nMotionIdx + ID)==FALSE) return;
+		//if (Check_Interlock(m_nMotionIdx + ID)==FALSE) return;
 	}
 
 	CAJinAXL *pAJinAXL = CAJinAXL::Get_Instance();
