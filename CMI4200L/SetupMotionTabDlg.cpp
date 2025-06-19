@@ -687,6 +687,17 @@ BOOL CSetupMotionTabDlg::Check_Interlock(int nAxis)
 			AfxMessageBox(_T("Load Picker Z Ready Up으로 이동후 진행하세요......."));
 			return FALSE;
 		}
+			
+		if((pCommon->Check_Position(AX_LOAD_TRAY_Z1, 0) && pCommon->Check_Position(AX_LOAD_TRAY_Z2, 1))
+			|| (pCommon->Check_Position(AX_LOAD_TRAY_Z1, 1) && pCommon->Check_Position(AX_LOAD_TRAY_Z2, 0)))
+		{
+			//pass
+		}
+		else
+		{
+			AfxMessageBox(_T("Load Tray Z축 위치 확인하세요 (Up & Down)"));
+			return FALSE;
+		}
 
 		double dPosZ1 = pAJinAXL->Get_pStatus(AX_LOAD_TRAY_Z1)->dPos;
 		double dPosZ2 = pAJinAXL->Get_pStatus(AX_LOAD_TRAY_Z2)->dPos;
@@ -695,7 +706,7 @@ BOOL CSetupMotionTabDlg::Check_Interlock(int nAxis)
 		{
 			AfxMessageBox(_T("Load Tray Z축 단차 확인하세요."));
 			return FALSE;
-		}		
+		}
 	}
 
 	if (nAxis == AX_LOAD_TRAY_X2) 
@@ -706,6 +717,16 @@ BOOL CSetupMotionTabDlg::Check_Interlock(int nAxis)
 			return FALSE;
 		}
 
+		if((pCommon->Check_Position(AX_LOAD_TRAY_Z1, 0) && pCommon->Check_Position(AX_LOAD_TRAY_Z2, 1))
+			|| (pCommon->Check_Position(AX_LOAD_TRAY_Z1, 1) && pCommon->Check_Position(AX_LOAD_TRAY_Z2, 0)))
+		{
+			//pass
+		}
+		else
+		{
+			AfxMessageBox(_T("Load Tray Z축 위치 확인하세요 (Up & Down)"));
+			return FALSE;
+		}
 		double dPosZ1 = pAJinAXL->Get_pStatus(AX_LOAD_TRAY_Z1)->dPos;
 		double dPosZ2 = pAJinAXL->Get_pStatus(AX_LOAD_TRAY_Z2)->dPos;
 
@@ -725,6 +746,16 @@ BOOL CSetupMotionTabDlg::Check_Interlock(int nAxis)
 			return FALSE;
 		}
 
+		if((pCommon->Check_Position(AX_UNLOAD_TRAY_Z1, 0) && pCommon->Check_Position(AX_UNLOAD_TRAY_Z2, 1))
+			|| (pCommon->Check_Position(AX_UNLOAD_TRAY_Z1, 1) && pCommon->Check_Position(AX_UNLOAD_TRAY_Z2, 0)))
+		{
+			//pass
+		}
+		else
+		{
+			AfxMessageBox(_T("Unload Tray Z축 위치 확인하세요 (Up & Down)"));
+			return FALSE;
+		}
 		double dPosZ1 = pAJinAXL->Get_pStatus(AX_UNLOAD_TRAY_Z1)->dPos;
 		double dPosZ2 = pAJinAXL->Get_pStatus(AX_UNLOAD_TRAY_Z2)->dPos;
 
@@ -740,6 +771,17 @@ BOOL CSetupMotionTabDlg::Check_Interlock(int nAxis)
 		if(!pCommon->Check_Position(AX_UNLOAD_PICKER_Z, 0))
 		{
 			AfxMessageBox(_T("Unload Picker Z Ready Up으로 이동후 진행하세요......."));
+			return FALSE;
+		}
+
+		if((pCommon->Check_Position(AX_UNLOAD_TRAY_Z1, 0) && pCommon->Check_Position(AX_UNLOAD_TRAY_Z2, 1))
+			|| (pCommon->Check_Position(AX_UNLOAD_TRAY_Z1, 1) && pCommon->Check_Position(AX_UNLOAD_TRAY_Z2, 0)))
+		{
+			//pass
+		}
+		else
+		{
+			AfxMessageBox(_T("Unload Tray Z축 위치 확인하세요 (Up & Down)"));
 			return FALSE;
 		}
 

@@ -64,7 +64,7 @@
 #define SIM_WAITTIMES	 5		//
 #define SIM_WAITTIMEM	 5		//
 
-#define AJIN_BOARD_USE
+//#define AJIN_BOARD_USE
 
 //BWI Model Only(5x2)
 #define EQ_TYPE_A1	//R44A,BWI
