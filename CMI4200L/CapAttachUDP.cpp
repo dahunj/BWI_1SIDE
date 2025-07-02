@@ -27,6 +27,7 @@ CCapAttachUDP::CCapAttachUDP()
 	m_bOpened = FALSE;
 	m_bConnected = FALSE;
 	m_nStatusCapAttach = 0;	// ป๓ลย (0:Not Ready, 1:Ready)
+	
 	Reset();
 }
 
@@ -76,6 +77,7 @@ void CCapAttachUDP::Reset()
 	memset(m_bJudgeReq, 0x00, sizeof(BOOL) * 2 * 40 * 45);
 	memset(m_dwReqStart, 0x00, sizeof(DWORD) * 2 * 40 * 45);
 	memset(m_bJudgeDone, 0x00, sizeof(BOOL) * 2 * 40 * 45);
+	memset(m_bBarcodeDone, 0x00, sizeof(BOOL) * 2 * 40 * 45);
 }
 
 void CCapAttachUDP::PortReset(int nPNo)
@@ -83,6 +85,7 @@ void CCapAttachUDP::PortReset(int nPNo)
 	memset(m_bJudgeReq[nPNo], 0x00, sizeof(BOOL) * 40 * 45);
 	memset(m_dwReqStart[nPNo], 0x00, sizeof(DWORD) * 40 * 45);
 	memset(m_bJudgeDone[nPNo], 0x00, sizeof(BOOL) * 40 * 45);
+	memset(m_bBarcodeDone[nPNo], 0x00, sizeof(BOOL) * 2 * 40 * 45);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -167,6 +170,8 @@ LRESULT CCapAttachUDP::OnUdpReceive(WPARAM wLocalPort, LPARAM lParam)
 
 		} else if (strCmd == "APD") {
 			if (strOp == "REPLY") Get_APDReply(strArg[0]);
+		} else if (strCmd == "BARCODE") {
+			if (strOp == "REPLY") Get_BarcodeReply( strArg[0], strArg[1],strArg[2]);
 		}
 	}
 
@@ -267,6 +272,11 @@ void CCapAttachUDP::Get_TrayUnload()
 void CCapAttachUDP::Get_APDReply(CString sCapForceAvg)
 {
 	gData.dAssyLoadCellAvg = atof(sCapForceAvg);
+}
+
+void CCapAttachUDP::Get_BarcodeReply(CString sPortNo, CString sTrayNo, CString sCmNo)
+{
+	Set_BarcodeDone(atoi(sPortNo), atoi(sTrayNo), atoi(sCmNo), TRUE);
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -405,6 +415,8 @@ void CCapAttachUDP::Set_BarcodeUpdate(int nPortNo, int nTrayNo, int nCmNo, CStri
 	CString	strSendCmd;
 	strSendCmd.Format("BARCODE,UPDATE,%d,%d,%d,%s", nPortNo, nTrayNo, nCmNo, sBarcode);
 	Send_Command(strSendCmd);
+
+	Set_BarcodeDone(nPortNo, nTrayNo, nCmNo, FALSE);
 
 // 	CLogFile *pLogFile = CLogFile::Get_Instance();
 // 	CString strLog;

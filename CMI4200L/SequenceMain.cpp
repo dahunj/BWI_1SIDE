@@ -88,6 +88,8 @@ CSequenceMain::CSequenceMain()
 	m_nULPickerCase = 100;
 	m_nIndexTCase = 100;
 	m_nNGTrayCase = 100;
+	
+	
 }
 
 CSequenceMain::~CSequenceMain()
@@ -5055,6 +5057,8 @@ BOOL CSequenceMain::LDPicker_Run()
 // 9.  (Error : 8100)
 BOOL CSequenceMain::ULPicker_Run()
 {
+	static DWORD dwStart, dwEnd;
+	
 	switch (m_nULPickerCase) {
 	case 100:
 		if (m_nIndexTCase <= 200 && gData.IndexJob[5] == 0) {
@@ -5353,18 +5357,10 @@ BOOL CSequenceMain::ULPicker_Run()
 		}
 		break;
 	case 221:
-		if (m_pCommon->Check_Position(AX_UNLOAD_PICKER_Z, 0) ) {
-			m_sLog.Format("m_nUnloadPickCase,%d",m_nULPickerCase); pLogFile->Save_MCCLog(m_sLog);
-			m_nULPickerCase = 230;
-			m_pCommon->Set_LoopTime(AUTO_ULPICKER, 5000);
-		}
-		break;
-	case 230:
-		if (m_pCommon->Check_Position(AX_UNLOAD_PICKER_Z, 0) ) {
-
+		if (m_pCommon->Check_Position(AX_UNLOAD_PICKER_Z, 0) ) 
+		{
 			int nTNo, nPno, nGdPos;
 			int w = gData.nTrayPos[3]-1;	//Get_TrayLineConvert(gData.nTrayPos[3])-1;
-
 			
 			for(int i=0; i<gData.nPickCnt; i++) {
 				nTNo = (gData.PickerUnTrayNo[i] > 0 ? (gData.PickerUnTrayNo[i] - 1) : 0);
@@ -5375,14 +5371,43 @@ BOOL CSequenceMain::ULPicker_Run()
 					//if (m_pEquipData->bUseInlineMode && nPno != -1) g_objCapAttachUDP.Set_BarcodeUpdate(1, gData.nGoodTrayCount+1, nGdPos, gLot.sBarLoad[nTNo][nPno]);
 					if (nPno != -1) {
 						g_objCapAttachUDP.Set_BarcodeUpdate(gData.nPortNo, gData.nGoodTrayCount+1, nGdPos, gLot.sBarLoad[nTNo][nPno]);
+						
 						//g_objCapAttachUDP.Set_BarcodeUpdate(1, gData.nGoodTrayCount+1, nGdPos, gLot.sBarLoad[nTNo][nPno]);
 					}
-//					g_objMES.Set_Result(gLot.sLotID, gLot.sBarLoad[nTNo][nPno], "OK", gLot.sNGCode[nTNo][nPno], gLot.sNGText[nTNo][nPno], nTNo+1, nPno+1, gData.nGoodTrayNo, nGdPos, 0,0);
+					//					g_objMES.Set_Result(gLot.sLotID, gLot.sBarLoad[nTNo][nPno], "OK", gLot.sNGCode[nTNo][nPno], gLot.sNGText[nTNo][nPno], nTNo+1, nPno+1, gData.nGoodTrayNo, nGdPos, 0,0);
 					pLogFile->Save_CmTrackingLog("GOOD", gData.nGoodTrayCount+1, i+1, w+1, gData.PickerUnTrayNo[i], gData.PickerUnPoNo[i]);
 					m_nUnloadLotCmCnt++;
 				}
 			}
-
+			m_sLog.Format("m_nUnloadPickCase,%d",m_nULPickerCase); pLogFile->Save_MCCLog(m_sLog);
+			dwStart = GetTickCount();
+			m_nULPickerCase = 222;
+			m_pCommon->Set_LoopTime(AUTO_ULPICKER, 5000);
+		}
+		break;
+	case 222:
+		{
+			// 바코드 전송 제대로 됬는지 확인하는 루틴
+			dwEnd = GetTickCount();
+			if((dwEnd - dwStart) > 3000) 
+			{
+				m_nULPickerCase = 221;
+				m_pCommon->Set_LoopTime(AUTO_ULPICKER, 5000);
+				break;
+			}
+			for(int i=0; i<gData.nPickCnt; i++) 
+			{
+				int w = gData.nTrayPos[3]-1;
+				int nGdPos = (gData.nPickCnt*w) + (gData.nPickCnt-i);
+				if(!g_objCapAttachUDP.Get_BarcodeDone(gData.nPortNo, gData.nGoodTrayCount+1, nGdPos)) break;
+			}
+			m_nULPickerCase = 230;
+			m_pCommon->Set_LoopTime(AUTO_ULPICKER, 5000);
+		}
+		break;
+	case 230:
+		if (m_pCommon->Check_Position(AX_UNLOAD_PICKER_Z, 0) ) 
+		{
 			if (Check_LotEnd()==TRUE && (m_nUnload1Case==300 || m_nUnload2Case==300)) {
 				m_sLog.Format("m_nUnloadPickCase,%d",m_nULPickerCase); pLogFile->Save_MCCLog(m_sLog);
 				m_nULPickerCase = 300;
@@ -7673,6 +7698,9 @@ void CSequenceMain::Job_LotEnd()
 		if (gData.nPortNo == 1) gData.nPortNo = 2;
 		else					gData.nPortNo = 1;
 	}
+
+	g_objCapAttachUDP.Reset();
+
 	CWorkDlg *pWorkDlg = CWorkDlg::Get_Instance();
 	pWorkDlg->Clear_LotInfo();
 	pWorkDlg->Enable_LotInfo(TRUE);
