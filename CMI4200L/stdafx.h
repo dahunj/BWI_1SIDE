@@ -124,7 +124,7 @@ typedef struct {
 	double		dTrayFirstL;
 	double		dTrayPitchW;	//[W]=[Y]=20
 	double		dTrayPitchL;	//[L]=[X]=33.6
-	int			nCMUseCount;
+	int			nCMMaxCount;
 	double		dUnPitchW;		//[W]=[Y]
 	double		dUnPitchL;		//[L]=[X]
 	double		dIndexPitch;	//Index Pitch(28)
@@ -254,6 +254,8 @@ typedef struct {
 	int		nInsTrayNo;
 	int		nInsLineNo;
 	int		nLotInfoBlockDelay;
+
+	BOOL	bUseAllPass;
 } GLOVAL_DATA;
 extern  GLOVAL_DATA	gData;
 

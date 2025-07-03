@@ -64,14 +64,10 @@ void CWorkDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_LABEL_4, m_Label[4]);
 	DDX_Control(pDX, IDC_LABEL_DOOR, m_LabelDoor);
 
-	for (int i = 10; i < 15; i++) DDX_Control(pDX, IDC_LABEL_0 + i, m_Label[i]);
-	for (int i =  0; i <  5; i++) DDX_Control(pDX, IDC_STC_LOTS_ID_0 + i, m_stcLotsId[i]);
-	for (int i =  0; i <  5; i++) DDX_Control(pDX, IDC_STC_TRAYS_CNT_0 + i, m_stcTraysCount[i]);
-	for (int i =  0; i <  5; i++) DDX_Control(pDX, IDC_STC_CMS_CNT_0 + i, m_stcCmsCount[i]);
-
 	DDX_Control(pDX, IDC_STC_MODEL_NAME, m_stcModelName);
 	DDX_Control(pDX, IDC_STC_STRIP_SIZE, m_stcStripSize);
 	DDX_Control(pDX, IDC_STC_STRIP_TYPE, m_stcStripType);
+	DDX_Control(pDX, IDC_CHK_ALL_PASS, m_chkAllPass);
 
 	DDX_Control(pDX, IDC_STC_LOT_ID_1, m_stcLotId1);
 	DDX_Control(pDX, IDC_STC_LOT_ID_2, m_stcLotId2);
@@ -187,7 +183,7 @@ void CWorkDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_BTN_BUZZER_OFF, m_btnBuzzerOff);
 	DDX_Control(pDX, IDC_BTN_LOT_CANCEL, m_btnLotCancel);
 	DDX_Control(pDX, IDC_CHK_MES_USE, m_chkMESUse);
-	DDX_Control(pDX, IDC_CHK_CONTINUE_LOT, m_chkContinueLot);
+	
 }
 
 BEGIN_MESSAGE_MAP(CWorkDlg, CDialogEx)
@@ -201,10 +197,6 @@ BEGIN_MESSAGE_MAP(CWorkDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_CHK_SAMPLE_JOB, &CWorkDlg::OnBnClickedChkSampleJob)
 	ON_BN_CLICKED(IDC_BTN_CONV_CLEAR, &CWorkDlg::OnBnClickedBtnConvClear)
 	ON_BN_CLICKED(IDC_CHK_MES_USE, &CWorkDlg::OnBnClickedChkMESUse)
-	ON_BN_CLICKED(IDC_CHK_CONTINUE_LOT, &CWorkDlg::OnBnClickedChkContinueLot)
-
-	ON_CONTROL_RANGE(STN_CLICKED, IDC_STC_LOTS_ID_0, IDC_STC_LOTS_ID_4, OnStcLotsIdClick)
-	ON_CONTROL_RANGE(STN_CLICKED, IDC_STC_CMS_CNT_0, IDC_STC_CMS_CNT_4, OnStcCmsCountClick)
 
 	//kty
 	ON_BN_CLICKED(IDC_STC_LOT_ID_1, &CWorkDlg::OnBnClickedLotID)
@@ -220,6 +212,7 @@ BEGIN_MESSAGE_MAP(CWorkDlg, CDialogEx)
 	ON_MESSAGE(UM_UPDATE_LOTID, OnUpdateLotID)
 	ON_MESSAGE(UM_LOT_START_END, &CWorkDlg::OnLotStartEnd)
 
+	ON_BN_CLICKED(IDC_CHK_ALL_PASS, &CWorkDlg::OnBnClickedChkAllPass)
 END_MESSAGE_MAP()
 
 // CWorkDlg 메시지 처리기입니다.
@@ -341,10 +334,7 @@ void CWorkDlg::OnShowWindow(BOOL bShow, UINT nStatus)
 		m_stcCMCnt.SetWindowText(strText);
 
 		EQUIP_DATA *pEquipData = pDataManager->Get_pEquipData();
-		m_chkMESUse.SetCheck(pEquipData->bUseMES);
-
-		m_chkContinueLot.SetCheck(pEquipData->bUseContinueLot);
-		m_bUseContinueLot = pEquipData->bUseContinueLot;
+		m_chkMESUse.SetCheck(pEquipData->bUseMES);		
 
 		gData.sRecipeName = pModelData->sModelName;	         
 		gData.nArrayW	  = pModelData->nArrayW;		
@@ -358,7 +348,7 @@ void CWorkDlg::OnShowWindow(BOOL bShow, UINT nStatus)
 		gData.dTrayFirstW = 0; 
 		gData.dTrayFirstL = 0; 
 		gData.dCMSizeW    = pModelData->dCMWSize;
-		gData.nCMUseCount = pModelData->nCMCount;
+		gData.nCMMaxCount = pModelData->nCMCount;
 		m_nDisCnt = 0;
 
 		Display_LotInfo();
@@ -622,32 +612,6 @@ void CWorkDlg::OnBnClickedChkMESUse()
 
 }
 
-void CWorkDlg::OnBnClickedChkContinueLot()
-{
-	CSequenceMain *pSequenceMain = CSequenceMain::Get_Instance();
-	CCommon *pCommon = CCommon::Get_Instance();
-	CDataManager *pDataManager = CDataManager::Get_Instance();
-
-	if (pSequenceMain->Get_IsAutoRun()) {
-		pCommon->Show_MsgBox(1, "Can't change in Auto Run.");
-
-		m_chkContinueLot.SetCheck(m_bUseContinueLot);
-		return;
-	} else {
-		CIniFileCS INI(gsCurrentDir + "\\System\\EquipData.ini");
-		if (!INI.Check_File()) { AfxMessageBox("EquipData.ini File Not Found!!!"); return; }
-
-		INI.Set_Bool("OPTION", "CONTINUE_LOT", m_chkContinueLot.GetCheck());
-		m_bUseContinueLot = m_chkContinueLot.GetCheck();
-		pDataManager->Read_EquipData();
-		Display_LotInfo();
-
-		CString sLog;
-		CLogFile *pLogFile = CLogFile::Get_Instance();
-		sLog.Format("[Work Mode] ContinueLot push....  LotID[%s] CM[%d] m_bUseContinueLot[%d]", gData.sLotID, gData.nCMJobCount, m_bUseContinueLot);
-		pLogFile->Save_HandlerLog(sLog);	
-	}
-}
 
 BOOL CWorkDlg::Check_Start()
 {
@@ -702,35 +666,20 @@ BOOL CWorkDlg::Check_Start()
 		m_rdoWorkStart.SetCheck(FALSE);
 		pCommon->Show_MsgBox(1, "Unload Tray(양품 Tray)를 확인해 주세요.");
 		return FALSE;
+	}	
+
+	if(gData.sLotID.GetLength() < 5) {
+		m_rdoWorkStart.SetCheck(FALSE);
+		pCommon->Show_MsgBox(1, "Lot ID를 다시 입력해 주세요............(5자리 이상)");
+		return FALSE;
 	}
+
+	//if(gData.nCMJobCount <= 0) {
+	//	m_rdoWorkStart.SetCheck(FALSE);
+	//	pCommon->Show_MsgBox(1, "CM Count 를 입력해 주세요.");
+	//	return FALSE;
+	//}
 	
-	if (pEquipData->bUseContinueLot) {
-		if(gData.sLotsID[0].GetLength() < 5) {
-			m_rdoWorkStart.SetCheck(FALSE);
-			pCommon->Show_MsgBox(1, "Lot ID를 다시 입력해 주세요............(5자리 이상)");
-			return FALSE;
-		}
-
-		if(gData.nCmsUseCnt[0] <= 0) {
-			m_rdoWorkStart.SetCheck(FALSE);
-			pCommon->Show_MsgBox(1, "CM Count 를 입력해 주세요.");
-			return FALSE;
-		}
-
-	} else {
-		if(gData.sLotID.GetLength() < 5) {
-			m_rdoWorkStart.SetCheck(FALSE);
-			pCommon->Show_MsgBox(1, "Lot ID를 다시 입력해 주세요............(5자리 이상)");
-			return FALSE;
-		}
-
-		if(gData.nCMJobCount <= 0) {
-			m_rdoWorkStart.SetCheck(FALSE);
-			pCommon->Show_MsgBox(1, "CM Count 를 입력해 주세요.");
-			return FALSE;
-		}
-	}
-
 	if (gData.sOperID.GetLength() < 1) {
 		m_rdoWorkStart.SetCheck(FALSE);
 		pCommon->Show_MsgBox(1, "Operator화면에서 Operator ID를 입력해 주세요....");
@@ -744,7 +693,7 @@ BOOL CWorkDlg::Check_Start()
 		return FALSE;
 	}
 
-	if (pEquipData->bUseContinueLot && gData.bCapAttachWork == TRUE) {
+	if (gData.bUseAllPass && gData.bCapAttachWork == TRUE) {
 		m_rdoWorkStart.SetCheck(FALSE);
 		pCommon->Show_MsgBox(1, "Cap Attach 장비에서 Lot End 되지 않았습니다. Lot End 후 시작해 주세요....");
 		return FALSE;
@@ -819,15 +768,23 @@ void CWorkDlg::OnBnClickedTrayCnt()
 	return;
 	CCommon *pCommon = CCommon::Get_Instance();
 	CString strOld, strNew;
-	m_stcLotId2.GetWindowText(strOld);
-	if (pCommon->Show_NumPad(strOld, strNew) == IDOK) {
-		m_stcLotId2.SetWindowText(strNew);
-		gData.nTrayJobCount = atoi(strNew);
 
-		gData.nCMJobCount = gData.nTrayJobCount * gData.nCMUseCount;
-		strOld.Format("%d", gData.nCMJobCount);
-		m_stcCMCnt.SetWindowText(strOld);
-	}
+	CDataManager *pDataManager = CDataManager::Get_Instance();
+	EQUIP_DATA *pEquipData = pDataManager->Get_pEquipData();
+
+	if(!pEquipData->bUseMES)
+	{
+		m_stcLotId2.GetWindowText(strOld);
+		if (pCommon->Show_NumPad(strOld, strNew) == IDOK)
+		{
+			m_stcLotId2.SetWindowText(strNew);
+			gData.nTrayJobCount = atoi(strNew);
+
+			gData.nCMJobCount = gData.nTrayJobCount * gData.nCMMaxCount;
+			strOld.Format("%d", gData.nCMJobCount);
+			m_stcCMCnt.SetWindowText(strOld);
+		}
+	}	
 }
 
 void CWorkDlg::OnBnClickedCMCnt()
@@ -837,64 +794,34 @@ void CWorkDlg::OnBnClickedCMCnt()
 		pCommon->Show_MsgBox(1, "Run중에는 CM수량 입력을 할수 없습니다........");
 		return;
 	}
+	CDataManager *pDataManager = CDataManager::Get_Instance();
+	EQUIP_DATA *pEquipData = pDataManager->Get_pEquipData();
 
-	CString strOld, strNew;
-	int nCM, nCM1, nCM2; 
-	m_stcCMCnt.GetWindowText(strOld);
-	if (pCommon->Show_NumPad(strOld, strNew) == IDOK) {
-		m_stcCMCnt.SetWindowText(strNew);
-		nCM = atoi(strNew);
-		gData.nCMJobCount = nCM;
+	if(!pEquipData->bUseMES)
+	{
+		CString strOld, strNew;
+		int nCM, nCM1, nCM2; 
+		m_stcCMCnt.GetWindowText(strOld);
+		if (pCommon->Show_NumPad(strOld, strNew) == IDOK) {
+			m_stcCMCnt.SetWindowText(strNew);
+			nCM = atoi(strNew);
+			gData.nCMJobCount = nCM;
 
-		nCM1 = nCM / gData.nCMUseCount;
-		nCM2 = nCM % gData.nCMUseCount;
-		if(nCM2 > 0) nCM1++;
-		gData.nTrayJobCount = nCM1;
-		strNew.Format("%d", gData.nTrayJobCount);
-		m_stcLotId2.SetWindowText(strNew);  
-	}
+			nCM1 = nCM / gData.nCMMaxCount;
+			nCM2 = nCM % gData.nCMMaxCount;
+			if(nCM2 > 0) nCM1++;
+			gData.nTrayJobCount = nCM1;
+			strNew.Format("%d", gData.nTrayJobCount);
+			m_stcLotId2.SetWindowText(strNew);  
+		}
+	}	
 
 	CString sLog;
 	sLog.Format("[Work Mode] CMCnt push....  LotID[%s] CM[%d]", gData.sLotID, gData.nCMJobCount);
 	pLogFile->Save_HandlerLog(sLog);
 }
 
-void CWorkDlg::OnStcLotsIdClick(UINT nID)
-{
-	CCommon *pCommon = CCommon::Get_Instance();
-	int ID = nID - IDC_STC_LOTS_ID_0;
 
-	CString strKey;
-	if (pCommon->Show_KeyPad(strKey) != IDOK) return;
-
-	strKey = strKey + "T1";
-	m_stcLotsId[ID].SetWindowText(strKey);
-	gData.sLotsID[ID] = strKey;
-}
-
-void CWorkDlg::OnStcCmsCountClick(UINT nID)
-{
-	CCommon *pCommon = CCommon::Get_Instance();
-	int ID = nID - IDC_STC_CMS_CNT_0;
-
-	CString strOld, strNew, strValue;
-
-	m_stcCmsCount[ID].GetWindowText(strOld);
-	if (pCommon->Show_NumPad(strOld, strNew) != IDOK) return;
-
-	int nCmCnt = atoi(strNew);
-
-	int nTraysUseCnt = nCmCnt / gData.nCMUseCount;
-	if (nCmCnt % gData.nCMUseCount) nTraysUseCnt++;
-	strValue.Format("%d", nTraysUseCnt);
-	m_stcTraysCount[ID].SetWindowText(strValue);
-	gData.nTraysUseCnt[ID] = nTraysUseCnt;
-
-	strValue.Format("%d", nCmCnt);
-	m_stcCmsCount[ID].SetWindowText(strValue);
-	gData.nCmsUseCnt[ID] = nCmCnt;
-
-}
 ///////////////////////////////////////////////////////////////////////////////
 // User Functions
 
@@ -917,12 +844,7 @@ void CWorkDlg::Initial_Controls()
 	for (int i = 35; i < 37; i++) m_Label[i].Init_Ctrl("바탕", 11, FALSE, RGB(0xFF, 0xFF, 0xFF), RGB(0x00, 0x00, 0x00));	// List
 	for (int i = 38; i < 39; i++) m_Label[i].Init_Ctrl("바탕", 11, FALSE, RGB(0xFF, 0xFF, 0xFF), RGB(0x00, 0x00, 0x00));	// Count  RGB(0x01, 0x80, 0x40)
 //	for (int i = 39; i < 48; i++) m_Label[i].Init_Ctrl("바탕", 11, FALSE, COLOR_DEFAULT, COLOR_DEFAULT);
-
-	for (int i = 10; i < 15; i++) m_Label[i].Init_Ctrl("바탕", 11, FALSE, RGB(0xFF, 0xFF, 0xFF), RGB(0x40, 0x00, 0x80));	// Continue Lot
-	for (int i =  0; i <  5; i++) m_stcLotsId[i].Init_Ctrl("바탕", 12, TRUE, COLOR_DEFAULT, RGB(0xF0, 0xE0, 0xF0));
-	for (int i =  0; i <  5; i++) m_stcTraysCount[i].Init_Ctrl("바탕", 12, TRUE, COLOR_DEFAULT, RGB(0xF0, 0xE0, 0xF0));
-	for (int i =  0; i <  5; i++) m_stcCmsCount[i].Init_Ctrl("바탕", 12, TRUE, COLOR_DEFAULT, RGB(0xF0, 0xE0, 0xF0));
-
+		
 	m_stcModelName.Init_Ctrl("바탕", 11, TRUE, RGB(0x00, 0x00, 0xFF), RGB(0xF0, 0xFF, 0xB0));
 	m_stcStripSize.Init_Ctrl("바탕", 11, TRUE, COLOR_DEFAULT, RGB(0xF0, 0xFF, 0xB0));
 	m_stcStripType.Init_Ctrl("바탕", 11, TRUE, COLOR_DEFAULT, RGB(0xF0, 0xFF, 0xB0));
@@ -975,7 +897,7 @@ void CWorkDlg::Initial_Controls()
 	m_ledBarAlarm.Init_Ctrl("바탕", 11, FALSE, COLOR_DEFAULT, COLOR_DEFAULT, CLedCS::emGreen, CLedCS::em16);
 	m_ledBarNG.Init_Ctrl("바탕", 11, FALSE, COLOR_DEFAULT, COLOR_DEFAULT, CLedCS::emGreen, CLedCS::em16);
 	m_chkMESUse.Init_Ctrl("Arial", 12, TRUE, RGB(0xFF, 0xFF, 0x00), RGB(0xC0, 0x10, 0x30), CCheckCS::emRed, CCheckCS::emRight);
-	m_chkContinueLot.Init_Ctrl("Arial", 12, TRUE, RGB(0xFF, 0xFF, 0x00), RGB(0xC0, 0x10, 0x30), CCheckCS::emRed, CCheckCS::emRight);
+	m_chkAllPass.Init_Ctrl("Arial", 12, TRUE, RGB(0xFF, 0xFF, 0x00), RGB(0xC0, 0x10, 0x30), CCheckCS::emRed, CCheckCS::emRight);
 
 	Initial_ShiftGrid();
 }
@@ -1178,48 +1100,27 @@ void CWorkDlg::Display_Status()
 	nData = sData.GetLength();
 	if(nData > 0 && gData.nLotInfoBlockDelay == 0) 
 	{
-		if (m_bUseContinueLot) 
-		{
-			sBarcode.Format("%sT1", sData);
-			if (gData.nLotIdsIndex == 0) m_stcLotsId[4].GetWindowText(strTemp);
-			else m_stcLotsId[gData.nLotIdsIndex - 1].GetWindowText(strTemp);
-			if (sBarcode == strTemp) return;
 
-			m_stcLotsId[gData.nLotIdsIndex].SetWindowText(sBarcode);
-			gData.sLotsID[gData.nLotIdsIndex] = sBarcode;
+		m_stcLotId1.SetWindowText(sData);
 
-			if (gData.nLotIdsIndex < 4) gData.nLotIdsIndex++;
-			else gData.nLotIdsIndex = 0;
-
+		if (gData.sLotID != sData) {
 			pDY0->oAlarmBuzzer2 = TRUE;
 			pAJinAXL->Write_Output(0);
-			Sleep(500);
+			Sleep(1000);
 			pDY0->oAlarmBuzzer2 = FALSE;
 			pAJinAXL->Write_Output(0);
 
-		} 
-		else 
-		{
-			m_stcLotId1.SetWindowText(sData);
-
-			if (gData.sLotID != sData) {
-				pDY0->oAlarmBuzzer2 = TRUE;
-				pAJinAXL->Write_Output(0);
-				Sleep(1000);
-				pDY0->oAlarmBuzzer2 = FALSE;
-				pAJinAXL->Write_Output(0);
-
-				SendMessage(UM_UPDATE_LOTID, (WPARAM)NULL, (LPARAM)NULL);
-			}
-			gData.sLotID = sData;
-
-			COperatorDlg *pOperatorDlg = COperatorDlg::Get_Instance();
-			pOperatorDlg->m_stcOperLotID.SetWindowText(gData.sLotID);
-
-			CString sLog;
-			sLog.Format("[Work Mode] Barcode Input....  Barcode : [%s]", sData);
-			pLogFile->Save_HandlerLog(sLog);
+			SendMessage(UM_UPDATE_LOTID, (WPARAM)NULL, (LPARAM)NULL);
 		}
+		gData.sLotID = sData;
+
+		COperatorDlg *pOperatorDlg = COperatorDlg::Get_Instance();
+		pOperatorDlg->m_stcOperLotID.SetWindowText(gData.sLotID);
+
+		CString sLog;
+		sLog.Format("[Work Mode] Barcode Input....  Barcode : [%s]", sData);
+		pLogFile->Save_HandlerLog(sLog);
+
 		sData.Empty();
 		nData = 0;
 
@@ -1287,71 +1188,23 @@ void CWorkDlg::Display_LotInfo()
 {
 	CString strText;
 
-	if (m_bUseContinueLot) 
-	{
-		for (int i = 10; i < 15; i++) m_Label[i].ShowWindow(SW_SHOW);
-		for (int i = 0; i < 5; i++) m_stcLotsId[i].ShowWindow(SW_SHOW);
-		for (int i = 0; i < 5; i++) m_stcTraysCount[i].ShowWindow(SW_SHOW);
-		for (int i = 0; i < 5; i++) m_stcCmsCount[i].ShowWindow(SW_SHOW);
-		
-		for (int i = 6; i < 8; i++) m_Label[i].ShowWindow(SW_HIDE);
-		m_LabelstcCMCnt.ShowWindow(SW_HIDE);
-		m_stcLotId1.ShowWindow(SW_HIDE);
-		m_stcLotId2.ShowWindow(SW_HIDE);
-		m_stcCMCnt.ShowWindow(SW_HIDE);
+	for (int i = 6; i < 8; i++) m_Label[i].ShowWindow(SW_SHOW);
+	m_LabelstcCMCnt.ShowWindow(SW_SHOW);
+	m_stcLotId1.ShowWindow(SW_SHOW);
+	m_stcLotId2.ShowWindow(SW_SHOW);
+	m_stcCMCnt.ShowWindow(SW_SHOW);
 
-		for (int i = 0; i < 5; i++) {
-			if (gData.sLotsID[i].GetLength() < 1) gData.sLotsID[i].Format("LOT_ID_%d", i + 1);
-			m_stcLotsId[i].SetWindowText(gData.sLotsID[i]);
+	if (gData.sLotID.GetLength() < 1) gData.sLotID = "LOT_ID";
+	m_stcLotId1.SetWindowText(gData.sLotID);
 
-			strText.Format("%d", gData.nTraysUseCnt[i]);
-			m_stcTraysCount[i].SetWindowText(strText);
+	strText.Format("%d", gData.nTrayJobCount);
+	m_stcLotId2.SetWindowText(strText);
 
-			strText.Format("%d", gData.nCmsUseCnt[i]);
-			m_stcCmsCount[i].SetWindowText(strText);
-		}
-
-	} 
-	else 
-	{
-		for (int i = 6; i < 8; i++) m_Label[i].ShowWindow(SW_SHOW);
-		m_LabelstcCMCnt.ShowWindow(SW_SHOW);
-		m_stcLotId1.ShowWindow(SW_SHOW);
-		m_stcLotId2.ShowWindow(SW_SHOW);
-		m_stcCMCnt.ShowWindow(SW_SHOW);
-
-		for (int i = 10; i < 15; i++) m_Label[i].ShowWindow(SW_HIDE);
-		for (int i = 0; i < 5; i++) m_stcLotsId[i].ShowWindow(SW_HIDE);
-		for (int i = 0; i < 5; i++) m_stcTraysCount[i].ShowWindow(SW_HIDE);
-		for (int i = 0; i < 5; i++) m_stcCmsCount[i].ShowWindow(SW_HIDE);
-
-		if (gData.sLotID.GetLength() < 1) gData.sLotID = "LOT_ID";
-		m_stcLotId1.SetWindowText(gData.sLotID);
-
-		strText.Format("%d", gData.nTrayJobCount);
-		m_stcLotId2.SetWindowText(strText);
-
-		strText.Format("%d", gData.nCMJobCount);
-		m_stcCMCnt.SetWindowText(strText);
-	}
-
+	strText.Format("%d", gData.nCMJobCount);
+	m_stcCMCnt.SetWindowText(strText);
 }
 
-void CWorkDlg::Clear_LotInfo()
-{
-	CString strText;
 
-	for (int i = 0; i < 5; i++) {
-		gData.sLotsID[i].Format("LOT_ID_%d", i + 1);
-		m_stcLotsId[i].SetWindowText(gData.sLotsID[i]);
-
-		gData.nTraysUseCnt[i] = 0;
-		m_stcTraysCount[i].SetWindowText("0");
-
-		gData.nCmsUseCnt[i] = 0;
-		m_stcCmsCount[i].SetWindowText("0");
-	}
-}
 
 void CWorkDlg::Enable_LotInfo(BOOL on)
 {
@@ -1708,4 +1561,79 @@ void CWorkDlg::OnBnClickedBtnBuzzerOff()
 	CLogFile *pLogFile = CLogFile::Get_Instance();
 	pLogFile->Save_Interlock(1);
 #endif
+}
+
+
+void CWorkDlg::OnBnClickedChkAllPass()
+{
+	CSequenceMain *pSequenceMain = CSequenceMain::Get_Instance();
+	CCommon *pCommon = CCommon::Get_Instance();
+	CDataManager *pDataManager = CDataManager::Get_Instance();
+
+	CString sLog;
+
+	if(m_chkAllPass.GetCheck())
+	{
+		if (pSequenceMain->Get_IsAutoRun()) 
+		{
+			pCommon->Show_MsgBox(1, "Can't change in Auto Run.");
+			m_chkAllPass.SetCheck(FALSE);
+			return;
+		} 
+		else
+		{
+			CIniFileCS INI(gsCurrentDir + "\\System\\EquipData.ini");
+			if (!INI.Check_File()) { AfxMessageBox("EquipData.ini File Not Found!!!"); return; }
+
+			INI.Set_Integer("OPTION", "DRY_NG_COUNT", 0);
+			gData.nNGPercent = 0;
+
+			INI.Set_Integer("OPTION", "DRY_RUN_USE", FALSE);
+			gData.bUseDryRun = FALSE;
+
+			pDataManager->Read_EquipData();
+
+			gData.bUseAllPass = TRUE;
+
+			CLogFile *pLogFile = CLogFile::Get_Instance();
+			sLog.Format("[Work Mode] All Pass push....  LotID[%s] CM[%d] bUseAllPass[%d]", gData.sLotID, gData.nCMJobCount, gData.bUseAllPass);
+			pLogFile->Save_HandlerLog(sLog);	
+		}
+	}
+	else if(!m_chkAllPass.GetCheck())
+	{
+		gData.bUseAllPass = FALSE;
+
+		CIniFileCS INI(gsCurrentDir + "\\System\\EquipData.ini");
+		if (!INI.Check_File()) { AfxMessageBox("EquipData.ini File Not Found!!!"); return; }
+
+		INI.Set_Bool("OPTION", "VISION_INSPECT", TRUE);
+		pDataManager->Read_EquipData();
+
+
+		CLogFile *pLogFile = CLogFile::Get_Instance();
+		sLog.Format("[Work Mode] All Pass push....  LotID[%s] CM[%d] bUseAllPass[%d]", gData.sLotID, gData.nCMJobCount, gData.bUseAllPass);
+		pLogFile->Save_HandlerLog(sLog);	
+	}	
+}
+
+
+void CWorkDlg::UpdateLotInfoFromMES(int nCMCount)
+{
+	CString strOld, strNew;
+	int nTemp, nTemp1, nTemp2; 
+
+	strOld.Format("%d", nCMCount);
+	
+	m_stcCMCnt.SetWindowText(strOld);
+	nTemp = nCMCount;
+	gData.nCMJobCount = nTemp;
+
+	nTemp1 = nTemp / gData.nCMMaxCount;
+	nTemp2 = nTemp % gData.nCMMaxCount;
+	if(nTemp2 > 0) nTemp1++;
+	gData.nTrayJobCount = nTemp1;
+	strNew.Format("%d", gData.nTrayJobCount);
+	m_stcLotId2.SetWindowText(strNew);  
+	
 }

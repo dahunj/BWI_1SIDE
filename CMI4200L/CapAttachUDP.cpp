@@ -353,15 +353,10 @@ void CCapAttachUDP::Set_LotStart(int nPortNo)
 	CString strLotId = gData.sLotID;
 	int nTrayUseCnt = gData.nTrayJobCount;
 	int nCmUseCnt = gData.nCMJobCount;
-	int nContinueLot = pEquipData->bUseContinueLot;
-	if (pEquipData->bUseContinueLot) {
-		strLotId = gData.sLotsID[0];
-		nTrayUseCnt = gLot.nTrayCount;
-		nCmUseCnt = gData.nCmsUseCnt[0];
-	}
+	
 /*	gData.nPortNo = 0;*/
 
-	strSendCmd.Format("LOT,START,%s,%d,%d,%d,%s,%d", strLotId, nPortNo, nTrayUseCnt, nCmUseCnt, gData.sRecipeName, nContinueLot);
+	strSendCmd.Format("LOT,START,%s,%d,%d,%d,%s,%d", strLotId, nPortNo, nTrayUseCnt, nCmUseCnt, gData.sRecipeName, 0);
 	Send_Command(strSendCmd);
 }
 
