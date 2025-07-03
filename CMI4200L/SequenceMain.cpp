@@ -5387,11 +5387,11 @@ BOOL CSequenceMain::ULPicker_Run()
 		break;
 	case 222:
 		{
-			// 바코드 전송 제대로 됬는지 확인하는 루틴
+			// 바코드 전송 제대로 됬는지 확인하고 reply 없을시 retry 
 			dwEnd = GetTickCount();
 			if((dwEnd - dwStart) > 3000) 
 			{
-				m_nULPickerCase = 221;
+				m_nULPickerCase = 221;// back to step 222 for retrying
 				m_pCommon->Set_LoopTime(AUTO_ULPICKER, 5000);
 				break;
 			}
