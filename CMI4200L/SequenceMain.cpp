@@ -5747,7 +5747,7 @@ BOOL CSequenceMain::IndexT_Run()
 		break;
 	case 120:
 		if (m_pDX2->iInspVacuumUp && !m_pDX2->iInspVacuumDown) {
-//			if (!m_pCommon->Delay_LoopTime(AUTO_INDEXT, 50)) break;
+			if (!m_pCommon->Delay_LoopTime(AUTO_INDEXT, 50)) break;
 			m_pDY3->oInspVacuumPad1On = TRUE;
 			m_pDY3->oInspVacuumPad2On = TRUE;
 			m_pDY3->oInspVacuumPad3On = TRUE;
