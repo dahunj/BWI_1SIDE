@@ -183,6 +183,8 @@ void CWorkDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_BTN_BUZZER_OFF, m_btnBuzzerOff);
 	DDX_Control(pDX, IDC_BTN_LOT_CANCEL, m_btnLotCancel);
 	DDX_Control(pDX, IDC_CHK_MES_USE, m_chkMESUse);
+
+	for (int i = 0; i < 4; i++) DDX_Control(pDX, IDC_STC_LOADPICK_NO_0 + i, m_stcLoadPickNo[i]);
 	
 }
 
@@ -899,6 +901,8 @@ void CWorkDlg::Initial_Controls()
 	m_chkMESUse.Init_Ctrl("Arial", 12, TRUE, RGB(0xFF, 0xFF, 0x00), RGB(0xC0, 0x10, 0x30), CCheckCS::emRed, CCheckCS::emRight);
 	m_chkAllPass.Init_Ctrl("Arial", 12, TRUE, RGB(0xFF, 0xFF, 0x00), RGB(0xC0, 0x10, 0x30), CCheckCS::emRed, CCheckCS::emRight);
 
+	for (int i = 0; i < 4; i++) m_stcLoadPickNo[i].Init_Ctrl("¹ÙÅÁ", 12, TRUE, RGB(0x00, 0xFF, 0x00), RGB(0x00, 0x00, 0x00));
+
 	Initial_ShiftGrid();
 }
 
@@ -919,6 +923,9 @@ void CWorkDlg::Display_Status()
 
 	strText.Format("%d", gData.nIndexPos);
 	m_stcWorkSlot[2].SetWindowText(strText);
+
+	for (int i = 0; i < 4; i++) { strText.Format("%d-%d", gData.LoadTrayNo, (gData.nTrayPos[0]-1)*gData.nPickCnt + i); m_stcLoadPickNo[i].SetWindowText(strText); }
+
 
 	int		i, j, nTCnt, nUPEH;
 	double	dTackTime[3];

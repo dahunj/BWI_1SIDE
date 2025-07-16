@@ -79,6 +79,7 @@ public:
 	CButtonCS		m_btnLotCancel;
 
 	CCheckCS		m_chkAllPass;
+	CStaticCS		m_stcLoadPickNo[4];
 	
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV 지원입니다.
