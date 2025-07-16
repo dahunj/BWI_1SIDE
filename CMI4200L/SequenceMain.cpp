@@ -5813,7 +5813,16 @@ BOOL CSequenceMain::IndexT_Run()
 			m_pCommon->Set_LoopTime(AUTO_INDEXT, 5000);
 		break;
 	case 142:
-		if (!m_pDX2->iInspCMAlign1In && m_pDX2->iInspCMAlign1Out) {
+		if (!m_pDX2->iInspCMAlign1In && m_pDX2->iInspCMAlign1Out) 
+		{
+			m_pDY3->oInspVacuumPad1On = TRUE;
+			m_pDY3->oInspVacuumPad2On = TRUE;
+			m_pDY3->oInspVacuumPad3On = TRUE;
+			m_pDY3->oInspVacuumPad4On = TRUE;
+			m_pDY3->oInspVacuumPad5On = TRUE;
+			m_pDY3->oInspVacuumPad6On = TRUE;
+			m_pAJinAXL->Write_Output(3);
+
 			if (!m_pCommon->Delay_LoopTime(AUTO_INDEXT, 1000)) break;
 			m_pDY2->oInspCMAlign1In = TRUE;
 			m_pDY2->oInspCMAlign1Out = FALSE;
