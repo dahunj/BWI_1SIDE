@@ -1,9 +1,9 @@
-// ManualLoadingDlg.cpp : 구현 파일입니다.
+// ManualLoadTrayDlg.cpp : 구현 파일입니다.
 //
 
 #include "stdafx.h"
 #include "CMI4200L.h"
-#include "ManualLoadingDlg.h"
+#include "ManualLoadTrayDlg.h"
 #include "afxdialogex.h"
 
 #include "AJinAXL.h"
@@ -11,21 +11,21 @@
 #include "Common.h"
 #include "ManualDlg.h"
 
-// CManualLoadingDlg 대화 상자입니다.
+// CManualLoadTrayDlg 대화 상자입니다.
 
-IMPLEMENT_DYNAMIC(CManualLoadingDlg, CDialogEx)
+IMPLEMENT_DYNAMIC(CManualLoadTrayDlg, CDialogEx)
 
-CManualLoadingDlg::CManualLoadingDlg(CWnd* pParent /*=NULL*/)
-	: CDialogEx(CManualLoadingDlg::IDD, pParent)
+CManualLoadTrayDlg::CManualLoadTrayDlg(CWnd* pParent /*=NULL*/)
+	: CDialogEx(CManualLoadTrayDlg::IDD, pParent)
 {
 
 }
 
-CManualLoadingDlg::~CManualLoadingDlg()
+CManualLoadTrayDlg::~CManualLoadTrayDlg()
 {
 }
 
-void CManualLoadingDlg::DoDataExchange(CDataExchange* pDX)
+void CManualLoadTrayDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
 
@@ -75,7 +75,7 @@ void CManualLoadingDlg::DoDataExchange(CDataExchange* pDX)
 }
 
 
-BEGIN_MESSAGE_MAP(CManualLoadingDlg, CDialogEx)
+BEGIN_MESSAGE_MAP(CManualLoadTrayDlg, CDialogEx)
 	ON_WM_DESTROY()
 	ON_WM_SHOWWINDOW()
 	ON_CONTROL_RANGE(BN_CLICKED, IDC_BTN_LD_TRAY_IO_0, IDC_BTN_LD_TRAY_IO_0, OnBtnShuttleIOClick)
@@ -107,8 +107,8 @@ BEGIN_MESSAGE_MAP(CManualLoadingDlg, CDialogEx)
 	ON_CONTROL_RANGE(BN_CLICKED, IDC_BTN_TR2_IO_5, IDC_BTN_TR2_IO_5, OnBtnTR2IOClick)
 END_MESSAGE_MAP()
 
-// CManualLoadingDlg 메시지 처리기입니다.
-BOOL CManualLoadingDlg::OnInitDialog() 
+// CManualLoadTrayDlg 메시지 처리기입니다.
+BOOL CManualLoadTrayDlg::OnInitDialog() 
 {
 	CDialogEx::OnInitDialog();
 
@@ -121,12 +121,12 @@ BOOL CManualLoadingDlg::OnInitDialog()
 	// 예외: OCX 속성 페이지는 FALSE를 반환해야 합니다.
 }
 
-void CManualLoadingDlg::OnDestroy() 
+void CManualLoadTrayDlg::OnDestroy() 
 {
 	CDialogEx::OnDestroy();
 }
 
-BOOL CManualLoadingDlg::PreTranslateMessage(MSG* pMsg) 
+BOOL CManualLoadTrayDlg::PreTranslateMessage(MSG* pMsg) 
 {
 	if ((pMsg->message == WM_KEYDOWN) && (pMsg->wParam == VK_RETURN || pMsg->wParam == VK_ESCAPE))
 		return TRUE;
@@ -134,7 +134,7 @@ BOOL CManualLoadingDlg::PreTranslateMessage(MSG* pMsg)
 	return CDialogEx::PreTranslateMessage(pMsg);
 }
 
-void CManualLoadingDlg::OnShowWindow(BOOL bShow, UINT nStatus) 
+void CManualLoadTrayDlg::OnShowWindow(BOOL bShow, UINT nStatus) 
 {
 	CDialogEx::OnShowWindow(bShow, nStatus);
 
@@ -143,7 +143,7 @@ void CManualLoadingDlg::OnShowWindow(BOOL bShow, UINT nStatus)
 	}
 }
 
-void CManualLoadingDlg::Initial_Controls() 
+void CManualLoadTrayDlg::Initial_Controls() 
 {
 	for (int i = 0; i < 4; i++) m_stcAxisPos[i].Init_Ctrl("바탕", 11, TRUE, RGB(0xFF, 0xFF, 0xFF), RGB(0x00, 0x10, 0xB0));
 	for (int i = 0; i < 6; i++) m_ledShuttle[i].Init_Ctrl("바탕", 11, FALSE, COLOR_DEFAULT, COLOR_DEFAULT, CLedCS::emGreen, CLedCS::em16);
@@ -152,7 +152,7 @@ void CManualLoadingDlg::Initial_Controls()
 	for (int i = 0; i < 6; i++) m_ledTR2[i].Init_Ctrl("바탕", 11, FALSE, COLOR_DEFAULT, COLOR_DEFAULT, CLedCS::emGreen, CLedCS::em16);
 }
 
-void CManualLoadingDlg::Display_Status()
+void CManualLoadTrayDlg::Display_Status()
 {
 	CAJinAXL *pAJinAXL = CAJinAXL::Get_Instance();
 	DX_DATA_1 *pDX1 = pAJinAXL->Get_pDX1();
@@ -242,7 +242,7 @@ void CManualLoadingDlg::Display_Status()
 }
 
 
-void CManualLoadingDlg::OnBtnShuttleIOClick(UINT nID)
+void CManualLoadTrayDlg::OnBtnShuttleIOClick(UINT nID)
 {
 	CAJinAXL *pAJinAXL = CAJinAXL::Get_Instance();
 	DY_DATA_1 *pDY1 = pAJinAXL->Get_pDY1();
@@ -263,7 +263,7 @@ void CManualLoadingDlg::OnBtnShuttleIOClick(UINT nID)
 	pAJinAXL->Write_Output(1);
 }
 
-void CManualLoadingDlg::OnBtnShuttleIO2Click(UINT nID)
+void CManualLoadTrayDlg::OnBtnShuttleIO2Click(UINT nID)
 {
 	CAJinAXL *pAJinAXL = CAJinAXL::Get_Instance();
 	DY_DATA_1 *pDY1 = pAJinAXL->Get_pDY1();
@@ -283,7 +283,7 @@ void CManualLoadingDlg::OnBtnShuttleIO2Click(UINT nID)
 	}
 	pAJinAXL->Write_Output(1);
 }
-void CManualLoadingDlg::OnBtnTR1YClick(UINT nID)
+void CManualLoadTrayDlg::OnBtnTR1YClick(UINT nID)
 {
 	CAJinAXL *pAJinAXL = CAJinAXL::Get_Instance();
 	DX_DATA_1 *pDX1 = pAJinAXL->Get_pDX1();
@@ -318,7 +318,7 @@ void CManualLoadingDlg::OnBtnTR1YClick(UINT nID)
 	}
 }
 
-void CManualLoadingDlg::OnBtnTR1ZClick(UINT nID)
+void CManualLoadTrayDlg::OnBtnTR1ZClick(UINT nID)
 {
 	CAJinAXL *pAJinAXL = CAJinAXL::Get_Instance();
 	DX_DATA_1 *pDX1 = pAJinAXL->Get_pDX1();
@@ -364,7 +364,7 @@ void CManualLoadingDlg::OnBtnTR1ZClick(UINT nID)
 	}
 }
 
-void CManualLoadingDlg::OnBtnTR1IOClick(UINT nID)
+void CManualLoadTrayDlg::OnBtnTR1IOClick(UINT nID)
 {
 	CAJinAXL *pAJinAXL = CAJinAXL::Get_Instance();
 	DY_DATA_1 *pDY1 = pAJinAXL->Get_pDY1();
@@ -414,7 +414,7 @@ void CManualLoadingDlg::OnBtnTR1IOClick(UINT nID)
 	} 
 }
 
-void CManualLoadingDlg::OnBtnTR2YClick(UINT nID)
+void CManualLoadTrayDlg::OnBtnTR2YClick(UINT nID)
 {
 	CAJinAXL *pAJinAXL = CAJinAXL::Get_Instance();
 	DX_DATA_1 *pDX1 = pAJinAXL->Get_pDX1();
@@ -449,7 +449,7 @@ void CManualLoadingDlg::OnBtnTR2YClick(UINT nID)
 	}
 }
 
-void CManualLoadingDlg::OnBtnTR2ZClick(UINT nID)
+void CManualLoadTrayDlg::OnBtnTR2ZClick(UINT nID)
 {
 	CAJinAXL *pAJinAXL = CAJinAXL::Get_Instance();
 	DX_DATA_1 *pDX1 = pAJinAXL->Get_pDX1();
@@ -495,7 +495,7 @@ void CManualLoadingDlg::OnBtnTR2ZClick(UINT nID)
 	}
 }
 
-void CManualLoadingDlg::OnBtnTR2IOClick(UINT nID)
+void CManualLoadTrayDlg::OnBtnTR2IOClick(UINT nID)
 {
 	CAJinAXL *pAJinAXL = CAJinAXL::Get_Instance();
 	DY_DATA_1 *pDY1 = pAJinAXL->Get_pDY1();

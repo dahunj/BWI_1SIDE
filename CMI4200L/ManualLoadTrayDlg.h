@@ -1,15 +1,15 @@
 #pragma once
 
 
-// CManualLoadingDlg 대화 상자입니다.
+// CManualLoadTrayDlg 대화 상자입니다.
 
-class CManualLoadingDlg : public CDialogEx
+class CManualLoadTrayDlg : public CDialogEx
 {
-	DECLARE_DYNAMIC(CManualLoadingDlg)
+	DECLARE_DYNAMIC(CManualLoadTrayDlg)
 
 public:
-	CManualLoadingDlg(CWnd* pParent = NULL);   // 표준 생성자입니다.
-	virtual ~CManualLoadingDlg();
+	CManualLoadTrayDlg(CWnd* pParent = NULL);   // 표준 생성자입니다.
+	virtual ~CManualLoadTrayDlg();
 
 // 대화 상자 데이터입니다.
 	enum { IDD = IDD_MANUAL_LOADING_DLG };

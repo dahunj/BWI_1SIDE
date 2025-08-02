@@ -1,8 +1,8 @@
-// ManualPickerDlg.cpp : 구현 파일입니다.
+// ManualNGoodPickerDlg.cpp : 구현 파일입니다.
 //
 #include "stdafx.h"
 #include "CMI4200L.h"
-#include "ManualPickerDlg.h"
+#include "ManualNGoodPickerDlg.h"
 #include "afxdialogex.h"
 
 #include "AJinAXL.h"
@@ -12,20 +12,20 @@
 #include "ManualDlg.h"
 #include "Math.h"
 
-// CManualPickerDlg 대화 상자입니다.
+// CManualNGoodPickerDlg 대화 상자입니다.
 
-IMPLEMENT_DYNAMIC(CManualPickerDlg, CDialogEx)
+IMPLEMENT_DYNAMIC(CManualNGoodPickerDlg, CDialogEx)
 
-CManualPickerDlg::CManualPickerDlg(CWnd* pParent /*=NULL*/)
-	: CDialogEx(CManualPickerDlg::IDD, pParent)
+CManualNGoodPickerDlg::CManualNGoodPickerDlg(CWnd* pParent /*=NULL*/)
+	: CDialogEx(CManualNGoodPickerDlg::IDD, pParent)
 {
 }
 
-CManualPickerDlg::~CManualPickerDlg()
+CManualNGoodPickerDlg::~CManualNGoodPickerDlg()
 {
 }
 
-void CManualPickerDlg::DoDataExchange(CDataExchange* pDX)
+void CManualNGoodPickerDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
 	for (int i = 0; i < 5; i++) DDX_Control(pDX, IDC_STC_AXIS_POS_0 + i, m_stcAxisPos[i]);
@@ -158,7 +158,7 @@ void CManualPickerDlg::DoDataExchange(CDataExchange* pDX)
 
 }
 
-BEGIN_MESSAGE_MAP(CManualPickerDlg, CDialogEx)
+BEGIN_MESSAGE_MAP(CManualNGoodPickerDlg, CDialogEx)
 	ON_WM_DESTROY()
 	ON_WM_SHOWWINDOW()
 
@@ -222,13 +222,13 @@ BEGIN_MESSAGE_MAP(CManualPickerDlg, CDialogEx)
 	ON_CONTROL_RANGE(BN_CLICKED, IDC_BTN_NG_PICKER_IO1_22, IDC_BTN_NG_PICKER_IO1_22, OnBtnNGPickIOClick)
 	ON_CONTROL_RANGE(BN_CLICKED, IDC_BTN_NG_PICKER_IO1_23, IDC_BTN_NG_PICKER_IO1_23, OnBtnNGPickIOClick)
 
-	ON_BN_CLICKED(IDC_BTN_GOOD_PICKER4_MOVE, &CManualPickerDlg::OnBtnGoodPickMoveClick)
-	ON_BN_CLICKED(IDC_BTN_GOOD_PICKER4_MOVE2, &CManualPickerDlg::OnBnClickedBtnGoodPicker4Move2)
+	ON_BN_CLICKED(IDC_BTN_GOOD_PICKER4_MOVE, &CManualNGoodPickerDlg::OnBtnGoodPickMoveClick)
+	ON_BN_CLICKED(IDC_BTN_GOOD_PICKER4_MOVE2, &CManualNGoodPickerDlg::OnBnClickedBtnGoodPicker4Move2)
 END_MESSAGE_MAP()
 
-// CManualPickerDlg 메시지 처리기입니다.
+// CManualNGoodPickerDlg 메시지 처리기입니다.
 
-BOOL CManualPickerDlg::OnInitDialog() 
+BOOL CManualNGoodPickerDlg::OnInitDialog() 
 {
 	CDialogEx::OnInitDialog();
 
@@ -266,12 +266,12 @@ BOOL CManualPickerDlg::OnInitDialog()
 	// 예외: OCX 속성 페이지는 FALSE를 반환해야 합니다.
 }
 
-void CManualPickerDlg::OnDestroy() 
+void CManualNGoodPickerDlg::OnDestroy() 
 {
 	CDialogEx::OnDestroy();
 }
 
-BOOL CManualPickerDlg::PreTranslateMessage(MSG* pMsg) 
+BOOL CManualNGoodPickerDlg::PreTranslateMessage(MSG* pMsg) 
 {
 	if ((pMsg->message == WM_KEYDOWN) && (pMsg->wParam == VK_RETURN || pMsg->wParam == VK_ESCAPE))
 		return TRUE;
@@ -279,7 +279,7 @@ BOOL CManualPickerDlg::PreTranslateMessage(MSG* pMsg)
 	return CDialogEx::PreTranslateMessage(pMsg);
 }
 
-void CManualPickerDlg::OnShowWindow(BOOL bShow, UINT nStatus) 
+void CManualNGoodPickerDlg::OnShowWindow(BOOL bShow, UINT nStatus) 
 {
 	CDialogEx::OnShowWindow(bShow, nStatus);
 
@@ -289,7 +289,7 @@ void CManualPickerDlg::OnShowWindow(BOOL bShow, UINT nStatus)
 }
 
 
-void CManualPickerDlg::OnBtnPickerXClick(UINT nID)
+void CManualNGoodPickerDlg::OnBtnPickerXClick(UINT nID)
 {
 	CAJinAXL *pAJinAXL = CAJinAXL::Get_Instance();
 	DX_DATA_4 *pDX4 = pAJinAXL->Get_pDX4();
@@ -354,7 +354,7 @@ void CManualPickerDlg::OnBtnPickerXClick(UINT nID)
 
 }
 
-void CManualPickerDlg::OnBtnPickerYClick(UINT nID)
+void CManualNGoodPickerDlg::OnBtnPickerYClick(UINT nID)
 {
 	CAJinAXL *pAJinAXL = CAJinAXL::Get_Instance();
 	DX_DATA_4 *pDX4 = pAJinAXL->Get_pDX4();
@@ -412,11 +412,11 @@ void CManualPickerDlg::OnBtnPickerYClick(UINT nID)
 
 	CString sLog;
 	CLogFile *pLogFile = CLogFile::Get_Instance();
-	sLog.Format("[Manual Mode] CManualPickerDlg.OnBtnPickerYClick.  LotID[%s] CM[%d] Data[%d]", gData.sLotID, gData.nCMJobCount, nID);
+	sLog.Format("[Manual Mode] CManualNGoodPickerDlg.OnBtnPickerYClick.  LotID[%s] CM[%d] Data[%d]", gData.sLotID, gData.nCMJobCount, nID);
 	pLogFile->Save_HandlerLog(sLog);
 }
 
-void CManualPickerDlg::OnBtnPickerZClick(UINT nID)
+void CManualNGoodPickerDlg::OnBtnPickerZClick(UINT nID)
 {
 	CAJinAXL *pAJinAXL = CAJinAXL::Get_Instance();
 	CCommon *pCommon = CCommon::Get_Instance();
@@ -432,11 +432,11 @@ void CManualPickerDlg::OnBtnPickerZClick(UINT nID)
 
 	CString sLog;
 	CLogFile *pLogFile = CLogFile::Get_Instance();
-	sLog.Format("[Manual Mode] CManualPickerDlg.OnBtnPickerZClick.  LotID[%s] CM[%d] Data[%d]", gData.sLotID, gData.nCMJobCount, nID);
+	sLog.Format("[Manual Mode] CManualNGoodPickerDlg.OnBtnPickerZClick.  LotID[%s] CM[%d] Data[%d]", gData.sLotID, gData.nCMJobCount, nID);
 	pLogFile->Save_HandlerLog(sLog);
 }
 
-void CManualPickerDlg::OnBtnNGPickXClick(UINT nID)
+void CManualNGoodPickerDlg::OnBtnNGPickXClick(UINT nID)
 {
 	CAJinAXL *pAJinAXL = CAJinAXL::Get_Instance();
 	CCommon *pCommon = CCommon::Get_Instance();
@@ -491,11 +491,11 @@ void CManualPickerDlg::OnBtnNGPickXClick(UINT nID)
 
 	CString sLog;
 	CLogFile *pLogFile = CLogFile::Get_Instance();
-	sLog.Format("[Manual Mode] CManualPickerDlg.OnBtnNGPickXClick.  LotID[%s] CM[%d] Data[%d]", gData.sLotID, gData.nCMJobCount, nID);
+	sLog.Format("[Manual Mode] CManualNGoodPickerDlg.OnBtnNGPickXClick.  LotID[%s] CM[%d] Data[%d]", gData.sLotID, gData.nCMJobCount, nID);
 	pLogFile->Save_HandlerLog(sLog);
 }
 
-void CManualPickerDlg::OnBtnNGPickZClick(UINT nID)
+void CManualNGoodPickerDlg::OnBtnNGPickZClick(UINT nID)
 {
 	CAJinAXL *pAJinAXL = CAJinAXL::Get_Instance();
 	CCommon *pCommon = CCommon::Get_Instance();
@@ -513,11 +513,11 @@ void CManualPickerDlg::OnBtnNGPickZClick(UINT nID)
 
 	CString sLog;
 	CLogFile *pLogFile = CLogFile::Get_Instance();
-	sLog.Format("[Manual Mode] CManualPickerDlg.OnBtnNGPickZClick.  LotID[%s] CM[%d] Data[%d]", gData.sLotID, gData.nCMJobCount, nID);
+	sLog.Format("[Manual Mode] CManualNGoodPickerDlg.OnBtnNGPickZClick.  LotID[%s] CM[%d] Data[%d]", gData.sLotID, gData.nCMJobCount, nID);
 	pLogFile->Save_HandlerLog(sLog);
 }
 
-void CManualPickerDlg::OnBtnNGPickIOClick(UINT nID)
+void CManualNGoodPickerDlg::OnBtnNGPickIOClick(UINT nID)
 {
 	CAJinAXL *pAJinAXL = CAJinAXL::Get_Instance();
 	DX_DATA_2 *pDX2 = pAJinAXL->Get_pDX2();
@@ -735,11 +735,11 @@ void CManualPickerDlg::OnBtnNGPickIOClick(UINT nID)
 
 	CString sLog;
 	CLogFile *pLogFile = CLogFile::Get_Instance();
-	sLog.Format("[Manual Mode] CManualPickerDlg.OnBtnNGPickIOClick.  LotID[%s] CM[%d] Data[%d]", gData.sLotID, gData.nCMJobCount, nID);
+	sLog.Format("[Manual Mode] CManualNGoodPickerDlg.OnBtnNGPickIOClick.  LotID[%s] CM[%d] Data[%d]", gData.sLotID, gData.nCMJobCount, nID);
 	pLogFile->Save_HandlerLog(sLog);
 }
 
-void CManualPickerDlg::OnBtnPicker1Click(UINT nID)
+void CManualNGoodPickerDlg::OnBtnPicker1Click(UINT nID)
 {
 	CAJinAXL *pAJinAXL = CAJinAXL::Get_Instance();
 	DX_DATA_2 *pDX2 = pAJinAXL->Get_pDX2();
@@ -777,11 +777,11 @@ void CManualPickerDlg::OnBtnPicker1Click(UINT nID)
 
 	CString sLog;
 	CLogFile *pLogFile = CLogFile::Get_Instance();
-	sLog.Format("[Manual Mode] CManualPickerDlg.OnBtnPicker1Click.  LotID[%s] CM[%d] Data[%d]", gData.sLotID, gData.nCMJobCount, nID);
+	sLog.Format("[Manual Mode] CManualNGoodPickerDlg.OnBtnPicker1Click.  LotID[%s] CM[%d] Data[%d]", gData.sLotID, gData.nCMJobCount, nID);
 	pLogFile->Save_HandlerLog(sLog);
 }
 
-void CManualPickerDlg::OnBtnPicker2Click(UINT nID)
+void CManualNGoodPickerDlg::OnBtnPicker2Click(UINT nID)
 {
 	CAJinAXL *pAJinAXL = CAJinAXL::Get_Instance();
 	DX_DATA_2 *pDX2 = pAJinAXL->Get_pDX2();
@@ -819,11 +819,11 @@ void CManualPickerDlg::OnBtnPicker2Click(UINT nID)
 
 	CString sLog;
 	CLogFile *pLogFile = CLogFile::Get_Instance();
-	sLog.Format("[Manual Mode] CManualPickerDlg.OnBtnPicker2Click.  LotID[%s] CM[%d] Data[%d]", gData.sLotID, gData.nCMJobCount, nID);
+	sLog.Format("[Manual Mode] CManualNGoodPickerDlg.OnBtnPicker2Click.  LotID[%s] CM[%d] Data[%d]", gData.sLotID, gData.nCMJobCount, nID);
 	pLogFile->Save_HandlerLog(sLog);
 }
 
-void CManualPickerDlg::OnBtnPicker3Click(UINT nID)
+void CManualNGoodPickerDlg::OnBtnPicker3Click(UINT nID)
 {
 	CAJinAXL *pAJinAXL = CAJinAXL::Get_Instance();
 	DX_DATA_2 *pDX2 = pAJinAXL->Get_pDX2();
@@ -861,11 +861,11 @@ void CManualPickerDlg::OnBtnPicker3Click(UINT nID)
 
 	CString sLog;
 	CLogFile *pLogFile = CLogFile::Get_Instance();
-	sLog.Format("[Manual Mode] CManualPickerDlg.OnBtnPicker3Click.  LotID[%s] CM[%d] Data[%d]", gData.sLotID, gData.nCMJobCount, nID);
+	sLog.Format("[Manual Mode] CManualNGoodPickerDlg.OnBtnPicker3Click.  LotID[%s] CM[%d] Data[%d]", gData.sLotID, gData.nCMJobCount, nID);
 	pLogFile->Save_HandlerLog(sLog);
 }
 
-void CManualPickerDlg::OnBtnPicker4Click(UINT nID)
+void CManualNGoodPickerDlg::OnBtnPicker4Click(UINT nID)
 {
 	CAJinAXL *pAJinAXL = CAJinAXL::Get_Instance();
 	DX_DATA_2 *pDX2 = pAJinAXL->Get_pDX2();
@@ -903,11 +903,11 @@ void CManualPickerDlg::OnBtnPicker4Click(UINT nID)
 
 	CString sLog;
 	CLogFile *pLogFile = CLogFile::Get_Instance();
-	sLog.Format("[Manual Mode] CManualPickerDlg.OnBtnPicker4Click.  LotID[%s] CM[%d] Data[%d]", gData.sLotID, gData.nCMJobCount, nID);
+	sLog.Format("[Manual Mode] CManualNGoodPickerDlg.OnBtnPicker4Click.  LotID[%s] CM[%d] Data[%d]", gData.sLotID, gData.nCMJobCount, nID);
 	pLogFile->Save_HandlerLog(sLog);
 }
 
-void CManualPickerDlg::OnBtnPicker5Click(UINT nID)
+void CManualNGoodPickerDlg::OnBtnPicker5Click(UINT nID)
 {
 	CAJinAXL *pAJinAXL = CAJinAXL::Get_Instance();
 	DX_DATA_2 *pDX2 = pAJinAXL->Get_pDX2();
@@ -945,11 +945,11 @@ void CManualPickerDlg::OnBtnPicker5Click(UINT nID)
 
 	CString sLog;
 	CLogFile *pLogFile = CLogFile::Get_Instance();
-	sLog.Format("[Manual Mode] CManualPickerDlg.OnBtnPicker5Click.  LotID[%s] CM[%d] Data[%d]", gData.sLotID, gData.nCMJobCount, nID);
+	sLog.Format("[Manual Mode] CManualNGoodPickerDlg.OnBtnPicker5Click.  LotID[%s] CM[%d] Data[%d]", gData.sLotID, gData.nCMJobCount, nID);
 	pLogFile->Save_HandlerLog(sLog);
 }
 
-void CManualPickerDlg::OnBtnPicker6Click(UINT nID)
+void CManualNGoodPickerDlg::OnBtnPicker6Click(UINT nID)
 {
 	CAJinAXL *pAJinAXL = CAJinAXL::Get_Instance();
 	DX_DATA_2 *pDX2 = pAJinAXL->Get_pDX2();
@@ -987,11 +987,11 @@ void CManualPickerDlg::OnBtnPicker6Click(UINT nID)
 
 	CString sLog;
 	CLogFile *pLogFile = CLogFile::Get_Instance();
-	sLog.Format("[Manual Mode] CManualPickerDlg.OnBtnPicker6Click.  LotID[%s] CM[%d] Data[%d]", gData.sLotID, gData.nCMJobCount, nID);
+	sLog.Format("[Manual Mode] CManualNGoodPickerDlg.OnBtnPicker6Click.  LotID[%s] CM[%d] Data[%d]", gData.sLotID, gData.nCMJobCount, nID);
 	pLogFile->Save_HandlerLog(sLog);
 }
 
-void CManualPickerDlg::OnBtnPickerAClick(UINT nID)
+void CManualNGoodPickerDlg::OnBtnPickerAClick(UINT nID)
 {
 	CAJinAXL *pAJinAXL = CAJinAXL::Get_Instance();
 	DX_DATA_2 *pDX2 = pAJinAXL->Get_pDX2();
@@ -1156,7 +1156,7 @@ void CManualPickerDlg::OnBtnPickerAClick(UINT nID)
 
 	CString sLog;
 	CLogFile *pLogFile = CLogFile::Get_Instance();
-	sLog.Format("[Manual Mode] CManualPickerDlg.OnBtnPickerAClick.  LotID[%s] CM[%d] Data[%d]", gData.sLotID, gData.nCMJobCount, nID);
+	sLog.Format("[Manual Mode] CManualNGoodPickerDlg.OnBtnPickerAClick.  LotID[%s] CM[%d] Data[%d]", gData.sLotID, gData.nCMJobCount, nID);
 	pLogFile->Save_HandlerLog(sLog);
 }
 
@@ -1164,7 +1164,7 @@ void CManualPickerDlg::OnBtnPickerAClick(UINT nID)
 ///////////////////////////////////////////////////////////////////////////////
 // User Functions
 
-void CManualPickerDlg::Initial_Controls() 
+void CManualNGoodPickerDlg::Initial_Controls() 
 {
 
 	for (int i = 0; i < 5; i++) m_stcAxisPos[i].Init_Ctrl("바탕", 11, TRUE, RGB(0xFF, 0xFF, 0xFF), RGB(0x00, 0x10, 0xB0));
@@ -1202,7 +1202,7 @@ void CManualPickerDlg::Initial_Controls()
 #endif
 }
 
-void CManualPickerDlg::Display_Status()
+void CManualNGoodPickerDlg::Display_Status()
 {
 
 	CAJinAXL *pAJinAXL = CAJinAXL::Get_Instance();
@@ -1387,7 +1387,7 @@ void CManualPickerDlg::Display_Status()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void CManualPickerDlg::OnBtnGoodPickMovePosClick(UINT nID)
+void CManualNGoodPickerDlg::OnBtnGoodPickMovePosClick(UINT nID)
 {
 
  	int ID; 
@@ -1419,7 +1419,7 @@ void CManualPickerDlg::OnBtnGoodPickMovePosClick(UINT nID)
 	}
 
 }
-void CManualPickerDlg::OnBtnGoodPickMoveClick()
+void CManualNGoodPickerDlg::OnBtnGoodPickMoveClick()
 {
 /*
 	CString sTmp[4];
@@ -1591,7 +1591,7 @@ void CManualPickerDlg::OnBtnGoodPickMoveClick()
 }
 
 
-void CManualPickerDlg::OnBnClickedBtnGoodPicker4Move2()
+void CManualNGoodPickerDlg::OnBnClickedBtnGoodPicker4Move2()
 {
 /*
 	CString sTmp[4];

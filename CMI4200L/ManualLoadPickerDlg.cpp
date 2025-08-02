@@ -1,9 +1,9 @@
-// ManualPicker3Dlg.cpp : 구현 파일입니다.
+// ManualLoadPickerDlg.cpp : 구현 파일입니다.
 //
 
 #include "stdafx.h"
 #include "CMI4200L.h"
-#include "ManualPicker3Dlg.h"
+#include "ManualLoadPickerDlg.h"
 #include "afxdialogex.h"
 
 #include "AJinAXL.h"
@@ -14,21 +14,21 @@
 #include "Math.h"
 
 
-// CManualPicker3Dlg 대화 상자입니다.
+// CManualLoadPickerDlg 대화 상자입니다.
 
-IMPLEMENT_DYNAMIC(CManualPicker3Dlg, CDialogEx)
+IMPLEMENT_DYNAMIC(CManualLoadPickerDlg, CDialogEx)
 
-CManualPicker3Dlg::CManualPicker3Dlg(CWnd* pParent /*=NULL*/)
-	: CDialogEx(CManualPicker3Dlg::IDD, pParent)
+CManualLoadPickerDlg::CManualLoadPickerDlg(CWnd* pParent /*=NULL*/)
+	: CDialogEx(CManualLoadPickerDlg::IDD, pParent)
 {
 
 }
 
-CManualPicker3Dlg::~CManualPicker3Dlg()
+CManualLoadPickerDlg::~CManualLoadPickerDlg()
 {
 }
 
-void CManualPicker3Dlg::DoDataExchange(CDataExchange* pDX)
+void CManualLoadPickerDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_STC_AXIS_POS_0, m_stcAxisPos[0]);
@@ -121,7 +121,7 @@ void CManualPicker3Dlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_BTN_NG_PICKER_MOVE2, m_btnNGPickMoveZ);
 }
 
-BEGIN_MESSAGE_MAP(CManualPicker3Dlg, CDialogEx)
+BEGIN_MESSAGE_MAP(CManualLoadPickerDlg, CDialogEx)
 	ON_WM_DESTROY()
 	ON_WM_SHOWWINDOW()
 	ON_CONTROL_RANGE(BN_CLICKED, IDC_BTN_ML_PICKER_Y1_0, IDC_BTN_ML_PICKER_Y1_0, OnBtnMLNGPickY1Click)
@@ -177,51 +177,67 @@ BEGIN_MESSAGE_MAP(CManualPicker3Dlg, CDialogEx)
 	ON_CONTROL_RANGE(BN_CLICKED, IDC_STC_MOVE_2, IDC_STC_MOVE_2, OnBtnNGPickMovePosClick)
 	ON_CONTROL_RANGE(BN_CLICKED, IDC_STC_MOVE_3, IDC_STC_MOVE_3, OnBtnNGPickMovePosClick)
 
-	ON_BN_CLICKED(IDC_BTN_NG_PICKER_MOVE, &CManualPicker3Dlg::OnBtnNGPickMoveClick)
-	ON_BN_CLICKED(IDC_BTN_NG_PICKER_MOVE2, &CManualPicker3Dlg::OnBnClickedBtnNgPickerMove2)
+	ON_BN_CLICKED(IDC_BTN_NG_PICKER_MOVE, &CManualLoadPickerDlg::OnBtnNGPickMoveClick)
+	ON_BN_CLICKED(IDC_BTN_NG_PICKER_MOVE2, &CManualLoadPickerDlg::OnBnClickedBtnNgPickerMove2)
 END_MESSAGE_MAP()
 
 
-// CManualPicker3Dlg 메시지 처리기입니다.
+// CManualLoadPickerDlg 메시지 처리기입니다.
 
-BOOL CManualPicker3Dlg::OnInitDialog() 
+BOOL CManualLoadPickerDlg::OnInitDialog() 
 {
 	CDialogEx::OnInitDialog();
 
 	// TODO:  여기에 추가 초기화 작업을 추가합니다.
 	SetWindowPos(this, 150, 0, 0, 0, SWP_NOSIZE | SWP_NOZORDER);
 
-	//Unload Picker
+	//Load Picker
 	Initial_Controls();
 
 #ifdef PICKER_3
+	for (int i=6; i<12; i++) {
+		m_btnMLPickIO[i].ShowWindow(FALSE);
+		m_ledMLPickIO[i].ShowWindow(FALSE);
+	}
 	for (int i=18; i<24; i++) {
 		m_btnMLPickIO[i].ShowWindow(FALSE);
 		m_ledMLPickIO[i].ShowWindow(FALSE);
 	}
 #endif
+
 #ifdef PICKER_4
+	for (int i=8; i<12; i++) {
+		m_btnMLPickIO[i].ShowWindow(FALSE);
+		m_ledMLPickIO[i].ShowWindow(FALSE);
+	}
 	for (int i=20; i<24; i++) {
 		m_btnMLPickIO[i].ShowWindow(FALSE);
 		m_ledMLPickIO[i].ShowWindow(FALSE);
 	}
 #endif
+
+
 #ifdef PICKER_5
+	for (int i=10; i<12; i++) {
+		m_btnMLPickIO[i].ShowWindow(FALSE);
+		m_ledMLPickIO[i].ShowWindow(FALSE);
+	}
 	for (int i=22; i<24; i++) {
 		m_btnMLPickIO[i].ShowWindow(FALSE);
 		m_ledMLPickIO[i].ShowWindow(FALSE);
 	}
 #endif
+
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// 예외: OCX 속성 페이지는 FALSE를 반환해야 합니다.
 }
 
-void CManualPicker3Dlg::OnDestroy() 
+void CManualLoadPickerDlg::OnDestroy() 
 {
 	CDialogEx::OnDestroy();
 }
 
-BOOL CManualPicker3Dlg::PreTranslateMessage(MSG* pMsg) 
+BOOL CManualLoadPickerDlg::PreTranslateMessage(MSG* pMsg) 
 {
 	if ((pMsg->message == WM_KEYDOWN) && (pMsg->wParam == VK_RETURN || pMsg->wParam == VK_ESCAPE))
 		return TRUE;
@@ -229,18 +245,18 @@ BOOL CManualPicker3Dlg::PreTranslateMessage(MSG* pMsg)
 	return CDialogEx::PreTranslateMessage(pMsg);
 }
 
-void CManualPicker3Dlg::OnShowWindow(BOOL bShow, UINT nStatus) 
+void CManualLoadPickerDlg::OnShowWindow(BOOL bShow, UINT nStatus) 
 {
 	CDialogEx::OnShowWindow(bShow, nStatus);
 }
 
-void CManualPicker3Dlg::Initial_Controls() 
+void CManualLoadPickerDlg::Initial_Controls() 
 {
 	for (int i = 0; i < 6; i++) m_stcAxisPos[i].Init_Ctrl("바탕", 11, TRUE, RGB(0xFF, 0xFF, 0xFF), RGB(0x00, 0x10, 0xB0));
 	for (int i = 0; i < 24; i++) m_ledMLPickIO[i].Init_Ctrl("바탕", 11, FALSE, COLOR_DEFAULT, COLOR_DEFAULT, CLedCS::emGreen, CLedCS::em16);
 }
 
-void CManualPicker3Dlg::Display_Status()
+void CManualLoadPickerDlg::Display_Status()
 {
 	CAJinAXL *pAJinAXL = CAJinAXL::Get_Instance();
 	DX_DATA_2 *pDX2 = pAJinAXL->Get_pDX2();
@@ -327,18 +343,17 @@ void CManualPicker3Dlg::Display_Status()
 	BOOL bShow = FALSE;
 
 	if (pEquipData->bUseManagerMode) bShow = TRUE;
-	m_btnMLPickY1[2].ShowWindow(bShow);
-	m_btnMLPickY1[3].ShowWindow(bShow);
-	m_btnMLPickY1[5].ShowWindow(bShow);
-	m_btnMLPickY2[2].ShowWindow(bShow);
-	m_btnMLPickY2[3].ShowWindow(bShow);
-	m_btnMLPickZ[3].ShowWindow(bShow);
-	m_btnMLPickZ[4].ShowWindow(bShow);
-	m_btnMLPickZ[5].ShowWindow(bShow);
-	m_btnMLPickZ[6].ShowWindow(bShow);
+	m_btnMLPickY1[0].ShowWindow(bShow);
+	m_btnMLPickY1[1].ShowWindow(bShow);
+	m_btnMLPickY1[4].ShowWindow(bShow);
+	m_btnMLPickY2[0].ShowWindow(bShow);
+	m_btnMLPickY2[1].ShowWindow(bShow);
+	m_btnMLPickZ[0].ShowWindow(bShow);
+	m_btnMLPickZ[1].ShowWindow(bShow);
+	m_btnMLPickZ[2].ShowWindow(bShow);
 }
 
-void CManualPicker3Dlg::OnBtnMLNGPickY1Click(UINT nID)
+void CManualLoadPickerDlg::OnBtnMLNGPickY1Click(UINT nID)
 {
 	CAJinAXL *pAJinAXL = CAJinAXL::Get_Instance();
 	CCommon *pCommon = CCommon::Get_Instance();
@@ -425,7 +440,7 @@ void CManualPicker3Dlg::OnBtnMLNGPickY1Click(UINT nID)
 	}
 }
 
-void CManualPicker3Dlg::OnBtnMLNGPickY2Click(UINT nID)
+void CManualLoadPickerDlg::OnBtnMLNGPickY2Click(UINT nID)
 {
 	CAJinAXL *pAJinAXL = CAJinAXL::Get_Instance();
 	CCommon *pCommon = CCommon::Get_Instance();
@@ -448,11 +463,10 @@ void CManualPicker3Dlg::OnBtnMLNGPickY2Click(UINT nID)
 	}
 }
 
-void CManualPicker3Dlg::OnBtnMLNGPickZClick(UINT nID)
+void CManualLoadPickerDlg::OnBtnMLNGPickZClick(UINT nID)
 {
 	CAJinAXL *pAJinAXL = CAJinAXL::Get_Instance();
 	DX_DATA_2 *pDX2 = pAJinAXL->Get_pDX2();
-	DX_DATA_5 *pDX5 = pAJinAXL->Get_pDX5();
 	CCommon *pCommon = CCommon::Get_Instance();
 
 	if (!pCommon->Check_MainDoor()) return;
@@ -462,9 +476,106 @@ void CManualPicker3Dlg::OnBtnMLNGPickZClick(UINT nID)
 		pCommon->Move_Position(AX_LOAD_PICKER_Z, 0);
 	} else if (nID == IDC_BTN_ML_PICKER_Z_1) {
 		if (!pAJinAXL->Is_Home(AX_LOAD_PICKER_Z)) return;
+
+#ifdef PICKER_3
+		if (pDX2->iInspCMAlign1In && pCommon->Check_Position(AX_LOAD_PICKER_Y1, 2) &&
+		   (pDX2->iMLPicker1CMCheck || pDX2->iMLPicker2CMCheck || pDX2->iMLPicker3CMCheck)) {
+			AfxMessageBox(_T("Can not move......(Load Picker CM Check And Align 1 In)"));
+			return;
+		}
+		if((!pDX2->iMLPicker1Open && !pDX2->iMLPicker1CMCheck) || (!pDX2->iMLPicker2Open && !pDX2->iMLPicker2CMCheck) || (!pDX2->iMLPicker3Open && !pDX2->iMLPicker3CMCheck) ) {
+			AfxMessageBox(_T("Can not move......(Load Picker Close And CM Check Off)"));
+			return;
+		}
+#endif
+#ifdef PICKER_4
+		if (pDX2->iInspCMAlign1In && pCommon->Check_Position(AX_LOAD_PICKER_Y1, 2) &&
+			(pDX2->iMLPicker1CMCheck || pDX2->iMLPicker2CMCheck || pDX2->iMLPicker3CMCheck || pDX2->iMLPicker4CMCheck )) {
+				AfxMessageBox(_T("Can not move......(Load Picker CM Check And Align 1 In)"));
+				return;
+		}
+		if((!pDX2->iMLPicker1Open && !pDX2->iMLPicker1CMCheck) || (!pDX2->iMLPicker2Open && !pDX2->iMLPicker2CMCheck) || (!pDX2->iMLPicker3Open && !pDX2->iMLPicker3CMCheck) ||
+			(!pDX2->iMLPicker4Open && !pDX2->iMLPicker4CMCheck) ) {
+				AfxMessageBox(_T("Can not move......(Load Picker Close And CM Check Off)"));
+				return;
+		}
+#endif
+#ifdef PICKER_5
+		if (pDX2->iInspCMAlign1In && pCommon->Check_Position(AX_LOAD_PICKER_Y1, 2) &&
+		   (pDX2->iMLPicker1CMCheck || pDX2->iMLPicker2CMCheck || pDX2->iMLPicker3CMCheck || pDX2->iMLPicker4CMCheck || pDX2->iMLPicker5CMCheck)) {
+			AfxMessageBox(_T("Can not move......(Load Picker CM Check And Align 1 In)"));
+			return;
+		}
+		if((!pDX2->iMLPicker1Open && !pDX2->iMLPicker1CMCheck) || (!pDX2->iMLPicker2Open && !pDX2->iMLPicker2CMCheck) || (!pDX2->iMLPicker3Open && !pDX2->iMLPicker3CMCheck) ||
+		   (!pDX2->iMLPicker4Open && !pDX2->iMLPicker4CMCheck) || (!pDX2->iMLPicker5Open && !pDX2->iMLPicker5CMCheck) ) {
+			AfxMessageBox(_T("Can not move......(Load Picker Close And CM Check Off)"));
+			return;
+		}
+#endif
+#ifdef PICKER_6
+		if (pDX2->iInspCMAlign1In && pCommon->Check_Position(AX_LOAD_PICKER_Y1, 2) &&
+			(pDX2->iMLPicker1CMCheck || pDX2->iMLPicker2CMCheck || pDX2->iMLPicker3CMCheck || pDX2->iMLPicker4CMCheck || pDX2->iMLPicker5CMCheck || pDX2->iMLPicker6CMCheck)) {
+				AfxMessageBox(_T("Can not move......(Load Picker CM Check And Align 1 In)"));
+				return;
+		}
+		if((!pDX2->iMLPicker1Open && !pDX2->iMLPicker1CMCheck) || (!pDX2->iMLPicker2Open && !pDX2->iMLPicker2CMCheck) || (!pDX2->iMLPicker3Open && !pDX2->iMLPicker3CMCheck) ||
+			(!pDX2->iMLPicker4Open && !pDX2->iMLPicker4CMCheck) || (!pDX2->iMLPicker5Open && !pDX2->iMLPicker5CMCheck) || (!pDX2->iMLPicker6Open && !pDX2->iMLPicker6CMCheck) ) {
+				AfxMessageBox(_T("Can not move......(Load Picker Close And CM Check Off)"));
+				return;
+		}
+#endif
+
 		pCommon->Move_Position(AX_LOAD_PICKER_Z, 1);
 	} else if (nID == IDC_BTN_ML_PICKER_Z_2) {
 		if (!pAJinAXL->Is_Home(AX_LOAD_PICKER_Z)) return;
+
+#ifdef PICKER_3
+		if (pDX2->iInspCMAlign1In && pCommon->Check_Position(AX_LOAD_PICKER_Y1, 2) &&
+		   (pDX2->iMLPicker1CMCheck || pDX2->iMLPicker2CMCheck || pDX2->iMLPicker3CMCheck)) {
+			AfxMessageBox(_T("Can not move......(Load Picker CM Check And Align 1 In)"));
+			return;
+		}
+		if((!pDX2->iMLPicker1Open && !pDX2->iMLPicker1CMCheck) || (!pDX2->iMLPicker2Open && !pDX2->iMLPicker2CMCheck) || (!pDX2->iMLPicker3Open && !pDX2->iMLPicker3CMCheck) ) {
+			AfxMessageBox(_T("Can not move......(Load Picker Close And CM Check Off)"));
+			return;
+		}
+#endif
+#ifdef PICKER_4
+		if (pDX2->iInspCMAlign1In && pCommon->Check_Position(AX_LOAD_PICKER_Y1, 2) &&
+			(pDX2->iMLPicker1CMCheck || pDX2->iMLPicker2CMCheck || pDX2->iMLPicker3CMCheck || pDX2->iMLPicker4CMCheck )) {
+				AfxMessageBox(_T("Can not move......(Load Picker CM Check And Align 1 In)"));
+				return;
+		}
+		if((!pDX2->iMLPicker1Open && !pDX2->iMLPicker1CMCheck) || (!pDX2->iMLPicker2Open && !pDX2->iMLPicker2CMCheck) || (!pDX2->iMLPicker3Open && !pDX2->iMLPicker3CMCheck) ||
+			(!pDX2->iMLPicker4Open && !pDX2->iMLPicker4CMCheck) ) {
+				AfxMessageBox(_T("Can not move......(Load Picker Close And CM Check Off)"));
+				return;
+		}
+#endif
+#ifdef PICKER_5
+		if (pDX2->iInspCMAlign1In && pCommon->Check_Position(AX_LOAD_PICKER_Y1, 2) &&
+		   (pDX2->iMLPicker1CMCheck || pDX2->iMLPicker2CMCheck || pDX2->iMLPicker3CMCheck || pDX2->iMLPicker4CMCheck || pDX2->iMLPicker5CMCheck)) {
+			AfxMessageBox(_T("Can not move......(Load Picker CM Check And Align 1 In)"));
+			return;
+		}
+		if((!pDX2->iMLPicker1Open && !pDX2->iMLPicker1CMCheck) || (!pDX2->iMLPicker2Open && !pDX2->iMLPicker2CMCheck) || (!pDX2->iMLPicker3Open && !pDX2->iMLPicker3CMCheck) ||
+		   (!pDX2->iMLPicker4Open && !pDX2->iMLPicker4CMCheck) || (!pDX2->iMLPicker5Open && !pDX2->iMLPicker5CMCheck) ) {
+			AfxMessageBox(_T("Can not move......(Load Picker Close And CM Check Off)"));
+			return;
+		}
+#endif
+#ifdef PICKER_6
+		if (pDX2->iInspCMAlign1In && pCommon->Check_Position(AX_LOAD_PICKER_Y1, 2) &&
+			(pDX2->iMLPicker1CMCheck || pDX2->iMLPicker2CMCheck || pDX2->iMLPicker3CMCheck || pDX2->iMLPicker4CMCheck || pDX2->iMLPicker5CMCheck || pDX2->iMLPicker6CMCheck)) {
+				AfxMessageBox(_T("Can not move......(Load Picker CM Check And Align 1 In)"));
+				return;
+		}
+		if((!pDX2->iMLPicker1Open && !pDX2->iMLPicker1CMCheck) || (!pDX2->iMLPicker2Open && !pDX2->iMLPicker2CMCheck) || (!pDX2->iMLPicker3Open && !pDX2->iMLPicker3CMCheck) ||
+			(!pDX2->iMLPicker4Open && !pDX2->iMLPicker4CMCheck) || (!pDX2->iMLPicker5Open && !pDX2->iMLPicker5CMCheck) || (!pDX2->iMLPicker6Open && !pDX2->iMLPicker6CMCheck) ) {
+				AfxMessageBox(_T("Can not move......(Load Picker Close And CM Check Off)"));
+				return;
+		}
+#endif
 		pCommon->Move_Position(AX_LOAD_PICKER_Z, 3);
 
 	} else if (nID == IDC_BTN_ML_PICKER_Z_3) {
@@ -472,127 +583,17 @@ void CManualPicker3Dlg::OnBtnMLNGPickZClick(UINT nID)
 		pCommon->Move_Position(AX_UNLOAD_PICKER_Z, 0);
 	} else if (nID == IDC_BTN_ML_PICKER_Z_4) {
 		if (!pAJinAXL->Is_Home(AX_UNLOAD_PICKER_Z)) return;
-
-#ifdef PICKER_3
-		if (pDX2->iInspCMAlign4In && pCommon->Check_Position(AX_UNLOAD_PICKER_X1, 0) &&
-		   (pDX5->iMUPicker1CMCheck || pDX5->iMUPicker2CMCheck || pDX5->iMUPicker3CMCheck)) {
-			AfxMessageBox(_T("Can not move......(Unload Picker CM Check And Align 4 In)"));
-			return;
-		}
-		if((!pDX5->iMUPicker1Open && !pDX5->iMUPicker1CMCheck) || (!pDX5->iMUPicker2Open && !pDX5->iMUPicker2CMCheck) || (!pDX5->iMUPicker3Open && !pDX5->iMUPicker3CMCheck) ) {
-			AfxMessageBox(_T("Can not move......(Unload Picker Close And CM Check Off)"));
-			return;
-		}
-#endif
-#ifdef PICKER_4
-		if (pDX2->iInspCMAlign4In && pCommon->Check_Position(AX_UNLOAD_PICKER_X1, 0) &&
-			(pDX5->iMUPicker1CMCheck || pDX5->iMUPicker2CMCheck || pDX5->iMUPicker3CMCheck || pDX5->iMUPicker4CMCheck )) {
-				AfxMessageBox(_T("Can not move......(Unload Picker CM Check And Align 4 In)"));
-				return;
-		}
-		if((!pDX5->iMUPicker1Open && !pDX5->iMUPicker1CMCheck) || (!pDX5->iMUPicker2Open && !pDX5->iMUPicker2CMCheck) || (!pDX5->iMUPicker3Open && !pDX5->iMUPicker3CMCheck) ||
-			(!pDX5->iMUPicker4Open && !pDX5->iMUPicker4CMCheck) ) {
-				AfxMessageBox(_T("Can not move......(Unload Picker Close And CM Check Off)"));
-				return;
-		}
-#endif
-#ifdef PICKER_5
-		if (pDX2->iInspCMAlign4In && pCommon->Check_Position(AX_UNLOAD_PICKER_X1, 0) &&
-		   (pDX5->iMUPicker1CMCheck || pDX5->iMUPicker2CMCheck || pDX5->iMUPicker3CMCheck || pDX5->iMUPicker4CMCheck || pDX5->iMUPicker5CMCheck)) {
-			AfxMessageBox(_T("Can not move......(Unload Picker CM Check And Align 4 In)"));
-			return;
-		}
-		if((!pDX5->iMUPicker1Open && !pDX5->iMUPicker1CMCheck) || (!pDX5->iMUPicker2Open && !pDX5->iMUPicker2CMCheck) || (!pDX5->iMUPicker3Open && !pDX5->iMUPicker3CMCheck) ||
-		   (!pDX5->iMUPicker4Open && !pDX5->iMUPicker4CMCheck) || (!pDX5->iMUPicker5Open && !pDX5->iMUPicker5CMCheck) ) {
-			AfxMessageBox(_T("Can not move......(Unload Picker Close And CM Check Off)"));
-			return;
-		}
-#endif
-#ifdef PICKER_6
-		if (pDX2->iInspCMAlign4In && pCommon->Check_Position(AX_UNLOAD_PICKER_X1, 0) &&
-			(pDX5->iMUPicker1CMCheck || pDX5->iMUPicker2CMCheck || pDX5->iMUPicker3CMCheck || pDX5->iMUPicker4CMCheck || pDX5->iMUPicker5CMCheck || pDX5->iMUPicker6CMCheck)) {
-				AfxMessageBox(_T("Can not move......(Unload Picker CM Check And Align 4 In)"));
-				return;
-		}
-		if((!pDX5->iMUPicker1Open && !pDX5->iMUPicker1CMCheck) || (!pDX5->iMUPicker2Open && !pDX5->iMUPicker2CMCheck) || (!pDX5->iMUPicker3Open && !pDX5->iMUPicker3CMCheck) ||
-			(!pDX5->iMUPicker4Open && !pDX5->iMUPicker4CMCheck) || (!pDX5->iMUPicker5Open && !pDX5->iMUPicker5CMCheck) || (!pDX5->iMUPicker6Open && !pDX5->iMUPicker6CMCheck)) {
-				AfxMessageBox(_T("Can not move......(Unload Picker Close And CM Check Off)"));
-				return;
-		}
-#endif
-
 		pCommon->Move_Position(AX_UNLOAD_PICKER_Z, 1);
 	} else if (nID == IDC_BTN_ML_PICKER_Z_5) {
 		if (!pAJinAXL->Is_Home(AX_UNLOAD_PICKER_Z)) return;
-
-#ifdef PICKER_3
-		if (pDX2->iInspCMAlign4In && pCommon->Check_Position(AX_UNLOAD_PICKER_X1, 0) &&
-		   (pDX5->iMUPicker1CMCheck || pDX5->iMUPicker2CMCheck || pDX5->iMUPicker3CMCheck)) {
-			AfxMessageBox(_T("Can not move......(Unload Picker CM Check And Align 4 In)"));
-			return;
-		}
-		if((!pDX5->iMUPicker1Open && !pDX5->iMUPicker1CMCheck) || (!pDX5->iMUPicker2Open && !pDX5->iMUPicker2CMCheck) || (!pDX5->iMUPicker3Open && !pDX5->iMUPicker3CMCheck) ) {
-			AfxMessageBox(_T("Can not move......(Unload Picker Close And CM Check Off)"));
-			return;
-		}
-#endif
-#ifdef PICKER_4
-		if (pDX2->iInspCMAlign4In && pCommon->Check_Position(AX_UNLOAD_PICKER_X1, 0) &&
-			(pDX5->iMUPicker1CMCheck || pDX5->iMUPicker2CMCheck || pDX5->iMUPicker3CMCheck || pDX5->iMUPicker4CMCheck )) {
-				AfxMessageBox(_T("Can not move......(Unload Picker CM Check And Align 4 In)"));
-				return;
-		}
-		if((!pDX5->iMUPicker1Open && !pDX5->iMUPicker1CMCheck) || (!pDX5->iMUPicker2Open && !pDX5->iMUPicker2CMCheck) || (!pDX5->iMUPicker3Open && !pDX5->iMUPicker3CMCheck) ||
-			(!pDX5->iMUPicker4Open && !pDX5->iMUPicker4CMCheck) ) {
-				AfxMessageBox(_T("Can not move......(Unload Picker Close And CM Check Off)"));
-				return;
-		}
-#endif
-#ifdef PICKER_5
-		if (pDX2->iInspCMAlign4In && pCommon->Check_Position(AX_UNLOAD_PICKER_X1, 0) &&
-		   (pDX5->iMUPicker1CMCheck || pDX5->iMUPicker2CMCheck || pDX5->iMUPicker3CMCheck || pDX5->iMUPicker4CMCheck || pDX5->iMUPicker5CMCheck)) {
-			AfxMessageBox(_T("Can not move......(Unload Picker CM Check And Align 4 In)"));
-			return;
-		}
-		if((!pDX5->iMUPicker1Open && !pDX5->iMUPicker1CMCheck) || (!pDX5->iMUPicker2Open && !pDX5->iMUPicker2CMCheck) || (!pDX5->iMUPicker3Open && !pDX5->iMUPicker3CMCheck) ||
-		   (!pDX5->iMUPicker4Open && !pDX5->iMUPicker4CMCheck) || (!pDX5->iMUPicker5Open && !pDX5->iMUPicker5CMCheck) ) {
-			AfxMessageBox(_T("Can not move......(Unload Picker Close And CM Check Off)"));
-			return;
-		}
-#endif
-#ifdef PICKER_6
-		if (pDX2->iInspCMAlign4In && pCommon->Check_Position(AX_UNLOAD_PICKER_X1, 0) &&
-			(pDX5->iMUPicker1CMCheck || pDX5->iMUPicker2CMCheck || pDX5->iMUPicker3CMCheck || pDX5->iMUPicker4CMCheck || pDX5->iMUPicker5CMCheck || pDX5->iMUPicker6CMCheck)) {
-				AfxMessageBox(_T("Can not move......(Unload Picker CM Check And Align 4 In)"));
-				return;
-		}
-		if((!pDX5->iMUPicker1Open && !pDX5->iMUPicker1CMCheck) || (!pDX5->iMUPicker2Open && !pDX5->iMUPicker2CMCheck) || (!pDX5->iMUPicker3Open && !pDX5->iMUPicker3CMCheck) ||
-			(!pDX5->iMUPicker4Open && !pDX5->iMUPicker4CMCheck) || (!pDX5->iMUPicker5Open && !pDX5->iMUPicker5CMCheck) || (!pDX5->iMUPicker6Open && !pDX5->iMUPicker6CMCheck)) {
-				AfxMessageBox(_T("Can not move......(Unload Picker Close And CM Check Off)"));
-				return;
-		}
-#endif
-
 		pCommon->Move_Position(AX_UNLOAD_PICKER_Z, 2);
 	} else if (nID == IDC_BTN_ML_PICKER_Z_6) {
 		if (!pAJinAXL->Is_Home(AX_UNLOAD_PICKER_Z)) return;
-
-		if (pDX2->iInspCMAlign4In && pCommon->Check_Position(AX_UNLOAD_PICKER_X1, 0) &&
-		   (pDX5->iMUPicker1CMCheck || pDX5->iMUPicker2CMCheck || pDX5->iMUPicker3CMCheck || pDX5->iMUPicker4CMCheck || pDX5->iMUPicker5CMCheck)) {
-			AfxMessageBox(_T("Can not move......(Unload Picker CM Check And Align 4 In)"));
-			return;
-		}
-		if((!pDX5->iMUPicker1Open && !pDX5->iMUPicker1CMCheck) || (!pDX5->iMUPicker2Open && !pDX5->iMUPicker2CMCheck) || (!pDX5->iMUPicker3Open && !pDX5->iMUPicker3CMCheck) ||
-		   (!pDX5->iMUPicker4Open && !pDX5->iMUPicker4CMCheck) || (!pDX5->iMUPicker5Open && !pDX5->iMUPicker5CMCheck) ) {
-			AfxMessageBox(_T("Can not move......(Unload Picker Close And CM Check Off)"));
-			return;
-		}
-
 		pCommon->Move_Position(AX_UNLOAD_PICKER_Z, 3);
 	}
 }
 
-void CManualPicker3Dlg::OnBtnMLPickIOClick(UINT nID)
+void CManualLoadPickerDlg::OnBtnMLPickIOClick(UINT nID)
 {
 	CAJinAXL *pAJinAXL = CAJinAXL::Get_Instance();
 	DY_DATA_2 *pDY2 = pAJinAXL->Get_pDY2();
@@ -656,12 +657,24 @@ void CManualPicker3Dlg::OnBtnMLPickIOClick(UINT nID)
 		pDY2->oMLPicker2Close = FALSE;
 		pDY2->oMLPicker3Open = TRUE;
 		pDY2->oMLPicker3Close = FALSE;
+#ifdef PICKER_4
+		pDY2->oMLPicker4Open = TRUE;
+		pDY2->oMLPicker4Close = FALSE;
+#endif
+#ifdef PICKER_5
+		pDY2->oMLPicker4Open = TRUE;
+		pDY2->oMLPicker4Close = FALSE;
+		pDY2->oMLPicker5Open = TRUE;
+		pDY2->oMLPicker5Close = FALSE;
+#endif
+#ifdef PICKER_6
 		pDY2->oMLPicker4Open = TRUE;
 		pDY2->oMLPicker4Close = FALSE;
 		pDY2->oMLPicker5Open = TRUE;
 		pDY2->oMLPicker5Close = FALSE;
 		pDY2->oMLPicker6Open = TRUE;
 		pDY2->oMLPicker6Close = FALSE;
+#endif
 		pAJinAXL->Write_Output(2);
 	} else if (nID == IDC_BTN_ML_PICKER_IO_25) {
 		pDY2->oMLPicker1Open = FALSE;
@@ -670,12 +683,24 @@ void CManualPicker3Dlg::OnBtnMLPickIOClick(UINT nID)
 		pDY2->oMLPicker2Close = TRUE;
 		pDY2->oMLPicker3Open = FALSE;
 		pDY2->oMLPicker3Close = TRUE;
+#ifdef PICKER_4
+		pDY2->oMLPicker4Open = FALSE;
+		pDY2->oMLPicker4Close = TRUE;
+#endif
+#ifdef PICKER_5
+		pDY2->oMLPicker4Open = FALSE;
+		pDY2->oMLPicker4Close = TRUE;
+		pDY2->oMLPicker5Open = FALSE;
+		pDY2->oMLPicker5Close = TRUE;
+#endif
+#ifdef PICKER_6
 		pDY2->oMLPicker4Open = FALSE;
 		pDY2->oMLPicker4Close = TRUE;
 		pDY2->oMLPicker5Open = FALSE;
 		pDY2->oMLPicker5Close = TRUE;
 		pDY2->oMLPicker6Open = FALSE;
 		pDY2->oMLPicker6Close = TRUE;
+#endif
 		pAJinAXL->Write_Output(2);
 
 	} else if (nID == IDC_BTN_ML_PICKER_IO_12) {
@@ -782,7 +807,7 @@ void CManualPicker3Dlg::OnBtnMLPickIOClick(UINT nID)
 }
 
 
-void CManualPicker3Dlg::OnBtnNGPickMoveClick()
+void CManualLoadPickerDlg::OnBtnNGPickMoveClick()
 {
 /*
 	CString sTmp[4];
@@ -1018,7 +1043,7 @@ void CManualPicker3Dlg::OnBtnNGPickMoveClick()
 */
 }
 
-void CManualPicker3Dlg::OnBtnNGPickMovePosClick(UINT nID)
+void CManualLoadPickerDlg::OnBtnNGPickMovePosClick(UINT nID)
 {
 
  	int ID; 
@@ -1053,7 +1078,7 @@ void CManualPicker3Dlg::OnBtnNGPickMovePosClick(UINT nID)
 
 
 
-void CManualPicker3Dlg::OnBnClickedBtnNgPickerMove2()
+void CManualLoadPickerDlg::OnBnClickedBtnNgPickerMove2()
 {
 	CString sTmp[4];
 	int xx, yy, zz;

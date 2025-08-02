@@ -1,15 +1,15 @@
 #pragma once
 
 
-// CManualPicker2Dlg 대화 상자입니다.
+// CManualLoadPickerDlg 대화 상자입니다.
 
-class CManualPicker2Dlg : public CDialogEx
+class CManualLoadPickerDlg : public CDialogEx
 {
-	DECLARE_DYNAMIC(CManualPicker2Dlg)
+	DECLARE_DYNAMIC(CManualLoadPickerDlg)
 
 public:
-	CManualPicker2Dlg(CWnd* pParent = NULL);   // 표준 생성자입니다.
-	virtual ~CManualPicker2Dlg();
+	CManualLoadPickerDlg(CWnd* pParent = NULL);   // 표준 생성자입니다.
+	virtual ~CManualLoadPickerDlg();
 
 // 대화 상자 데이터입니다.
 	enum { IDD = IDD_MANUAL_PICKER2_DLG };

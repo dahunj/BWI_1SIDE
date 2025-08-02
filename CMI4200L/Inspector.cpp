@@ -436,7 +436,7 @@ void CInspector::Get_ScanRequest(int nInspector, CString sDir, CString sSpeed, C
 //			if (nMoldCase == 110 && dStartX > 0.0) pSequenceMain->Set_MoldScan(nDir, dSpeed, dThickZ, dStartX);
 //			else nNG = 1;
 
-		} else if (pManualDlg->m_pManualInspectorDlg->IsWindowVisible()) {	// Manual
+		} else if (pManualDlg->m_pManualUnloadTrayDlg->IsWindowVisible()) {	// Manual
 
 			//int n3dCase = pManualDlg->m_pManualInspectorDlg->Get_3dRunCase();
 			//if (n3dCase == 0 && dStartX >= 0.0) 
@@ -809,29 +809,14 @@ void CInspector::Get_RMoveRequest(int nInspector, CString sX, CString sY, CStrin
 		return;
 	}
 
-	if (pWorkDlg->IsWindowVisible()) {									// AutoRun
+	if (pWorkDlg->IsWindowVisible()) 
+	{									// AutoRun
 		CSequenceMain *pSequenceMain = CSequenceMain::Get_Instance();
 		
-//		int nMoldCase = pSequenceMain->Get_RunCase(AUTO_INSP_GQFN);
-//		if (nMoldCase == 110) {
-			nCanMove = 1;
-//			pCommon->Set_LoopTime(AUTO_INSP_GQFN, 150000);
-			//if (dX != 0.0) pAJinAXL->Move_Relative(AX_SCAN_X, dX);
-			//if (dY != 0.0) pAJinAXL->Move_Relative(AX_SCAN_Y, dY);
-			//if (dZ != 0.0) pAJinAXL->Move_Relative(AX_SCAN_Z, dZ);
-//		}
-
-	} else if (pManualDlg->m_pManualInspectorDlg->IsWindowVisible()) {	// Manual
-
-			//if (pAJinAXL->Is_Home(AX_SCAN_X) && pAJinAXL->Is_Home(AX_SCAN_Y) && pAJinAXL->Is_Home(AX_SCAN_Z)) {
-			//	int nMoldCase = pManualDlg->m_pManualInspectorDlg->Get_MoldRunCase();
-			//	if (nMoldCase == 0) {
-			//		nCanMove = 1;
-			//		if (dX != 0.0) pAJinAXL->Move_Absolute(AX_SCAN_X, dX);
-			//		if (dY != 0.0) pAJinAXL->Move_Absolute(AX_SCAN_Y, dY);
-			//		if (dZ != 0.0) pAJinAXL->Move_Absolute(AX_SCAN_Z, dZ);
-			//	}
-			//}
+	}
+	else if (pManualDlg->m_pManualUnloadTrayDlg->IsWindowVisible()) 
+	{	// Manual
+			
 	}
 	
 	Set_RMoveReply(nInspector, nCanMove, sGbn);

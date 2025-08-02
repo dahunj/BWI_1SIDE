@@ -1,16 +1,16 @@
-// ManualPickerDlg.h : 헤더 파일
+// ManualNGoodPickerDlg.h : 헤더 파일
 //
 #pragma once
 
-// CManualPickerDlg 대화 상자입니다.
+// CManualNGoodPickerDlg 대화 상자입니다.
 
-class CManualPickerDlg : public CDialogEx
+class CManualNGoodPickerDlg : public CDialogEx
 {
-	DECLARE_DYNAMIC(CManualPickerDlg)
+	DECLARE_DYNAMIC(CManualNGoodPickerDlg)
 
 public:
-	CManualPickerDlg(CWnd* pParent = NULL);   // 표준 생성자입니다.
-	virtual ~CManualPickerDlg();
+	CManualNGoodPickerDlg(CWnd* pParent = NULL);   // 표준 생성자입니다.
+	virtual ~CManualNGoodPickerDlg();
 
 	// 대화 상자 데이터입니다.
 	enum { IDD = IDD_MANUAL_PICKER_DLG };

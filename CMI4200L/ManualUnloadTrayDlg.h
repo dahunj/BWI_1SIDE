@@ -1,4 +1,4 @@
-// ManualInspectorDlg.h : 헤더 파일
+// ManualUnloadTrayDlg.h : 헤더 파일
 //
 #pragma once
 
@@ -6,15 +6,15 @@
 #define SCAN_CALIBRATE	1
 #define SCAN_LASER		2
 
-// CManualInspectorDlg 대화 상자입니다.
+// CManualUnloadTrayDlg 대화 상자입니다.
 
-class CManualInspectorDlg : public CDialogEx
+class CManualUnloadTrayDlg : public CDialogEx
 {
-	DECLARE_DYNAMIC(CManualInspectorDlg)
+	DECLARE_DYNAMIC(CManualUnloadTrayDlg)
 
 public:
-	CManualInspectorDlg(CWnd* pParent = NULL);   // 표준 생성자입니다.
-	virtual ~CManualInspectorDlg();
+	CManualUnloadTrayDlg(CWnd* pParent = NULL);   // 표준 생성자입니다.
+	virtual ~CManualUnloadTrayDlg();
 
 	// 대화 상자 데이터입니다.
 	enum { IDD = IDD_MANUAL_INSPECTOR_DLG };
