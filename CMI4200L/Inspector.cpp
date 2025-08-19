@@ -574,7 +574,8 @@ void CInspector::Get_InspectComplete(int nInspector, CString strRecv)
 	}
 
 	int nJugdeNo;
-	for(int i=0; i<gData.nPickCnt; i++) {
+	for(int i=0; i<gData.nPickCnt; i++) 
+	{
 		if (pEquipData->bUseContinueLot) {
 			if (gData.IndexInfo[x][i] > 0) { gData.IndexInfo[x][i] = 1; gLot.nGoodCnt++; }
 
@@ -597,6 +598,12 @@ void CInspector::Get_InspectComplete(int nInspector, CString strRecv)
 		}
 		gLot.nInsResult[nTrayNo-1][cm+i] = gLot.nBarResult[nTrayNo-1][cm+i] = nJugdeNo;
 		gLot.sBarLoad[nTrayNo-1][cm+i] = sBarcode[i];
+		if(sBarcode[i] =="NO_READ")
+		{
+			gLot.nNGCnt++;
+		}
+
+
 		gLot.sNGCode[nTrayNo-1][cm+i] = sNGcode[i];
 		gLot.sNGText[nTrayNo-1][cm+i] = sNGText[i];
 		gData.IDXPoNo[x][i] = cm+i+1;	//Pocket No Set
