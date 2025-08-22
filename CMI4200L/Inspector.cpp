@@ -17,7 +17,7 @@
 
 #define UDP_VISION_IP		"192.168.1.12"
 //#define UDP_VISION_IP		"127.0.0.1"
-#define UDP_VISION_PORT		8000
+#define UDP_VISION_PORT		20000
 
 IMPLEMENT_DYNAMIC(CInspector, CWnd)
 
@@ -598,7 +598,7 @@ void CInspector::Get_InspectComplete(int nInspector, CString strRecv)
 		}
 		gLot.nInsResult[nTrayNo-1][cm+i] = gLot.nBarResult[nTrayNo-1][cm+i] = nJugdeNo;
 		gLot.sBarLoad[nTrayNo-1][cm+i] = sBarcode[i];
-		if(sBarcode[i] =="NO_READ")
+		if(sBarcode[i] =="NOREAD")
 		{
 			gLot.nNGCnt++;
 		}
