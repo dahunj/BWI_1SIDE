@@ -278,11 +278,7 @@ void CCapAttachUDP::Get_BarcodeReply(CString sPortNo, CString sTrayNo, CString s
 {
 	Set_BarcodeDone(atoi(sPortNo), atoi(sTrayNo), atoi(sCmNo), TRUE);
 }
-<<<<<<< HEAD
-=======
 
->>>>>>> 25y_Bwi/CMCount-auto-set
-/////////////////////////////////////////////////////////////////////////////
 // Set Command
 
 void CCapAttachUDP::Set_ConnectRequest()
@@ -414,10 +410,7 @@ void CCapAttachUDP::Set_BarcodeUpdate(int nPortNo, int nTrayNo, int nCmNo, CStri
 	Send_Command(strSendCmd);
 
 	Set_BarcodeDone(nPortNo, nTrayNo, nCmNo, FALSE);
-<<<<<<< HEAD
-=======
 
->>>>>>> 25y_Bwi/CMCount-auto-set
 // 	CLogFile *pLogFile = CLogFile::Get_Instance();
 // 	CString strLog;
 // 	strLog.Format("[H->C] : %s", strSendCmd);

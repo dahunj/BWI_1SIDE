@@ -3072,7 +3072,8 @@ BOOL CSequenceMain::Inspect_Run()
 		else if (!m_pEquipData->bUseVisionInspect) 
 		{	
 			for(int i=0; i<gData.nPickCnt; i++) {
-				if (gData.IndexInfo[1][i] > 0) {
+				if (gData.IndexInfo[1][i] > 0 && gData.IndexInfo[1][i] != 2)
+				{
 					int nRand = m_pCommon->Get_Random(0, 99);
 					int nJudge = (nRand < gData.nNGPercent ? 2 : 1);
 					if (nJudge == 2) {
@@ -4811,7 +4812,7 @@ BOOL CSequenceMain::LDPicker_Run()
 			m_pCommon->Move_Position(AX_LOAD_PICKER_Z, 0);
 			m_sLog.Format("m_nLDPickerCase,%d",m_nLDPickerCase); pLogFile->Save_MCCLog(m_sLog);
 			m_nLDPickerCase = 150;
-			m_pCommon->Set_LoopTime(AUTO_LDPICKER, 10000);
+			m_pCommon->Set_LoopTime(AUTO_LDPICKER, 10000);			
 		}
 		break;
 	case 150:
@@ -4957,7 +4958,8 @@ BOOL CSequenceMain::LDPicker_Run()
 		}
 		break;
 	case 221:
-		if (m_pDX2->iInspCMAlign1In && !m_pDX2->iInspCMAlign1Out) {
+		if (m_pDX2->iInspCMAlign1In && !m_pDX2->iInspCMAlign1Out) 
+		{
 			m_pCommon->Move_Position(AX_LOAD_PICKER_Z, 0);// Ready Up Position 
 			m_sLog.Format("m_nLDPickerCase,%d",m_nLDPickerCase); pLogFile->Save_MCCLog(m_sLog);
 			m_nLDPickerCase = 230;
@@ -4966,9 +4968,13 @@ BOOL CSequenceMain::LDPicker_Run()
 		break;
 
 	case 230:
-		if (m_pCommon->Check_Position(AX_LOAD_PICKER_Z, 0) ) {
-			if (!m_pCommon->Delay_LoopTime(AUTO_LDPICKER, 100)) break;
+		if (m_pCommon->Check_Position(AX_LOAD_PICKER_Z, 0) ) 
+		{
+			CWorkDlg *pWorkDlg = CWorkDlg::Get_Instance();
+			pWorkDlg->ResetInfoDisplay();
 
+			if (!m_pCommon->Delay_LoopTime(AUTO_LDPICKER, 100)) break;
+			
 			gData.IDXLineNo[0] = gData.PickerLoadLineNo;
 			gData.PickerLoadLineNo = 0;
 			//int cm = (Get_TrayLineConvert(gData.IDXLineNo[0]) -1) * 5;
@@ -6819,10 +6825,9 @@ BOOL CSequenceMain::Check_InspecEnd(int nPos)
 	{
 		if (gData.IndexInfo[2][i] > 0) 
 		{
-			gData.IndexInfo[2][i] = gLot.nInsResult[nTrayNo-1][cm+i];
+			if(gData.IndexInfo[2][i] != 2) gData.IndexInfo[2][i] = gLot.nInsResult[nTrayNo-1][cm+i];
 			if (gData.IndexInfo[2][i] == 3) gData.IndexInfo[2][i] = 2;
 		}
-
 	}
 	return FALSE;
 }

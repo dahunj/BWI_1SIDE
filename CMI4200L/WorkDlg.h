@@ -103,6 +103,7 @@ protected:
 	afx_msg void OnBnClickedBtnBuzzerOff();
 	afx_msg void OnBnClickedBtnLotCancel();
 	afx_msg void OnBnClickedChkAllPass();
+	afx_msg void OnStcLoadPickInfoClick(UINT nID);
 
 	afx_msg LRESULT OnUpdateModel(WPARAM wParam, LPARAM lParam);
 	afx_msg LRESULT OnUpdateRfid(WPARAM wParam, LPARAM lParam);
@@ -145,7 +146,7 @@ public:
 	void Enable_LotInfo(BOOL on);
 	void UpdateLotInfoFromMES(int nCMCount);
 
-
+	void ResetInfoDisplay();
 	
 };
 

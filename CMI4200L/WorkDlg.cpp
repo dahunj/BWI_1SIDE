@@ -215,6 +215,8 @@ BEGIN_MESSAGE_MAP(CWorkDlg, CDialogEx)
 	ON_MESSAGE(UM_LOT_START_END, &CWorkDlg::OnLotStartEnd)
 
 	ON_BN_CLICKED(IDC_CHK_ALL_PASS, &CWorkDlg::OnBnClickedChkAllPass)
+
+	ON_CONTROL_RANGE(STN_CLICKED, IDC_STC_LOADPICK_NO_0,IDC_STC_LOADPICK_NO_3, OnStcLoadPickInfoClick)
 END_MESSAGE_MAP()
 
 // CWorkDlg 메시지 처리기입니다.
@@ -924,7 +926,11 @@ void CWorkDlg::Display_Status()
 	strText.Format("%d", gData.nIndexPos);
 	m_stcWorkSlot[2].SetWindowText(strText);
 
-	for (int i = 0; i < 4; i++) { strText.Format("%d-%d", gData.LoadTrayNo, (gData.nTrayPos[0]-1)*gData.nPickCnt + i); m_stcLoadPickNo[i].SetWindowText(strText); }
+	for (int i = 0; i < 4; i++) 
+	{ 
+		strText.Format("%d-%d", gData.LoadTrayNo, (gData.nTrayPos[0]-1)*gData.nPickCnt + i); 
+		m_stcLoadPickNo[i].SetWindowText(strText); 
+	}
 
 
 	int		i, j, nTCnt, nUPEH;
@@ -1643,4 +1649,36 @@ void CWorkDlg::UpdateLotInfoFromMES(int nCMCount)
 	strNew.Format("%d", gData.nTrayJobCount);
 	m_stcLotId2.SetWindowText(strNew);  
 	
+}
+
+
+void CWorkDlg::OnStcLoadPickInfoClick(UINT nID)
+{
+	int ID = nID - IDC_STC_LOADPICK_NO_0;
+
+	CCommon *pCommon = CCommon::Get_Instance();
+
+	if(pCommon->Show_MsgBox(2, "해당 모듈 Dummy 입니까?") != IDOK) return;
+
+	//나중에 NG로 빠지게 하면 될듯 지금 그렇게 해줄 이유가 없음 
+	//gData.nCNoBtm1Pick[ID] = 0; //gData.nTNoBtm1Pick[ID] = 0;
+	//gData.InfoBtm1Pick[ID] = gData.nCNoBtm1Pick[ID];
+	
+	
+	m_stcLoadPickNo[ID].Set_Color(RGB(0xFF, 0x00, 0x00), RGB(0x0F, 0x0F, 0x0F));
+	gData.LoadTrayInfo[gData.nTrayPos[0]-1][ID] = 2;
+
+	CString strLog;
+	
+	strLog.Format("MES NG, Clicked, TrayNo(%d), LineNo(%d), CmIndex(%d)", gData.LoadTrayNo, gData.nTrayPos[0], ID);
+	pLogFile->Save_HandlerLog(strLog);
+
+	//CString strText;
+	//strText.Format("%d-%d", gData.nTNoBtm1Pick[ID], gData.nCNoBtm1Pick[ID]); m_stcB1No[ID].Set_Text(strText);
+
+}
+
+void CWorkDlg::ResetInfoDisplay()
+{
+	for (int i = 0; i < gData.nPickCnt; i++) m_stcLoadPickNo[i].Set_Color(RGB(0x00, 0xFF, 0x00), RGB(0x00, 0x00, 0x00));
 }

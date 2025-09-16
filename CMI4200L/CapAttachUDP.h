@@ -73,8 +73,7 @@ public:
 	BOOL Get_BarcodeDone (int nPortNo, int nTrayNo, int nCmNo) { return m_bBarcodeDone[nPortNo][nTrayNo][nCmNo];}
 
 
-	void Set_BarcodeDone (int nPortNo, int nTrayNo, int nCmNo, BOOL Done) { m_bBarcodeDone[nPortNo][nTrayNo][nCmNo] = Done;}
-	BOOL Get_BarcodeDone (int nPortNo, int nTrayNo, int nCmNo) { return m_bBarcodeDone[nPortNo][nTrayNo][nCmNo];}
+
 
 	BOOL Is_Opened() { return m_bOpened; }
 
