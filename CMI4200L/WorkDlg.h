@@ -73,19 +73,14 @@ public:
 	CLedStatic		m_ledIndexSlot[5][6];
 	CLedCS			m_ledBarAlarm;
 	CLedCS			m_ledBarNG;
-	CCheckCS		m_chkMESUse;
-	CCheckCS		m_chkContinueLot;
+	CCheckCS		m_chkMESUse;	
 	CGridCS			m_grdShiftList;
 	CButtonCS		m_btnBuzzerOff;
 	CButtonCS		m_btnLotCancel;
 
-	BOOL			m_bUseContinueLot;
-
-	CStaticCS		m_stcLotsId[5];
-	CStaticCS		m_stcTraysCount[5];
-	CStaticCS		m_stcCmsCount[5];
-
-
+	CCheckCS		m_chkAllPass;
+	CStaticCS		m_stcLoadPickNo[4];
+	
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV 지원입니다.
 	DECLARE_MESSAGE_MAP()
@@ -101,16 +96,13 @@ protected:
 	afx_msg void OnBnClickedChkSampleJob();
 	afx_msg void OnBnClickedBtnConvClear();
 	afx_msg void OnBnClickedChkMESUse();
-	afx_msg void OnBnClickedChkContinueLot();
-
-	afx_msg void OnStcCmsCountClick(UINT nID);
-	afx_msg void OnStcLotsIdClick(UINT nID);
 
 	afx_msg void OnBnClickedLotID();
 	afx_msg void OnBnClickedTrayCnt();
 	afx_msg void OnBnClickedCMCnt();
 	afx_msg void OnBnClickedBtnBuzzerOff();
 	afx_msg void OnBnClickedBtnLotCancel();
+	afx_msg void OnBnClickedChkAllPass();
 
 	afx_msg LRESULT OnUpdateModel(WPARAM wParam, LPARAM lParam);
 	afx_msg LRESULT OnUpdateRfid(WPARAM wParam, LPARAM lParam);
@@ -149,10 +141,12 @@ public:
 	void Initial_ShiftGrid();
 	void Add_ShifeError();
 	void AutoStop();
-	void Clear_LotInfo();
-
+	
 	void Enable_LotInfo(BOOL on);
+	void UpdateLotInfoFromMES(int nCMCount);
 
+
+	
 };
 
 ///////////////////////////////////////////////////////////////////////////////
