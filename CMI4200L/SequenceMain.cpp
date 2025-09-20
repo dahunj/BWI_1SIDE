@@ -1814,7 +1814,7 @@ BOOL CSequenceMain::Unload1_Run()
 		break;
 
 	case 430:
-		if (m_pCommon->Check_Position(AX_UNLOAD_TRAY_Z1, 1)) {
+		if (m_pCommon->Check_Position(AX_UNLOAD_TRAY_Z1, 1) && !m_pDX6->iUS_Z1Check1 && !m_pDX6->iUS_Z1Check2) {
 			gData.nGoodTrayCount++;
 			if (m_pEquipData->bUseInlineMode) {
 				gData.bCapTrayLoad = TRUE;
@@ -1836,7 +1836,7 @@ BOOL CSequenceMain::Unload1_Run()
 		break;
 
 	case 440:
-		if (m_pCommon->Check_Position(AX_UNLOAD_TRAY_Y2, 2) || m_nUnload2Case >= 300 ) {
+		if ((m_pCommon->Check_Position(AX_UNLOAD_TRAY_Y2, 2)&& !m_pDX6->iUS_Z1Check1 && !m_pDX6->iUS_Z1Check2) || (m_nUnload2Case >= 300 && !m_pDX6->iUS_Z1Check1 && !m_pDX6->iUS_Z1Check2)) {
 			m_pCommon->Move_Position(AX_UNLOAD_TRAY_Y1, 0);
 			m_sLog.Format("m_nUnload1Case,%d",m_nUnload1Case); pLogFile->Save_MCCLog(m_sLog);
 			m_nUnload1Case = 450;
@@ -2635,7 +2635,7 @@ BOOL CSequenceMain::Unload2_Run()
 		}
 		break;
 	case 430:
-		if (m_pCommon->Check_Position(AX_UNLOAD_TRAY_Z2, 1)) {
+		if (m_pCommon->Check_Position(AX_UNLOAD_TRAY_Z2, 1)&& !m_pDX6->iUS_Z2Check1 && !m_pDX6->iUS_Z2Check2) {
 			gData.nGoodTrayCount++;
 			if (m_pEquipData->bUseInlineMode) {
 				gData.bCapTrayLoad = TRUE;
@@ -2655,7 +2655,8 @@ BOOL CSequenceMain::Unload2_Run()
 		break;
 
 	case 440:
-		if (m_pCommon->Check_Position(AX_UNLOAD_TRAY_Y1, 2) || m_nUnload1Case >= 300) {
+		if ((m_pCommon->Check_Position(AX_UNLOAD_TRAY_Y1, 2) && !m_pDX6->iUS_Z2Check1 && !m_pDX6->iUS_Z2Check2) || (m_nUnload1Case >= 300 &&!m_pDX6->iUS_Z2Check1 && !m_pDX6->iUS_Z2Check2)) 
+		{
 			m_pCommon->Move_Position(AX_UNLOAD_TRAY_Y2, 0);
 			m_sLog.Format("m_nUnload2Case,%d",m_nUnload2Case); pLogFile->Save_MCCLog(m_sLog);
 			m_nUnload2Case = 450;

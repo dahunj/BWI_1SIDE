@@ -64,17 +64,17 @@
 #define SIM_WAITTIMES	 5		//
 #define SIM_WAITTIMEM	 5		//
 
-//#define AJIN_BOARD_USE
+#define AJIN_BOARD_USE
 
 //BWI Model Only(5x2)
-//#define EQ_TYPE_A1	//R44A,BWI
-#define EQ_TYPE_A2	//R44A,BWI
+#define EQ_TYPE_A1	//R44A,BWI
+//#define EQ_TYPE_A2	//R44A,BWI
 
 #if defined(EQ_TYPE_A1)		//R44A(MainAir1)
-	#define MAIN_VERSION	"V3.4.12.a1"
+	#define MAIN_VERSION	"V3.4.18.a1"
 	#define PICKER_5		// Load/Good/Unload Picker 5개 (기본 6개)
 #elif defined(EQ_TYPE_A2)	//R44A(MainAir2)
-	#define MAIN_VERSION	"V3.4.12.a2"
+	#define MAIN_VERSION	"V3.4.18.a2"
 	#define ALIGN_NEW		// Main Air 2개 (기본 1개), 스테이지 Master/Slave I/O 순서 뒤바뀌어 있음.
 	#define TRAY_CHECK2		// Tray Check Sensor 2개 (기본 1개)
 	#define PICKER_5		// Load/Good/Unload Picker 5개 (기본 6개)
